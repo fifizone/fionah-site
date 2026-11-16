@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>fionah Motion Studio</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Motion Studio">
+<meta name="description" content="Turn your images into a smooth, gliding video on your phone.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f1115'/%3E%3Cpath d='M38 30 L72 50 L38 70 Z' fill='%23d4b483'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1115; --card:#181b22; --line:#262a33; --text:#f2efe9; --muted:#9aa0ab;
+    --gold:#d4b483; --gold2:#b8955c; --ok:#7cc79a; --bad:#e58a8a;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:15px}
+  body{padding-bottom:110px}
+  header{padding:22px 18px 8px}
+  header h1{font-family:"Playfair Display",serif;font-weight:600;font-size:26px;margin:0;letter-spacing:.2px}
+  header h1 span{color:var(--gold)}
+  header p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+  main{padding:8px 14px;max-width:760px;margin:0 auto}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}
+  .card h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);margin:0 0 4px;font-weight:600}
+  .card .hint{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.45}
+  .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+        border:1.5px dashed #3a3f4b;border-radius:14px;padding:26px 12px;text-align:center;cursor:pointer}
+  .drop b{font-size:16px}
+  .drop small{color:var(--muted)}
+  .drop.hot{border-color:var(--gold);background:#1f1c17}
+  .pick{display:flex;gap:8px;width:100%;margin:6px 0}
+  .gl{max-height:52vh;overflow:auto;text-align:left;margin:10px 0;display:flex;flex-direction:column;gap:6px}
+  .gi{display:flex;align-items:center;gap:10px;background:#11141a;border:1px solid var(--line);border-radius:11px;padding:10px;font-size:13.5px}
+  .gi input{width:20px;height:20px;accent-color:var(--gold);flex:none}
+  .gi span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .gi small{color:var(--muted);flex:none}
+  .mrow{display:flex;align-items:center;gap:10px;margin:8px 0}
+  .mrow label{flex:1;font-size:13.5px;color:var(--text);display:flex;align-items:center;gap:8px}
+  .mrow input[type=checkbox]{width:20px;height:20px;accent-color:var(--gold)}
+  .pickbtn{flex:1;background:#231f18;border:1px solid var(--gold);color:var(--gold);border-radius:12px;padding:13px 6px;font:inherit;font-weight:600;font-size:14px}
+  input[type=file]{display:none}
+  .stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .pill{background:#11141a;border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:13px;color:var(--muted)}
+  .pill b{color:var(--text);font-weight:600}
+  .list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .row{display:flex;align-items:center;gap:7px;background:#11141a;border:1px solid var(--line);border-radius:14px;padding:8px}
+  .row img{width:56px;height:42px;object-fit:cover;border-radius:9px;flex:none}
+  .row .num{width:22px;text-align:center;color:var(--muted);font-size:12px;flex:none}
+  .row select{flex:1;min-width:0;padding:8px 6px;font-size:13px}
+  .row .btns{display:flex;gap:4px;flex:none}
+  .ib{width:30px;height:32px;border-radius:10px;border:1px solid var(--line);background:#1b1f27;color:var(--text);font-size:15px;display:grid;place-items:center;padding:0}
+  .ib:active{background:#262b35}
+  select,input[type=text]{width:100%;background:#11141a;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font:inherit;font-size:14px}
+  label.f{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+  .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .seg.three{grid-template-columns:repeat(3,1fr)}
+  .seg.two{grid-template-columns:repeat(2,1fr)}
+  .seg button{background:#11141a;border:1px solid var(--line);color:var(--text);border-radius:11px;padding:10px 4px;font:inherit;font-size:13px}
+  .seg button.on{border-color:var(--gold);background:#231f18;color:var(--gold)}
+  .slider{display:flex;align-items:center;gap:10px}
+  .slider input{flex:1;accent-color:var(--gold)}
+  .slider output{width:48px;text-align:right;font-variant-numeric:tabular-nums}
+  .stage{position:relative;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--line)}
+  canvas{display:block;width:100%;height:auto;background:#000}
+  .stage .empty{position:absolute;inset:0;display:grid;place-items:center;color:#555;font-size:14px}
+  .scrub{display:flex;align-items:center;gap:10px;margin-top:10px}
+  .scrub input{flex:1;accent-color:var(--gold)}
+  .scrub span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:84px;text-align:right}
+  .bar{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+       background:linear-gradient(180deg,rgba(15,17,21,0),#0f1115 30%);display:flex;gap:10px;justify-content:center}
+  .bar button{flex:1;max-width:360px;border:none;border-radius:16px;padding:16px 10px;font:inherit;font-weight:600;font-size:16px}
+  .b1{background:#232833;color:var(--text)}
+  .b2{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1408}
+  button:disabled{opacity:.45}
+  .modal{position:fixed;inset:0;background:rgba(5,6,8,.86);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
+  .modal.show{display:flex}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;width:100%;max-width:520px;text-align:center}
+  .box h3{font-family:"Playfair Display",serif;font-size:22px;margin:0 0 6px}
+  .box p{color:var(--muted);font-size:14px;line-height:1.5;margin:6px 0}
+  .prog{height:10px;background:#11141a;border-radius:99px;overflow:hidden;margin:16px 0 8px;border:1px solid var(--line)}
+  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold))}
+  .box video{width:100%;border-radius:12px;margin:12px 0;background:#000}
+  .box .acts{display:flex;gap:8px;margin-top:10px}
+  .box .acts button{flex:1;border:none;border-radius:13px;padding:13px;font:inherit;font-weight:600}
+  .presets{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+  .presets button{background:#11141a;border:1px solid var(--line);color:var(--text);border-radius:11px;padding:10px 6px;font:inherit;font-size:13px;line-height:1.3}
+  .presets button small{color:var(--muted);font-size:11px}
+  .presets button.on{border-color:var(--gold);background:#231f18;color:var(--gold)}
+  .cnt{font-size:12px;color:var(--muted);text-align:right;margin-top:4px;min-height:15px}
+  .cnt.ok{color:var(--gold)} .cnt.warn{color:#e2b26b} .cnt.bad{color:var(--bad)}
+  .msg{font-size:13px;margin-top:8px;min-height:18px}
+  .msg.ok{color:var(--ok)} .msg.bad{color:var(--bad)}
+  .tip{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:10px}
+  .tiny{background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:7px 10px;font:inherit;font-size:12.5px}
+  .rowtools{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+  <h1><a href="../" style="color:inherit;text-decoration:none">fionah</a> <span>Motion</span> Studio</h1>
+  <p>Turn your images into a smooth, gliding video — zooms and pans, soft fades. Made for your phone.</p>
+</header>
+
+<main>
+  <!-- 1. Photos -->
+  <section class="card">
+    <h2>1 · Add your photos</h2>
+    <p class="hint">Add as many as you like. Put your favourite shot first — it opens the video.</p>
+    <div class="drop" id="drop">
+      <b>Tap to choose images</b>
+      <div class="pick">
+        <button type="button" class="pickbtn" data-for="files">📷 Photos</button>
+        <button type="button" class="pickbtn" data-for="files2">📁 Files</button>
+        <button type="button" class="pickbtn" id="driveBtn">🟢 Google Drive</button>
+      </div>
+      <small><b>Photos</b>: your camera roll · <b>Files</b>: iCloud, Dropbox, OneDrive, downloads · <b>Google Drive</b>: picks straight from your Drive</small>
+      <input type="file" id="files" accept="image/*" multiple>
+      <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="rowtools" id="tools" style="display:none">
+      <button class="tiny" id="autoAll">✨ Reset all to Auto motion</button>
+      <button class="tiny" id="clearAll">🗑 Remove all</button>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <!-- 2. Style -->
+  <section class="card">
+    <h2>2 · Video style</h2>
+    <label class="f" style="margin-top:8px">Made for… <small>(one tap sets everything)</small></label>
+    <div class="presets" id="presets">
+      <button data-p="ebay">🛒 eBay<br><small>under 1 min</small></button>
+      <button data-p="reels">📱 Reels / TikTok<br><small>tall</small></button>
+      <button data-p="fb">🏷️ Facebook<br><small>Marketplace</small></button>
+      <button data-p="youtube">▶️ YouTube link<br><small>Trade Me · Gumtree · Domain</small></button>
+      <button data-p="rea">🏠 realestate.com.au<br><small>walkthrough reel</small></button>
+      <button data-p="amazon">📦 Amazon<br><small>product video</small></button>
+    </div>
+    <p class="tip" id="presetNote" style="margin-top:8px"></p>
+    <label class="f">Shape (where will you post it?)</label>
+    <div class="seg" id="shape">
+      <button data-v="16:9" class="on">Wide<br><small>16:9</small></button>
+      <button data-v="9:16">Reels<br><small>9:16</small></button>
+      <button data-v="4:5">Post<br><small>4:5</small></button>
+      <button data-v="1:1">Square<br><small>1:1</small></button>
+    </div>
+
+    <label class="f">File size</label>
+    <div class="seg three" id="size">
+      <button data-v="small">Small<br><small>720 · for sharing</small></button>
+      <button data-v="balanced" class="on">Balanced<br><small>1080 · best pick</small></button>
+      <button data-v="best">Best<br><small>1080 · biggest</small></button>
+    </div>
+    <p class="tip" style="margin-top:6px">Slow glides squash down really well, so Small and Balanced still keep rich, true colour.</p>
+
+    <label class="f">Time on each photo</label>
+    <div class="slider"><input type="range" id="imgSec" min="3" max="15" step="0.5" value="5"><output id="imgOut">5s</output></div>
+
+    <label class="f">Fade between photos</label>
+    <div class="slider"><input type="range" id="trSec" min="0.5" max="6" step="0.5" value="5"><output id="trOut">5s</output></div>
+
+    <label class="f">Movement speed</label>
+    <div class="seg three" id="strength">
+      <button data-v="0.15">Whisper</button>
+      <button data-v="0.26" class="on">Buttery</button>
+      <button data-v="0.52">Bold</button>
+    </div>
+    <p class="tip" style="margin-top:8px">💡 <b>Speed stays the same</b> whatever time you pick. Give a photo more seconds and the camera simply travels further — like a car at the same speed driving for longer.</p>
+  </section>
+
+  <!-- 3. Words & music -->
+  <section class="card">
+    <h2>3 · Words & music <small style="color:var(--muted);text-transform:none;letter-spacing:0">(optional)</small></h2>
+    <label class="f">Opening words (shown on the first photo)</label>
+    <input type="text" id="headline" placeholder="e.g. 12 Ocean View Road, Scarborough" maxlength="80">
+    <div class="cnt" id="headlineCnt" data-lim="25"></div>
+    <label class="f">Small line under it</label>
+    <input type="text" id="subline" placeholder="e.g. 4 bed · 2 bath · 2 car" maxlength="80">
+    <div class="cnt" id="sublineCnt" data-lim="40"></div>
+    <label class="f">Closing words (shown on the last photo)</label>
+    <input type="text" id="closing" placeholder="e.g. Book your viewing today" maxlength="80">
+    <div class="cnt" id="closingCnt" data-lim="25"></div>
+    <label class="f">Background music</label>
+    <div class="drop" id="musicDrop" style="padding:14px">
+      <b id="musicName">🎵 Tap to add a song</b>
+      <small>MP3 · M4A · WAV · AAC you're allowed to use · fades out at the end</small>
+      <input type="file" id="music" accept="audio/*,.mp3,.m4a,.wav,.aac,.ogg">
+    </div>
+    <div id="musicPanel" style="display:none;margin-top:12px">
+      <label class="f">Start the song at</label>
+      <div class="slider"><input type="range" id="mStart" min="0" max="10" step="0.1" value="0"><output id="mStartOut">0:00</output></div>
+      <label class="f">End the song at</label>
+      <div class="slider"><input type="range" id="mEnd" min="0" max="10" step="0.1" value="10"><output id="mEndOut">0:00</output></div>
+      <p class="tip" id="mInfo" style="margin-top:4px"></p>
+      <div class="mrow"><label><input type="checkbox" id="mFadeIn" checked> Fade in</label>
+        <div class="slider" style="flex:1"><input type="range" id="mFi" min="0.5" max="8" step="0.5" value="2"><output id="mFiOut">2s</output></div></div>
+      <div class="mrow"><label><input type="checkbox" id="mFadeOut" checked> Fade out</label>
+        <div class="slider" style="flex:1"><input type="range" id="mFo" min="0.5" max="8" step="0.5" value="3"><output id="mFoOut">3s</output></div></div>
+      <div class="mrow"><label><input type="checkbox" id="mLoop" checked> Repeat the clip if the video is longer</label></div>
+      <div class="rowtools">
+        <button class="tiny" id="mPlay">▶ Hear my clip</button>
+        <button class="tiny" id="mRemove">✕ Remove song</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tips -->
+  <section class="card">
+    <h2>💡 Tips for the best results</h2>
+    <ul class="tip" style="padding-left:18px;margin:8px 0 0">
+      <li>Your phone opens its own picker for photos and music. If it asks, tap <b>Allow Full Access</b> so you can pick lots at once.</li>
+      <li>Songs from Apple Music or Spotify are locked and can't be used. Use a song saved on your phone, in Files or in Drive.</li>
+      <li><b>Bold</b> looks best at 3–6 seconds per photo. Longer times zoom in a lot and photos can look soft.</li>
+      <li>While making the video, keep this screen open and switched on until it finishes.</li>
+      <li>Bright daylight photos with tidy rooms look best.</li>
+    </ul>
+  </section>
+
+  <!-- 4. Preview -->
+  <section class="card">
+    <h2>4 · Preview</h2>
+    <p class="hint">Watch it here first. Drag the bar to jump around.</p>
+    <div class="stage">
+      <canvas id="cv"></canvas>
+      <div class="empty" id="empty">Add photos to see your video</div>
+    </div>
+    <div class="scrub">
+      <button class="ib" id="playBtn">▶</button>
+      <input type="range" id="seek" min="0" max="1000" value="0">
+      <span id="timeLbl">0:00 / 0:00</span>
+    </div>
+  </section>
+</main>
+
+<div class="bar">
+  <button class="b1" id="previewBtn">▶ Preview</button>
+  <button class="b2" id="makeBtn">🎬 Make video</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box" id="box"></div>
+</div>
+
+<script>
+(() => {
+  // ---------- state ----------
+  const S = {
+    slides: [],            // {src: canvas, thumb, motion:'auto'|...}
+    shape: '16:9', quality: 1080, size: 'balanced', imgSec: 5, trSec: 5, strength: 0.26,
+    playing: false, t: 0, recording: false
+  };
+  const AUTO = ['in', 'right', 'out', 'left'];
+  const MOTIONS = [
+    ['auto', '✨ Auto'], ['in', '🔍 Slow zoom in'], ['out', '🔭 Slow zoom out'],
+    ['right', '➡️ Glide right'], ['left', '⬅️ Glide left'],
+    ['up', '⬆️ Glide up'], ['down', '⬇️ Glide down']
+  ];
+  const $ = id => document.getElementById(id);
+  const cv = $('cv'), ctx = cv.getContext('2d', { alpha: false });
+  let music = null, audioCtx = null, audioSrc = null, audioGain = null, audioDest = null;
+
+  // ---------- helpers ----------
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const easeSine = x => 0.5 - 0.5 * Math.cos(Math.PI * clamp(x));
+  const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+  const step = () => S.imgSec + S.trSec;
+  const bitrate = () => ({ small: 2_000_000, balanced: 4_000_000, best: 8_000_000 })[S.size] || 4_000_000;
+  const total = () =>S.slides.length ? S.slides.length * step() + S.trSec : 0;
+
+  function dims() {
+    const q = S.quality, [a, b] = S.shape.split(':').map(Number);
+    let w, h;
+    if (a >= b) { h = q; w = Math.round(q * a / b); } else { w = q; h = Math.round(q * b / a); }
+    return [w - (w % 2), h - (h % 2)];
+  }
+  function sizeCanvas() {
+    const [w, h] = dims();
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  }
+
+  // ---------- loading photos ----------
+  async function loadFile(file) {
+    const url = URL.createObjectURL(file);
+    try {
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+      const cap = 2200;
+      const k = Math.min(1, cap / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      const g = c.getContext('2d'); g.imageSmoothingQuality = 'high';
+      g.drawImage(img, 0, 0, c.width, c.height);
+      const t = document.createElement('canvas');
+      const tk = 160 / Math.max(c.width, c.height);
+      t.width = Math.round(c.width * tk); t.height = Math.round(c.height * tk);
+      t.getContext('2d').drawImage(c, 0, 0, t.width, t.height);
+      return { src: c, thumb: t.toDataURL('image/jpeg', 0.7), motion: 'auto', name: file.name };
+    } catch (e) { return null; }
+    finally { URL.revokeObjectURL(url); }
+  }
+  async function addFiles(list) {
+    const files = [...list].filter(f => f.type.startsWith('image/') || /\.(heic|heif|jpe?g|png|webp|gif|bmp|tiff?|avif)$/i.test(f.name));
+    if (!files.length) return;
+    let bad = 0;
+    $('stats').innerHTML = `<span class="pill">Loading ${files.length} photos…</span>`;
+    for (const f of files) {
+      const s = await loadFile(f);
+      if (s) S.slides.push(s); else bad++;
+      renderStats(bad);
+    }
+    renderList(); renderStats(bad); if (S.preset) applyPreset(S.preset); draw(S.t);
+  }
+  ['files', 'files2'].forEach(id => $(id).addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; }));
+
+  // friendly "allow access" step before the phone's own picker opens (shown once)
+  function seen(k) { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } }
+  function mark(k) { try { localStorage.setItem(k, '1'); } catch (e) {} }
+  function askAccess(kind, input) {
+    const key = 'lms-ok-' + kind;
+    if (seen(key)) return input.click();
+    const photo = kind === 'photos';
+    openModal(`
+      <h3>${photo ? '📷 Allow access to your photos?' : '🎵 Allow access to your music?'}</h3>
+      <p>${photo
+        ? 'Your phone will open your Photo Library. If it asks, tap <b style="color:var(--text)">Allow</b> or <b style="color:var(--text)">Allow Full Access</b> so you can pick lots of photos at once.'
+        : 'Your phone will open your music files. Pick a song saved on your phone or in Files.<br><br>Songs from Apple Music or Spotify are locked by those apps and can\'t be used.'}</p>
+      <p class="tip">Your ${photo ? 'photos' : 'music'} stay on your phone — nothing is uploaded anywhere.</p>
+      <div class="acts"><button class="b1" id="nox">Not now</button><button class="b2" id="yesx">Allow</button></div>`);
+    $('nox').onclick = closeModal;
+    $('yesx').onclick = () => { mark(key); closeModal(); input.click(); };
+  }
+  document.querySelectorAll('.pickbtn[data-for]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); askAccess('photos', $(b.dataset.for)); }));
+  $('musicDrop').addEventListener('click', e => { if (e.target.id !== 'music') askAccess('music', $('music')); });
+  const drop = $('drop');
+  ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('hot'); }));
+  ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('hot'); }));
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+
+  function renderStats(bad = 0) {
+    const n = S.slides.length;
+    $('tools').style.display = n ? 'flex' : 'none';
+    $('empty').style.display = n ? 'none' : 'grid';
+    $('stats').innerHTML = n ? `
+      <span class="pill"><b>${n}</b> photos</span>
+      <span class="pill">Video length <b>${fmt(total())}</b></span>
+      <span class="pill">File about <b>${Math.max(1, Math.round(bitrate() * total() / 8 / 1048576))} MB</b></span>
+      ${bad ? `<span class="pill" style="color:var(--bad)">${bad} couldn't open</span>` : ''}` : '';
+    $('timeLbl').textContent = `${fmt(S.t)} / ${fmt(total())}`;
+    if (typeof musicInfo === 'function') musicInfo();
+  }
+  function resolveMotion(i) { const m = S.slides[i].motion; return m === 'auto' ? AUTO[i % AUTO.length] : m; }
+
+  function renderList() {
+    const L = $('list'); L.innerHTML = '';
+    S.slides.forEach((s, i) => {
+      const r = document.createElement('div'); r.className = 'row';
+      const opts = MOTIONS.map(([v, l]) => `<option value="${v}" ${s.motion === v ? 'selected' : ''}>${l}</option>`).join('');
+      r.innerHTML = `<span class="num">${i + 1}</span><img src="${s.thumb}" alt="">
+        <select aria-label="Movement">${opts}</select>
+        <div class="btns">
+          <button class="ib" data-a="up" aria-label="Move up">↑</button>
+          <button class="ib" data-a="down" aria-label="Move down">↓</button>
+          <button class="ib" data-a="del" aria-label="Remove">✕</button>
+        </div>`;
+      r.querySelector('select').addEventListener('change', e => { s.motion = e.target.value; jumpTo(i); });
+      r.querySelector('img').addEventListener('click', () => jumpTo(i));
+      r.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+        const a = b.dataset.a, arr = S.slides;
+        if (a === 'up' && i > 0) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+        if (a === 'down' && i < arr.length - 1) [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
+        if (a === 'del') arr.splice(i, 1);
+        renderList(); renderStats(); if (S.preset && PRESETS[S.preset].max) applyPreset(S.preset); draw(Math.min(S.t, total()));
+      }));
+      L.appendChild(r);
+    });
+  }
+  function jumpTo(i) { pause(); S.t = i * step() + S.trSec * 0.6; syncSeek(); draw(S.t); }
+  $('autoAll').onclick = () => { S.slides.forEach(s => s.motion = 'auto'); renderList(); draw(S.t); };
+  $('clearAll').onclick = () => { showConfirm('Remove all photos?', () => { S.slides = []; S.t = 0; renderList(); renderStats(); draw(0); }); };
+
+  // ---------- settings ----------
+  function seg(id, key, num) {
+    $(id).querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      if (S.recording) return;
+      $(id).querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on');
+      S[key] = num ? Number(b.dataset.v) : b.dataset.v;
+      if (key !== 'strength') clearPreset();
+      sizeCanvas(); renderStats(); draw(S.t);
+    }));
+  }
+  seg('shape', 'shape'); seg('size', 'size'); seg('strength', 'strength', true);
+  $('size').addEventListener('click', () => { S.quality = S.size === 'small' ? 720 : 1080; sizeCanvas(); renderStats(); draw(S.t); });
+  function slider(id, out, key) {
+    $(id).addEventListener('input', e => { clearPreset(); S[key] = Number(e.target.value); $(out).textContent = S[key] + 's'; renderStats(); draw(Math.min(S.t, total())); });
+  }
+  slider('imgSec', 'imgOut', 'imgSec'); slider('trSec', 'trOut', 'trSec');
+
+  // ---------- "Made for" presets ----------
+  const PRESETS = {
+    ebay:    { shape: '1:1',  size: 'balanced', img: 3.5, tr: 1.5, max: 58,
+               note: '🛒 <b>eBay</b>: square, kept under 1 minute (eBay\'s limit), MP4. Upload it in the listing\'s <b>Photos & Video</b> section on a computer. Fewer photos = slower, calmer glides.' },
+    reels:   { shape: '9:16', size: 'balanced', img: 4, tr: 1.5,
+               note: '📱 <b>Reels / TikTok</b>: tall full-screen video. Post it straight from your phone.' },
+    fb:      { shape: '4:5',  size: 'balanced', img: 4, tr: 1.5, max: 58,
+               note: '🏷️ <b>Facebook Marketplace</b>: 4:5 shape fills the feed nicely, kept under 1 minute. Add it with your photos when you list.' },
+    youtube: { shape: '16:9', size: 'best', img: 5, tr: 2,
+               note: '▶️ <b>YouTube link</b>: wide, best quality. Upload to YouTube (set it to <b>Unlisted</b>), copy the link, then paste it into Trade Me, Gumtree or Domain.' },
+    rea:     { shape: '9:16', size: 'balanced', img: 5, tr: 2,
+               note: '🏠 <b>realestate.com.au</b>: tall walkthrough reel. Agents upload it through Ignite — private sellers, send it to your agent or listing service.' },
+    amazon:  { shape: '16:9', size: 'balanced', img: 4, tr: 1.5,
+               note: '📦 <b>Amazon</b>: wide product video. Uploading usually needs a brand-registered seller account.' }
+  };
+  function setSeg(id, v) { $(id).querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === String(v))); }
+  function setSlider(id, out, v) { $(id).value = v; $(out).textContent = v + 's'; }
+  function clearPreset() { if (!S.preset) return; S.preset = null; $('presets').querySelectorAll('button').forEach(b => b.classList.remove('on')); $('presetNote').innerHTML = ''; }
+  function applyPreset(key) {
+    const P = PRESETS[key]; if (!P) return;
+    S.preset = key; S.shape = P.shape; S.size = P.size; S.quality = P.size === 'small' ? 720 : 1080;
+    let img = P.img, tr = P.tr, extra = '';
+    const n = S.slides.length;
+    if (P.max && n) {
+      // squeeze timing so the whole video fits under the limit
+      img = Math.floor(((P.max - tr) / n - tr) * 2) / 2;
+      if (img > 8) img = 8;
+      if (img < 3) {
+        img = 3; tr = 1;
+        const fit = Math.floor((P.max - tr) / (img + tr));
+        extra = ` <span style="color:var(--bad)">⚠ ${n} photos is too many for 1 minute — use about ${fit} or fewer.</span>`;
+      }
+    }
+    S.imgSec = img; S.trSec = tr;
+    setSeg('shape', S.shape); setSeg('size', S.size);
+    setSlider('imgSec', 'imgOut', img); setSlider('trSec', 'trOut', tr);
+    $('presets').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.p === key));
+    $('presetNote').innerHTML = P.note + (P.max && !n ? ' <i>Add your photos and the timing will adjust to fit.</i>' : '') + extra;
+    sizeCanvas(); renderStats(); draw(Math.min(S.t, total()));
+  }
+  $('presets').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { if (!S.recording) applyPreset(b.dataset.p); }));
+  function countFor(id) {
+    const el = $(id), c = $(id + 'Cnt'), lim = Number(c.dataset.lim), n = el.value.trim().length;
+    if (!n) { c.textContent = `Best up to ${lim} characters`; c.className = 'cnt'; return; }
+    if (n <= lim) { c.textContent = `${n} / ${lim} ✓ fits on one line`; c.className = 'cnt ok'; }
+    else if (n <= lim * 2) { c.textContent = `${n} / ${lim} · will wrap neatly onto 2 lines`; c.className = 'cnt warn'; }
+    else { c.textContent = `${n} / ${lim} · too long — letters will shrink`; c.className = 'cnt bad'; }
+  }
+  ['headline', 'subline', 'closing'].forEach(id => { countFor(id); $(id).addEventListener('input', () => { countFor(id); draw(S.t); }); });
+
+  // ---------- music: choose part, fades ----------
+  const M = { start: 0, end: 0, dur: 0, fi: 2, fo: 3, fadeIn: true, fadeOut: true, loop: true, on: false };
+  const fmt1 = s => { s = Math.max(0, s); const m = Math.floor(s / 60); return m + ':' + (s - m * 60).toFixed(1).padStart(4, '0'); };
+  function ensureAudio() {
+    if (!music) return;
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        audioSrc = audioCtx.createMediaElementSource(music);
+        audioGain = audioCtx.createGain();
+        audioDest = audioCtx.createMediaStreamDestination();
+        audioSrc.connect(audioGain); audioGain.connect(audioDest); audioGain.connect(audioCtx.destination);
+      }
+      audioCtx.resume();
+    } catch (e) { audioCtx = null; }
+    // unlock playback while we still have the tap (iPhone needs this)
+    if (!music._unlocked) {
+      music._unlocked = true; setGain(0);
+      music.play().then(() => { if (!S.playing && !S.recording && !clipRaf) music.pause(); }).catch(() => { music._unlocked = false; });
+    }
+  }
+  function setGain(g) {
+    g = clamp(g);
+    if (audioGain) audioGain.gain.value = g; else { try { music.volume = g; } catch (e) {} }
+  }
+  const clipLen = () => Math.max(0.5, M.end - M.start);
+  function musicGain(t, T, loop) {
+    const end = loop ? T : Math.min(T, clipLen());
+    if (t >= end) return 0;
+    let g = 1;
+    if (M.fadeIn) g *= clamp(t / M.fi);
+    if (M.fadeOut) g *= clamp((end - t) / M.fo);
+    return g;
+  }
+  // keep the song in step with the video at time t
+  function syncMusic(t, T, loop = M.loop) {
+    if (!music || !M.on) return;
+    const len = clipLen(), end = loop ? T : Math.min(T, len);
+    if (t >= end) { setGain(0); if (!music.paused) music.pause(); return; }
+    const pos = M.start + (loop ? t % len : t);
+    if (music.paused) { try { music.currentTime = pos; } catch (e) {} music.play().catch(() => {}); }
+    else if (Math.abs(music.currentTime - pos) > 0.35) { try { music.currentTime = pos; } catch (e) {} }
+    setGain(musicGain(t, T, loop));
+  }
+  function musicInfo() {
+    if (!M.on) return;
+    $('mStartOut').textContent = fmt1(M.start); $('mEndOut').textContent = fmt1(M.end);
+    const T = total();
+    $('mInfo').textContent = `Clip length ${fmt1(clipLen())}` + (T ? ` · Video length ${fmt(T)}` : '') +
+      (T && clipLen() < T ? (M.loop ? ' · clip will repeat' : ' · music stops early') : '');
+  }
+  $('music').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    if (music) { music.pause(); }
+    if (!music) { music = new Audio(); music.preload = 'auto'; music.loop = false; }
+    music.src = URL.createObjectURL(f);
+    $('musicName').textContent = '🎵 ' + f.name;
+    music.onloadedmetadata = () => {
+      M.dur = music.duration || 0; M.start = 0; M.end = M.dur; M.on = true;
+      ['mStart', 'mEnd'].forEach(id => { $(id).max = M.dur.toFixed(1); });
+      $('mStart').value = 0; $('mEnd').value = M.dur.toFixed(1);
+      $('musicPanel').style.display = 'block'; musicInfo();
+    };
+  });
+  $('mStart').addEventListener('input', e => {
+    M.start = Math.min(Number(e.target.value), M.end - 1); e.target.value = M.start; musicInfo();
+  });
+  $('mEnd').addEventListener('input', e => {
+    M.end = Math.max(Number(e.target.value), M.start + 1); e.target.value = M.end; musicInfo();
+  });
+  $('mFadeIn').onchange = e => { M.fadeIn = e.target.checked; };
+  $('mFadeOut').onchange = e => { M.fadeOut = e.target.checked; };
+  $('mLoop').onchange = e => { M.loop = e.target.checked; musicInfo(); };
+  $('mFi').oninput = e => { M.fi = Number(e.target.value); $('mFiOut').textContent = M.fi + 's'; };
+  $('mFo').oninput = e => { M.fo = Number(e.target.value); $('mFoOut').textContent = M.fo + 's'; };
+  let clipRaf = 0;
+  function stopClip() { cancelAnimationFrame(clipRaf); clipRaf = 0; $('mPlay').textContent = '▶ Hear my clip'; if (music && !S.playing && !S.recording) music.pause(); }
+  $('mPlay').onclick = () => {
+    if (clipRaf) return stopClip();
+    if (S.playing) pause();
+    ensureAudio(); $('mPlay').textContent = '■ Stop';
+    const st = performance.now(), len = clipLen();
+    const loop = now => {
+      const t = (now - st) / 1000;
+      if (t >= len) return stopClip();
+      syncMusic(t, len, false); clipRaf = requestAnimationFrame(loop);
+    };
+    clipRaf = requestAnimationFrame(loop);
+  };
+  $('mRemove').onclick = () => {
+    stopClip(); if (music) { music.pause(); music.removeAttribute('src'); music.load(); }
+    M.on = false; $('musicPanel').style.display = 'none'; $('musicName').textContent = '🎵 Tap to add a song';
+  };
+
+  // ---------- Google Drive picker ----------
+  let mcp = null;
+  setTimeout(() => { if (!window.claude) { $('driveBtn').style.display = 'none'; const sm = document.querySelector('#drop small'); if (sm) sm.innerHTML = '<b>Photos</b>: your camera roll · <b>Files</b>: iCloud, Google Drive, Dropbox, OneDrive, downloads'; } }, 1500);
+  try { window.claude?.use?.('mcp').then(x => { mcp = x; }).catch(() => {}); } catch (e) {}
+  const GD = 'Google Drive';
+  function mcpMsg(e) {
+    const c = e && e.code;
+    if (c === 'needs_reauth') return 'Google Drive needs reconnecting. In claude.ai go to Settings → Connectors and reconnect Google Drive.';
+    if (c === 'server_not_connected' || c === 'selection_required') return 'Google Drive isn\'t connected. In claude.ai go to Settings → Connectors and add Google Drive.';
+    if (c === 'not_in_manifest' || c === 'approval_required') return 'Google Drive access wasn\'t allowed for this app. Tap Google Drive again and choose Allow.';
+    if (c === 'blocked_by_policy') return 'Your account settings block Google Drive here.';
+    if (c === 'server_unavailable') return 'Google Drive is busy right now — try again in a moment.';
+    return 'Google Drive didn\'t answer — please try again.';
+  }
+  function b64ToBlob(b64, type) {
+    b64 = String(b64).replace(/^data:[^,]*,/, '').replace(/\s+/g, '');
+    const bin = atob(b64), u = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    return new Blob([u], { type: type || 'image/jpeg' });
+  }
+  // the download tool's exact reply shape varies, so look for the base64 text
+  function findB64(res) {
+    for (const c of (res && res.content) || []) {
+      if (c.type === 'image' && c.data) return c.data;
+      if (c.type === 'resource' && c.resource && c.resource.blob) return c.resource.blob;
+    }
+    let best = '';
+    const walk = v => {
+      if (typeof v === 'string') { if (v.length > best.length && /^[A-Za-z0-9+/=\s]+$/.test(v.slice(0, 200).replace(/^data:[^,]*,/, ''))) best = v; }
+      else if (v && typeof v === 'object') Object.values(v).forEach(walk);
+    };
+    walk(res && res.payload);
+    return best.length > 100 ? best : '';
+  }
+  let gdItems = [], gdToken = null, gdQuery = '';
+  async function gdSearch(more) {
+    const q = gdQuery.trim().replace(/'/g, "\\'");
+    const query = "mimeType contains 'image/' and trashed = false" + (q ? ` and title contains '${q}'` : '');
+    const input = { query, pageSize: 40, excludeContentSnippets: true, orderBy: 'modifiedTime desc' };
+    if (more && gdToken) input.pageToken = gdToken;
+    const r = await mcp.callTool(GD, 'search_files', input);
+    const p = r.payload || {};
+    gdToken = p.nextPageToken || null;
+    const files = (p.files || []).filter(f => /^image\//.test(f.mimeType || ''));
+    gdItems = more ? gdItems.concat(files) : files;
+  }
+  function gdRender(note) {
+    const list = gdItems.map((f, i) => {
+      const mb = f.fileSize ? (Number(f.fileSize) / 1048576).toFixed(1) + ' MB' : '';
+      const d = (f.modifiedTime || '').slice(0, 10);
+      return `<label class="gi"><input type="checkbox" data-i="${i}"><span>${(f.title || 'image').replace(/</g, '&lt;')}</span><small>${d} ${mb}</small></label>`;
+    }).join('') || '<p>No images found.</p>';
+    openModal(`
+      <h3>🟢 Google Drive</h3>
+      <input type="text" id="gdq" placeholder="Search by name (or leave empty for newest)" value="${gdQuery.replace(/"/g, '&quot;')}">
+      <div class="rowtools"><button class="tiny" id="gdgo">🔍 Search</button><button class="tiny" id="gdall">☑ Select all</button></div>
+      <div class="gl">${list}</div>
+      ${gdToken ? '<button class="tiny" id="gdmore">Show more</button>' : ''}
+      <div class="msg" id="gdmsg">${note || ''}</div>
+      <div class="acts"><button class="b1" id="gdx">Cancel</button><button class="b2" id="gdadd">Add selected</button></div>`);
+    $('gdx').onclick = closeModal;
+    $('gdgo').onclick = () => { gdQuery = $('gdq').value; gdLoad(false); };
+    $('gdall').onclick = () => box.querySelectorAll('.gi input').forEach(c => c.checked = true);
+    if ($('gdmore')) $('gdmore').onclick = () => { gdQuery = $('gdq').value; gdLoad(true); };
+    $('gdadd').onclick = gdAdd;
+  }
+  async function gdLoad(more) {
+    if ($('gdmsg')) { $('gdmsg').className = 'msg'; $('gdmsg').textContent = 'Looking in your Drive…'; }
+    else openModal('<h3>🟢 Google Drive</h3><p>Looking in your Drive…</p>');
+    try { await gdSearch(more); gdRender(); }
+    catch (e) { gdRender(`<span style="color:var(--bad)">${mcpMsg(e)}</span>`); }
+  }
+  async function gdAdd() {
+    const picked = [...box.querySelectorAll('.gi input:checked')].map(c => gdItems[Number(c.dataset.i)]);
+    if (!picked.length) { $('gdmsg').textContent = 'Tick at least one image.'; return; }
+    let ok = 0, bad = 0;
+    for (let i = 0; i < picked.length; i++) {
+      const f = picked[i];
+      openModal(`<h3>Bringing in your images…</h3><p>${i + 1} of ${picked.length}</p><div class="prog"><i style="width:${(i / picked.length * 100).toFixed(0)}%"></i></div>`);
+      try {
+        const r = await mcp.callTool(GD, 'download_file_content', { fileId: f.id });
+        const b64 = findB64(r);
+        if (!b64) throw new Error('no data');
+        const blob = b64ToBlob(b64, f.mimeType);
+        const s = await loadFile(new File([blob], f.title || 'drive-image', { type: f.mimeType }));
+        if (s) { S.slides.push(s); ok++; } else bad++;
+      } catch (e) {
+        bad++;
+        if (e && e.code && e.code !== 'tool_error') { closeModal(); renderList(); renderStats(); draw(S.t); return toast(mcpMsg(e)); }
+      }
+    }
+    renderList(); renderStats(bad); if (S.preset) applyPreset(S.preset); draw(S.t);
+    toast(`Added ${ok} image${ok === 1 ? '' : 's'} from Google Drive${bad ? ` · ${bad} couldn't open (iPhone HEIC files may need Photos instead)` : ''} ✨`);
+  }
+  $('driveBtn').addEventListener('click', e => {
+    e.stopPropagation();
+    if (!mcp) return toast('Google Drive works when this app is opened inside Claude with Google Drive connected (claude.ai → Settings → Connectors). For now, use 📁 Files — Google Drive also shows there if the Drive app is on your phone.');
+    gdLoad(false);
+  });
+
+  // ---------- drawing ----------
+  function drawSlide(i, p, alpha) {
+    const s = S.slides[i]; if (!s) return;
+    const W = cv.width, H = cv.height, iw = s.src.width, ih = s.src.height;
+    const base = Math.max(W / iw, H / ih);
+    // constant speed: movement grows with time on screen (reference = 3s photo + 3.5s fades)
+    const visible = S.imgSec + 2 * S.trSec;
+    const e = easeSine(p), A = Math.min(1.0, S.strength * visible / 10);
+    let z = 1 + A, cx = 0, cy = 0;
+    switch (resolveMotion(i)) {
+      case 'in': z = 1 + A * e; cx = 0.15 * e; cy = -0.1 * e; break;
+      case 'out': z = 1 + A * (1 - e); cx = -0.15 * (1 - e); cy = 0.1 * (1 - e); break;
+      case 'right': cx = 1 - 2 * e; break;
+      case 'left': cx = -1 + 2 * e; break;
+      case 'up': cy = -1 + 2 * e; break;
+      case 'down': cy = 1 - 2 * e; break;
+    }
+    const dw = iw * base * z, dh = ih * base * z;
+    const x = (W - dw) / 2 + cx * (dw - W) / 2;
+    const y = (H - dh) / 2 + cy * (dh - H) / 2;
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(s.src, x, y, dw, dh);
+    ctx.globalAlpha = 1;
+  }
+
+  // split text into at most `max` lines that fit `maxW` (long addresses wrap neatly)
+  function wrap(text, maxW, max) {
+    const words = text.split(/\s+/).filter(Boolean), lines = [];
+    let cur = '';
+    for (const w of words) {
+      const test = cur ? cur + ' ' + w : w;
+      if (ctx.measureText(test).width <= maxW || !cur) cur = test;
+      else { lines.push(cur); cur = w; }
+    }
+    if (cur) lines.push(cur);
+    if (lines.length > max) { const keep = lines.slice(0, max - 1); keep.push(lines.slice(max - 1).join(' ')); return keep; }
+    return lines;
+  }
+  function fitLines(text, weightFamily, size, minSize, maxW, max) {
+    let s = size, lines;
+    for (; s >= minSize; s *= 0.94) {
+      ctx.font = `${weightFamily.replace('{s}', Math.round(s))}`;
+      lines = wrap(text, maxW, max);
+      if (lines.every(l => ctx.measureText(l).width <= maxW)) break;
+    }
+    s = Math.max(s, minSize);
+    ctx.font = weightFamily.replace('{s}', Math.round(s));
+    return { lines: wrap(text, maxW, max), size: s };
+  }
+  function drawText(main, sub, alpha) {
+    if (!main && !sub || alpha <= 0) return;
+    const W = cv.width, H = cv.height, u = Math.min(W, H);
+    const pad = u * 0.07, maxW = W - pad * 2;
+    const g = ctx.createLinearGradient(0, H * 0.5, 0, H);
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,0.62)');
+    ctx.globalAlpha = alpha; ctx.fillStyle = g; ctx.fillRect(0, H * 0.5, W, H * 0.5);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = u * 0.02;
+    let yb = H - pad;
+    if (sub) {
+      const f = fitLines(sub, '500 {s}px Inter, sans-serif', u * 0.038, u * 0.03, maxW, 2);
+      ctx.fillStyle = '#e9dcc4';
+      for (let i = f.lines.length - 1; i >= 0; i--) { ctx.fillText(f.lines[i], pad, yb, maxW); yb -= f.size * 1.35; }
+      yb -= u * 0.012;
+    }
+    if (main) {
+      const f = fitLines(main, '600 {s}px "Playfair Display", serif', u * 0.068, u * 0.05, maxW, 2);
+      ctx.fillStyle = '#ffffff';
+      let top = yb;
+      for (let i = f.lines.length - 1; i >= 0; i--) { ctx.fillText(f.lines[i], pad, yb, maxW); top = yb; yb -= f.size * 1.18; }
+      ctx.fillStyle = '#d4b483';
+      ctx.fillRect(pad, top - f.size - u * 0.035, u * 0.08, Math.max(2, u * 0.005));
+    }
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  }
+
+  function draw(t) {
+    sizeCanvas();
+    const W = cv.width, H = cv.height, n = S.slides.length;
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+    if (!n) return;
+    const st = step(), D = st + S.trSec, T = total(), tr = S.trSec;
+    const k = Math.min(n - 1, Math.floor(t / st)), local = t - k * st;
+    if (k > 0 && local < tr) {
+      drawSlide(k - 1, (t - (k - 1) * st) / D, 1);
+      drawSlide(k, local / D, easeSine(local / tr));
+    } else drawSlide(k, local / D, 1);
+
+    // words
+    const h = $('headline').value.trim(), sl = $('subline').value.trim(), cl = $('closing').value.trim();
+    if (h || sl) {
+      const a = Math.min(clamp((t - 1) / 1.2), clamp((st - 0.5 - t) / 1.2));
+      drawText(h, sl, easeSine(a));
+    }
+    if (cl) {
+      const s0 = T - tr - S.imgSec + 1, e0 = T - 0.3;
+      const a = Math.min(clamp((t - s0) / 1.2), clamp((e0 - t) / 1.5));
+      drawText(cl, '', easeSine(a));
+    }
+    // fade from black at start, to black at end
+    const fin = 1 - clamp(t / 1.2), fout = clamp((t - (T - tr)) / tr);
+    const blk = Math.max(fin, easeSine(fout));
+    if (blk > 0) { ctx.globalAlpha = blk; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
+  }
+
+  // ---------- preview ----------
+  let raf = 0, t0 = 0;
+  function syncSeek() {
+    const T = total();
+    $('seek').value = T ? Math.round(S.t / T * 1000) : 0;
+    $('timeLbl').textContent = `${fmt(S.t)} / ${fmt(T)}`;
+  }
+  function play() {
+    if (!S.slides.length) { toast('Add some photos first'); return; }
+    if (S.t >= total() - 0.05) S.t = 0;
+    S.playing = true; $('playBtn').textContent = '❚❚'; $('previewBtn').textContent = '❚❚ Pause';
+    t0 = performance.now() - S.t * 1000;
+    if (clipRaf) stopClip();
+    if (music && M.on) { ensureAudio(); if (!music.paused) music.pause(); }
+    const loop = now => {
+      S.t = (now - t0) / 1000;
+      if (S.t >= total()) { S.t = total(); draw(S.t); syncSeek(); pause(); return; }
+      draw(S.t); syncSeek(); syncMusic(S.t, total()); raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+  }
+  function pause() {
+    S.playing = false; cancelAnimationFrame(raf);
+    $('playBtn').textContent = '▶'; $('previewBtn').textContent = '▶ Preview';
+    if (music && !S.recording) music.pause();
+  }
+  $('playBtn').onclick = () => S.playing ? pause() : play();
+  $('previewBtn').onclick = () => {
+    if (S.playing) return pause();
+    document.querySelector('.stage').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    play();
+  };
+  $('seek').addEventListener('input', e => { pause(); S.t = total() * e.target.value / 1000; draw(S.t); syncSeek(); });
+
+  // ---------- modal helpers ----------
+  const modal = $('modal'), box = $('box');
+  function openModal(html) { box.innerHTML = html; modal.classList.add('show'); }
+  function closeModal() { modal.classList.remove('show'); }
+  function toast(text) {
+    openModal(`<p style="color:var(--text);font-size:15px">${text}</p><div class="acts"><button class="b1" id="okx">OK</button></div>`);
+    $('okx').onclick = closeModal;
+  }
+  function showConfirm(text, yes) {
+    openModal(`<p style="color:var(--text);font-size:15px">${text}</p><div class="acts"><button class="b1" id="nox">Cancel</button><button class="b2" id="yesx">Yes</button></div>`);
+    $('nox').onclick = closeModal; $('yesx').onclick = () => { closeModal(); yes(); };
+  }
+
+  // ---------- make the video ----------
+  function pickMime() {
+    if (!window.MediaRecorder) return null;
+    const list = [
+      'video/mp4;codecs=avc1.42E01F,mp4a.40.2', 'video/mp4;codecs=avc1', 'video/mp4',
+      'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'
+    ];
+    return list.find(m => { try { return MediaRecorder.isTypeSupported(m); } catch (e) { return false; } }) || '';
+  }
+
+  $('makeBtn').onclick = () => {
+    if (!S.slides.length) return toast('Add your photos first 📷');
+    if (!cv.captureStream || pickMime() === null) return toast('Sorry — this phone\'s browser can\'t record video. Try Chrome on Android or Safari on a recent iPhone.');
+    pause();
+    const T = total();
+    openModal(`
+      <h3>Ready to make your video?</h3>
+      <p><b style="color:var(--text)">${S.slides.length} photos · ${fmt(T)} long</b></p>
+      <p>Your video is recorded live, so it takes the same time as the video — about <b style="color:var(--gold)">${fmt(T)}</b>.</p>
+      <p>📱 Keep this screen open and switched on until it finishes.</p>
+      <div class="acts"><button class="b1" id="nox">Not yet</button><button class="b2" id="go">Start 🎬</button></div>`);
+    $('nox').onclick = closeModal;
+    $('go').onclick = record;
+  };
+
+  async function record() {
+    S.recording = true;
+    if (music && M.on) ensureAudio();
+    try { await document.fonts.ready; } catch (e) {}
+    const T = total(), mime = pickMime();
+    sizeCanvas(); draw(0);
+    const vStream = cv.captureStream(30);
+    const tracks = [...vStream.getVideoTracks()];
+
+    // music
+    if (music && M.on) {
+      try {
+        if (clipRaf) stopClip();
+        ensureAudio();
+        if (audioCtx) await audioCtx.resume();
+        music.pause(); setGain(0);
+        if (audioDest) tracks.push(...audioDest.stream.getAudioTracks());
+      } catch (e) { console.log('music skipped', e); }
+    }
+
+    const stream = new MediaStream(tracks);
+    const bps = bitrate();
+    let rec;
+    try { rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: bps } : { videoBitsPerSecond: bps }); }
+    catch (e) { S.recording = false; return toast('Sorry — recording could not start on this phone.'); }
+    const chunks = [];
+    rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+
+    let wake = null;
+    try { wake = await navigator.wakeLock?.request('screen'); } catch (e) {}
+
+    let cancelled = false;
+    openModal(`
+      <h3>Making your video…</h3>
+      <p>Photo <b id="pn" style="color:var(--text)">1</b> of ${S.slides.length}</p>
+      <div class="prog"><i id="pb"></i></div>
+      <p id="pt">0:00 of ${fmt(T)}</p>
+      <p class="tip">Keep this screen on 🙂 The preview behind is what's being recorded.</p>
+      <div class="acts"><button class="b1" id="cancel">Cancel</button></div>`);
+    $('cancel').onclick = () => { cancelled = true; rec.stop(); };
+
+    const done = new Promise(res => rec.onstop = res);
+    rec.start(1000);
+    const start = performance.now();
+    const tick = now => {
+      if (cancelled) return;
+      const t = (now - start) / 1000;
+      draw(Math.min(t, T)); syncMusic(Math.min(t, T), T);
+      S.t = Math.min(t, T); syncSeek();
+      const pb = $('pb'); if (pb) {
+        pb.style.width = (Math.min(1, t / T) * 100).toFixed(1) + '%';
+        $('pt').textContent = `${fmt(t)} of ${fmt(T)}`;
+        $('pn').textContent = Math.min(S.slides.length, Math.floor(t / step()) + 1);
+      }
+      if (t >= T + 0.4) { rec.stop(); return; }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    await done;
+
+    S.recording = false;
+    if (music) music.pause();
+    try { wake && wake.release(); } catch (e) {}
+    vStream.getTracks().forEach(t => t.stop());
+    if (cancelled) { closeModal(); return; }
+
+    const type = (rec.mimeType || mime || 'video/webm').split(';')[0];
+    const blob = new Blob(chunks, { type });
+    const ext = type.includes('mp4') ? 'mp4' : 'webm';
+    showResult(blob, ext);
+  }
+
+  async function showResult(blob, ext) {
+    const url = URL.createObjectURL(blob);
+    const name = ($('headline').value.trim() || 'listing-video').replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '-').slice(0, 60) + '.' + ext;
+    const mb = (blob.size / 1048576).toFixed(1);
+    openModal(`
+      <h3>Your video is ready ✨</h3>
+      <video src="${url}" controls playsinline></video>
+      <p>${name} · ${mb} MB</p>
+      <div class="acts"><button class="b1" id="closeR">Close</button><button class="b2" id="saveR">⬇ Save video</button></div>
+      <div class="msg" id="saveMsg"></div>
+      ${ext === 'webm' ? '<p class="tip">This phone made a .webm file. It plays on YouTube, Facebook and Android. For Instagram on iPhone you may need a free converter app to .mp4.</p>' : ''}`);
+    $('closeR').onclick = () => { closeModal(); };
+    let dl = null;
+    try { dl = await window.claude?.use?.('downloads'); } catch (e) {}
+    const btn = $('saveR'), msg = $('saveMsg');
+    if (!dl) {
+      // on your own website / normal browser: share sheet on phones, download on computers
+      const file = new File([blob], name, { type: blob.type });
+      const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+      btn.textContent = canShare ? '⬇ Save / Share' : '⬇ Download';
+      btn.onclick = async () => {
+        msg.className = 'msg';
+        if (canShare) {
+          try { await navigator.share({ files: [file], title: name }); msg.className = 'msg ok'; msg.textContent = 'Done! Choose "Save Video" to put it in Photos.'; return; }
+          catch (e) { if (e && e.name === 'AbortError') { msg.textContent = 'Cancelled — tap again any time.'; return; } }
+        }
+        try {
+          const a = document.createElement('a'); a.href = url; a.download = name;
+          document.body.appendChild(a); a.click(); a.remove();
+          msg.className = 'msg ok'; msg.textContent = 'Downloading… check your Downloads folder.';
+        } catch (e) { msg.innerHTML = 'Long-press the video above and choose <b>Save</b>.'; }
+      };
+      return;
+    }
+    btn.onclick = async () => {
+      btn.disabled = true; msg.className = 'msg'; msg.textContent = 'Opening save…';
+      try {
+        await dl.save({ filename: name, data: blob });
+        msg.className = 'msg ok'; msg.textContent = 'Saved! 🎉 Check your Downloads or Photos.';
+      } catch (e) {
+        const c = e && e.code;
+        msg.className = 'msg bad';
+        msg.textContent = c === 'declined' ? 'Save cancelled — tap Save again any time.'
+          : c === 'rate_limited' ? 'One moment, then tap Save again.'
+          : 'Could not save here. Long-press the video above to save it instead.';
+      }
+      btn.disabled = false;
+    };
+  }
+
+  // ---------- start ----------
+  sizeCanvas(); draw(0); renderStats();
+  if (document.fonts) document.fonts.ready.then(() => draw(S.t));
+})();
+</script>
+</body>
+</html>
