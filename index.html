@@ -77,14 +77,21 @@
 
   /* demo (gentle zoom & glide, like the real videos) */
   .demo{position:relative;aspect-ratio:4/5;border-radius:28px;overflow:hidden;box-shadow:var(--shadow);background:var(--a1);max-width:420px;justify-self:center;width:100%}
-  .scene{position:absolute;inset:0;opacity:0;animation:fade 18s infinite}
-  .scene img{width:100%;height:100%;object-fit:cover;display:block;animation:kb 18s infinite ease-in-out}
-  .scene:nth-child(2){animation-delay:6s}.scene:nth-child(2) img{animation-delay:6s;animation-name:kb2}
-  .scene:nth-child(3){animation-delay:12s}.scene:nth-child(3) img{animation-delay:12s;animation-name:kb3}
-  @keyframes fade{0%{opacity:0}6%{opacity:1}33%{opacity:1}40%{opacity:0}100%{opacity:0}}
-  @keyframes kb{0%{transform:scale(1)}40%{transform:scale(1.14) translate(2%,-1%)}100%{transform:scale(1.14)}}
-  @keyframes kb2{0%{transform:scale(1.12) translateX(4%)}40%{transform:scale(1.12) translateX(-4%)}100%{transform:scale(1.12) translateX(-4%)}}
-  @keyframes kb3{0%{transform:scale(1.15)}40%{transform:scale(1.0)}100%{transform:scale(1.0)}}
+  .scene{position:absolute;inset:0;opacity:0;animation:fade 36s infinite}
+  .scene img{width:100%;height:100%;object-fit:cover;display:block;animation:kb1 36s infinite ease-in-out}
+  .scene:nth-child(2){animation-delay:4s}.scene:nth-child(2) img{animation-delay:4s;animation-name:kb2}
+  .scene:nth-child(3){animation-delay:8s}.scene:nth-child(3) img{animation-delay:8s;animation-name:kb3}
+  .scene:nth-child(4){animation-delay:12s}.scene:nth-child(4) img{animation-delay:12s;animation-name:kb1}
+  .scene:nth-child(5){animation-delay:16s}.scene:nth-child(5) img{animation-delay:16s;animation-name:kb2}
+  .scene:nth-child(6){animation-delay:20s}.scene:nth-child(6) img{animation-delay:20s;animation-name:kb3}
+  .scene:nth-child(7){animation-delay:24s}.scene:nth-child(7) img{animation-delay:24s;animation-name:kb1}
+  .scene:nth-child(8){animation-delay:28s}.scene:nth-child(8) img{animation-delay:28s;animation-name:kb2}
+  .scene:nth-child(9){animation-delay:32s}.scene:nth-child(9) img{animation-delay:32s;animation-name:kb3}
+  
+  @keyframes fade{0%{opacity:0}3.33%{opacity:1}11.11%{opacity:1}14.44%{opacity:0}100%{opacity:0}}
+  @keyframes kb1{0%{transform:scale(1)}14.44%{transform:scale(1.12) translate(2%,-1%)}100%{transform:scale(1.12) translate(2%,-1%)}}
+  @keyframes kb2{0%{transform:scale(1.1) translateX(3%)}14.44%{transform:scale(1.1) translateX(-3%)}100%{transform:scale(1.1) translateX(-3%)}}
+  @keyframes kb3{0%{transform:scale(1.13)}14.44%{transform:scale(1.0)}100%{transform:scale(1.0)}}
   .demo .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 22px 20px;background:linear-gradient(180deg,transparent,rgba(20,15,25,.6));color:#fff}
   .demo .cap b{font-family:Fraunces,serif;font-size:22px;display:block}
   .demo .cap small{opacity:.9}
@@ -171,9 +178,15 @@
     </div>
 
     <div class="demo" aria-label="Example of a smooth photo video">
-      <div class="scene"><img src="img/sample-living.jpg" alt="Bright living room with a cream sofa and timber floors" width="896" height="1120" decoding="async"></div>
-      <div class="scene"><img src="img/sample-kitchen.jpg" alt="Light kitchen with a white island bench and brass pendant lights" width="896" height="1120" decoding="async"></div>
       <div class="scene"><img src="img/sample-front.jpg" alt="Front of a modern single-storey family home on a sunny day" width="896" height="1120" decoding="async"></div>
+      <div class="scene"><img src="img/sample-living.jpg" alt="Bright living room with a cream sofa and timber floors" width="896" height="1120" decoding="async"></div>
+      <div class="scene"><img src="img/sample-kitchen.jpg" alt="Light kitchen with a white island bench and brass pendant lights" width="896" height="1120" decoding="async" loading="lazy"></div>
+      <div class="scene"><img src="img/sample-bed-1.jpg" alt="Main bedroom with a king bed and a woven pendant light" width="896" height="1120" decoding="async" loading="lazy"></div>
+      <div class="scene"><img src="img/sample-bed-2.jpg" alt="Second bedroom with a lavender quilt and garden window" width="896" height="1120" decoding="async" loading="lazy"></div>
+      <div class="scene"><img src="img/sample-bed-3.jpg" alt="Third bedroom with plantation shutters and built-in wardrobes" width="896" height="1120" decoding="async" loading="lazy"></div>
+      <div class="scene"><img src="img/sample-bath-1.jpg" alt="Main ensuite with a freestanding bath and double vanity" width="896" height="1120" decoding="async" loading="lazy"></div>
+      <div class="scene"><img src="img/sample-bath-2.jpg" alt="Family bathroom with white subway tiles and sage floor" width="896" height="1120" decoding="async" loading="lazy"></div>
+      <div class="scene"><img src="img/sample-garage.jpg" alt="Double garage with polished concrete floor and storage" width="896" height="1120" decoding="async" loading="lazy"></div>
       <div class="cap"><b>12 Sample Street</b><small>3 bed · 2 bath · 2 car</small></div>
     </div>
   </div>
