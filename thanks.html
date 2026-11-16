@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Thank you — fionah</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%23F3D9D6'/%3E%3Cpath d='M40 30 L72 50 L40 70 Z' fill='%23B9787A'/%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   body{margin:0;min-height:100vh;display:grid;place-items:center;background:#FBF7F2;color:#3A3440;font-family:Inter,system-ui,sans-serif;padding:20px}
   .card{background:#fff;border:1px solid #ECE3DA;border-radius:28px;padding:34px 28px;max-width:520px;box-shadow:0 10px 30px rgba(120,90,90,.10);text-align:center}
@@ -15,10 +16,28 @@
   ol{text-align:left;line-height:1.7;padding-left:22px;margin:18px 0}
   .btn{display:inline-block;margin-top:10px;background:#B9787A;color:#fff;text-decoration:none;font-weight:600;border-radius:999px;padding:14px 22px}
   .big{font-size:46px}
+  .brandbar{background:#000;border-radius:18px;padding:10px 18px;display:inline-flex;margin-bottom:14px}
+  /* fionah logo: chrome lens + calligraphy name */
+  .logo{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
+  .logo img{position:relative;z-index:1;flex:none}
+  .logo .wm{position:relative;z-index:2;display:inline-flex;align-items:baseline;font-family:'Pinyon Script',cursive;font-weight:400;line-height:1.25;white-space:nowrap}
+  .logo .f,.logo .rest{display:inline-block;transform:skewX(16deg)}
+  .logo .f{background:linear-gradient(160deg,#8A6CF0 0%,#5A44C4 45%,#2E2270 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .logo .rest{color:#FFFFFF}
+  .logo.md img{width:40px;height:40px}
+  .logo.md .wm{margin-left:-10px}
+  .logo.md .f{font-size:40px;padding:4px 6px 13px 17px;margin:-4px -2px -13px -12px}
+  .logo.md .rest{font-size:32px;margin-left:-2px}
+  .logo.sm img{width:30px;height:30px}
+  .logo.sm .wm{margin-left:-7px}
+  .logo.sm .f{font-size:30px;padding:3px 4px 10px 13px;margin:-3px -2px -10px -9px}
+  .logo.sm .rest{font-size:24px;margin-left:-1px}
+
 </style>
 </head>
 <body>
   <div class="card">
+    <div class="brandbar"><a class="logo md" href="./" aria-label="fionah home"><img src="logo.svg" alt="" width="40" height="40"><span class="wm" aria-hidden="true"><span class="f">f</span><span class="rest">ionah</span></span></a></div>
     <div class="big">🎉</div>
     <h1>Thank you for your order!</h1>
     <p>Your payment went through. Here's what happens next:</p>

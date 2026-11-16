@@ -12,9 +12,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Motion Studio">
 <meta name="description" content="Turn your images into a smooth, gliding video on your phone.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f1115'/%3E%3Cpath d='M38 30 L72 50 L38 70 Z' fill='%23d4b483'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="../logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0f1115; --card:#181b22; --line:#262a33; --text:#f2efe9; --muted:#9aa0ab;
@@ -26,6 +26,25 @@
   header{padding:22px 18px 8px}
   header h1{font-family:"Playfair Display",serif;font-weight:600;font-size:26px;margin:0;letter-spacing:.2px}
   header h1 span{color:var(--gold)}
+  header .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  header .brand .title{font-family:"Playfair Display",serif;font-weight:600;font-size:22px;color:var(--ink)}
+  header .brand .title span{color:var(--gold)}
+  /* fionah logo: chrome lens + calligraphy name */
+  .logo{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
+  .logo img{position:relative;z-index:1;flex:none}
+  .logo .wm{position:relative;z-index:2;display:inline-flex;align-items:baseline;font-family:'Pinyon Script',cursive;font-weight:400;line-height:1.25;white-space:nowrap}
+  .logo .f,.logo .rest{display:inline-block;transform:skewX(16deg)}
+  .logo .f{background:linear-gradient(160deg,#8A6CF0 0%,#5A44C4 45%,#2E2270 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .logo .rest{color:#FFFFFF}
+  .logo.md img{width:40px;height:40px}
+  .logo.md .wm{margin-left:-10px}
+  .logo.md .f{font-size:40px;padding:4px 6px 13px 17px;margin:-4px -2px -13px -12px}
+  .logo.md .rest{font-size:32px;margin-left:-2px}
+  .logo.sm img{width:30px;height:30px}
+  .logo.sm .wm{margin-left:-7px}
+  .logo.sm .f{font-size:30px;padding:3px 4px 10px 13px;margin:-3px -2px -10px -9px}
+  .logo.sm .rest{font-size:24px;margin-left:-1px}
+
   header p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
   main{padding:8px 14px;max-width:760px;margin:0 auto}
   .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}
@@ -105,7 +124,7 @@
 </head>
 <body>
 <header>
-  <h1><a href="../" style="color:inherit;text-decoration:none">fionah</a> <span>Motion</span> Studio</h1>
+  <h1 class="brand"><a class="logo md" href="../" aria-label="fionah home"><img src="../logo.svg" alt="" width="40" height="40"><span class="wm" aria-hidden="true"><span class="f">f</span><span class="rest">ionah</span></span></a><span class="title"><span>Motion</span> Studio</span></h1>
   <p>Turn your images into a smooth, gliding video — zooms and pans, soft fades. Made for your phone.</p>
 </header>
 

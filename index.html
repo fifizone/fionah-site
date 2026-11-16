@@ -6,9 +6,10 @@
 <title>fionah — smooth photo videos for listings & sellers</title>
 <meta name="description" content="Turn your photos into smooth, gliding videos for real estate, eBay, Facebook Marketplace, Reels and more. Order a done-for-you video or use the free app.">
 <meta name="theme-color" content="#FBF7F2">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%23F3D9D6'/%3E%3Cpath d='M40 30 L72 50 L40 70 Z' fill='%23B9787A'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* ---------- themes (visitors can switch) ---------- */
   :root, [data-theme="pastel"]{
@@ -41,12 +42,27 @@
   .btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
 
   /* nav */
-  nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
-  .logo{font-family:Fraunces,serif;font-size:24px;font-weight:600;text-decoration:none}
-  .logo span{color:var(--accent)}
+  nav{position:sticky;top:0;z-index:20;background:#000000;border-bottom:1px solid #000000}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+
+  /* fionah logo: chrome lens + calligraphy name */
+  .logo{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
+  .logo img{position:relative;z-index:1;flex:none}
+  .logo .wm{position:relative;z-index:2;display:inline-flex;align-items:baseline;font-family:'Pinyon Script',cursive;font-weight:400;line-height:1.25;white-space:nowrap}
+  .logo .f,.logo .rest{display:inline-block;transform:skewX(16deg)}
+  .logo .f{background:linear-gradient(160deg,#8A6CF0 0%,#5A44C4 45%,#2E2270 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .logo .rest{color:#FFFFFF}
+  .logo.md img{width:40px;height:40px}
+  .logo.md .wm{margin-left:-10px}
+  .logo.md .f{font-size:40px;padding:4px 6px 13px 17px;margin:-4px -2px -13px -12px}
+  .logo.md .rest{font-size:32px;margin-left:-2px}
+  .logo.sm img{width:30px;height:30px}
+  .logo.sm .wm{margin-left:-7px}
+  .logo.sm .f{font-size:30px;padding:3px 4px 10px 13px;margin:-3px -2px -10px -9px}
+  .logo.sm .rest{font-size:24px;margin-left:-1px}
   .navlinks{display:flex;gap:6px;align-items:center}
-  .navlinks a.l{padding:8px 10px;text-decoration:none;font-size:14px;color:var(--muted)}
+  .navlinks a.l{padding:8px 10px;text-decoration:none;font-size:14px;color:#CFC9D6}
+  .navlinks a.l:hover{color:#FFFFFF}
   @media (max-width:640px){.navlinks a.l{display:none}}
   .navlinks .btn{padding:9px 16px;font-size:14px}
 
@@ -114,8 +130,9 @@
   details[open] summary::after{content:"–"}
   details p{color:var(--muted);margin-top:10px}
 
-  footer{padding:36px 0 50px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
-  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer{padding:30px 0 70px;background:#000000;font-size:14px;color:#B8B2C2}
+  footer a{color:#E6E1EC}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 
   /* theme switcher */
   .themer{position:fixed;right:16px;bottom:16px;z-index:30;display:flex;gap:6px;background:var(--card);border:1px solid var(--line);padding:6px;border-radius:999px;box-shadow:var(--shadow)}
@@ -130,7 +147,7 @@
 
 <nav>
   <div class="wrap">
-    <a class="logo" href="#top">fionah<span>.</span></a>
+    <a class="logo md" href="#top" aria-label="fionah home"><img src="logo.svg" alt="" width="40" height="40"><span class="wm" aria-hidden="true"><span class="f">f</span><span class="rest">ionah</span></span></a>
     <div class="navlinks">
       <a class="l" href="#how">How it works</a>
       <a class="l" href="#pricing">Pricing</a>
@@ -219,7 +236,7 @@
 
 <footer>
   <div class="wrap">
-    <div><b style="color:var(--ink)">fionah.</b> · Smooth photo videos · Perth, WA</div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><a class="logo sm" href="#top" aria-label="Back to top"><img src="logo.svg" alt="" width="40" height="40"><span class="wm" aria-hidden="true"><span class="f">f</span><span class="rest">ionah</span></span></a><span>Smooth photo videos · Perth, WA</span></div>
     <div id="footContact"></div>
   </div>
 </footer>

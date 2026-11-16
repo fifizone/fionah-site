@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+<defs>
+<linearGradient id="svcx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"></stop><stop offset="0.12" stop-color="#9AA3B2"></stop><stop offset="0.24" stop-color="#F4F6F9"></stop><stop offset="0.36" stop-color="#6B7384"></stop><stop offset="0.48" stop-color="#E6E9EE"></stop><stop offset="0.6" stop-color="#FFFFFF"></stop><stop offset="0.72" stop-color="#8A93A3"></stop><stop offset="0.86" stop-color="#F0F2F5"></stop><stop offset="1" stop-color="#737B8C"></stop></linearGradient>
+<linearGradient id="shcx" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0"></stop><stop offset="0.44" stop-color="#FFFFFF" stop-opacity="0.9"></stop><stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.25"></stop><stop offset="0.6" stop-color="#FFFFFF" stop-opacity="0"></stop></linearGradient>
+<radialGradient id="dpcx" cx="0.5" cy="0.5" r="0.5"><stop offset="0.7" stop-color="#2E3440" stop-opacity="0"></stop><stop offset="1" stop-color="#2E3440" stop-opacity="0.5"></stop></radialGradient>
+<linearGradient id="edcx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"></stop><stop offset="0.5" stop-color="#4A5262"></stop><stop offset="1" stop-color="#E9ECF1"></stop></linearGradient>
+<radialGradient id="pucx" cx="0.42" cy="0.4" r="0.65"><stop offset="0" stop-color="#07060F"></stop><stop offset="0.55" stop-color="#2E2270"></stop><stop offset="1" stop-color="#8A6CF0"></stop></radialGradient>
+<filter id="blcx" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"></feGaussianBlur></filter>
+</defs>
+<circle cx="60" cy="60" r="56" fill="url(#svcx)"></circle>
+<circle cx="60" cy="60" r="56" fill="url(#shcx)" opacity="0.8"></circle>
+<circle cx="60" cy="60" r="56" fill="url(#dpcx)"></circle>
+<circle cx="60" cy="60" r="55" fill="none" stroke="url(#edcx)" stroke-width="1.6"></circle>
+<circle cx="60" cy="60" r="42" fill="none" stroke="#FFFFFF" stroke-width="0.9" opacity="0.75"></circle>
+<circle cx="60" cy="60" r="41" fill="none" stroke="#5B6374" stroke-width="0.7" opacity="0.6"></circle>
+<circle cx="57" cy="60" r="28" fill="url(#pucx)" stroke="url(#edcx)" stroke-width="1.8"></circle>
+<circle cx="57" cy="60" r="19" fill="none" stroke="#FFFFFF" stroke-width="0.8" opacity="0.3"></circle>
+<ellipse cx="49" cy="50" rx="8" ry="4.5" fill="#FFFFFF" opacity="0.85" transform="rotate(-35 49 50)" filter="url(#blcx)"></ellipse>
+<circle cx="65" cy="69" r="2.2" fill="#FFFFFF" opacity="0.8"></circle>
+</svg>
