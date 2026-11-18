@@ -6,148 +6,206 @@
 <title>fionah Motion Studio</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#0f1115">
+<meta name="theme-color" content="#4B33C4">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Motion Studio">
 <meta name="description" content="Turn your images into a smooth, gliding video on your phone.">
 <link rel="icon" type="image/svg+xml" href="../logo.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+<link rel="shortcut icon" href="../favicon.ico">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("fionah-theme")||"pastel"}catch(e){}</script>
 <style>
+  /* =========================================================
+     fionah Motion Studio — minimal design system
+     Font: Arial everywhere, logo included
+     Same 3 themes as fionah.com (Cream / Classic / Night)
+     ========================================================= */
+  :root, [data-theme="pastel"]{
+    --bg:#4B33C4; --card:#FFFFFF; --field:#F7F6FB; --line:#E4E2EC; --text:#111014; --muted:#111014;
+    --gold:#4B33C4; --gold-hover:#3A2699; --soft:#EEEAFB; --on-accent:#FFFFFF; --logo-ink:#111014;
+    --ok:#2F7D4F; --bad:#C2413B; --warn:#A86A12;
+  }
+  [data-theme="classic"]{
+    --bg:#D6DAE0; --card:#FFFFFF; --field:#EEF0F3; --line:#B9BFC9; --text:#0A0A0A; --muted:#0A0A0A;
+    --gold:#4B33C4; --gold-hover:#3A2699; --soft:#EEEAFB; --on-accent:#FFFFFF; --logo-ink:#0A0A0A;
+    --ok:#2F7D4F; --bad:#C2413B; --warn:#A86A12;
+  }
+  [data-theme="night"]{
+    --bg:#0C0C10; --card:#16161D; --field:#101016; --line:#2A2A33; --text:#F4F2EE; --muted:#F4F2EE;
+    --gold:#A996FF; --gold-hover:#BBAEFF; --soft:#1F1B33; --on-accent:#FFFFFF; --logo-ink:#FFFFFF;
+    --ok:#7CC79A; --bad:#E58A8A; --warn:#E2B26B;
+  }
+  :root{--btn:#4B33C4;--btn-ink:#FFFFFF}
+  [data-theme="night"]{--btn:#6A4FE0}
+  /* purple / white: white buttons on the purple page, purple buttons inside white boxes */
+  [data-theme="pastel"]{--btn:#FFFFFF;--btn-ink:#4B33C4}
+  [data-theme="pastel"] .card,[data-theme="pastel"] .box{--btn:#4B33C4;--btn-ink:#FFFFFF}
+  [data-theme="pastel"] header .brand .title,[data-theme="pastel"] header .brand .title span{color:#FFFFFF}
   :root{
-    --bg:#0f1115; --card:#181b22; --line:#262a33; --text:#f2efe9; --muted:#9aa0ab;
-    --gold:#d4b483; --gold2:#b8955c; --ok:#7cc79a; --bad:#e58a8a;
+    --chrome:linear-gradient(135deg,#FFFFFF 0%,#9AA3B2 18%,#F4F6F9 36%,#6B7384 54%,#E6E9EE 72%,#8A93A3 88%,#F0F2F5 100%);
+    --r:4px; --r-lg:6px;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:15px}
-  body{padding-bottom:110px}
-  header{padding:22px 18px 8px}
-  header h1{font-family:"Playfair Display",serif;font-weight:600;font-size:26px;margin:0;letter-spacing:.2px}
-  header h1 span{color:var(--gold)}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;font-size:15px;transition:background .3s,color .3s;-webkit-font-smoothing:antialiased}
+  body{padding-bottom:160px}
+  header{padding:22px 18px 10px;max-width:760px;margin:0 auto}
+  header .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  header h1{font-weight:700;font-size:22px;margin:0;letter-spacing:-.02em}
   header .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  header .brand .title{font-family:"Playfair Display",serif;font-weight:600;font-size:22px;color:var(--ink)}
+  header .brand .title{font-weight:700;font-size:20px;letter-spacing:-.02em;color:var(--text)}
   header .brand .title span{color:var(--gold)}
-  /* fionah logo: chrome lens + calligraphy name */
-  .logo{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
-  .logo img{position:relative;z-index:1;flex:none}
-  .logo .wm{position:relative;z-index:2;display:inline-flex;align-items:baseline;font-family:'Pinyon Script',cursive;font-weight:400;line-height:1.25;white-space:nowrap}
-  .logo .f,.logo .rest{display:inline-block;transform:skewX(16deg)}
-  .logo .f{background:linear-gradient(160deg,#8A6CF0 0%,#5A44C4 45%,#2E2270 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .logo .rest{color:#FFFFFF}
-  .logo.md img{width:40px;height:40px}
-  .logo.md .wm{margin-left:-10px}
-  .logo.md .f{font-size:40px;padding:4px 6px 13px 17px;margin:-4px -2px -13px -12px}
-  .logo.md .rest{font-size:32px;margin-left:-2px}
-  .logo.sm img{width:30px;height:30px}
-  .logo.sm .wm{margin-left:-7px}
-  .logo.sm .f{font-size:30px;padding:3px 4px 10px 13px;margin:-3px -2px -10px -9px}
-  .logo.sm .rest{font-size:24px;margin-left:-1px}
+  /* fionah logo: chrome lens + bold Arial name (purple "f") */
+  .logo{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
+  .logo img{flex:none}
+  .logo .wm{display:inline-flex;align-items:baseline;font-family:Arial,Helvetica,sans-serif;font-weight:700;letter-spacing:-.04em;line-height:1;white-space:nowrap}
+  .logo .f{background:linear-gradient(160deg,#8A6CF0 0%,#5A44C4 45%,#2E2270 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em}
+  .logo .rest{color:var(--logo-ink,#111014)}
+  .logo.md img{width:42px;height:42px}
+  .logo.md .wm{font-size:28px}
+  .logo.sm img{width:32px;height:32px}
+  .logo.sm .wm{font-size:22px}
+  [data-theme="night"] .logo .f{background-image:linear-gradient(160deg,#C9BCFF 0%,#8A6CF0 100%)}
 
-  header p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
-  main{padding:8px 14px;max-width:760px;margin:0 auto}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}
-  .card h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);margin:0 0 4px;font-weight:600}
-  .card .hint{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.45}
-  .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-        border:1.5px dashed #3a3f4b;border-radius:14px;padding:26px 12px;text-align:center;cursor:pointer}
-  .drop b{font-size:16px}
-  .drop small{color:var(--muted)}
-  .drop.hot{border-color:var(--gold);background:#1f1c17}
+  /* theme switcher (same as fionah.com) */
+  .themer{display:flex;gap:5px;background:#FFFFFF;border:1px solid #2A2A33;padding:5px;border-radius:var(--r-lg);flex:none}
+  .themer button{width:24px;height:24px;border-radius:var(--r);border:2px solid transparent;cursor:pointer;padding:0}
+  .themer button.on{border-color:#111014}
+  .themer .t1{background:linear-gradient(135deg,#4B33C4 50%,#FFFFFF 50%);box-shadow:inset 0 0 0 1px #E4E2EC}
+  .themer .t2{background:linear-gradient(135deg,#FFFFFF 0%,#9AA3B2 18%,#F4F6F9 32%,#6B7384 46%,#E6E9EE 50%,#4B33C4 50%)}
+  .themer .t3{background:linear-gradient(135deg,#0C0C10 50%,#6A4FE0 50%)}
+
+  header p{margin:10px 0 0;color:var(--muted);font-size:14px;line-height:1.5}
+  main{padding:4px 14px;max-width:760px;margin:0 auto}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 16px;margin:14px 0}
+  .card h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;font-weight:700}
+  .card .hint{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.5}
+  .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+        border:1.5px dashed var(--line);border-radius:var(--r-lg);padding:24px 12px;text-align:center;cursor:pointer;background:var(--field)}
+  .drop b{font-size:15px}
+  .drop small{color:var(--muted);line-height:1.5}
+  .drop.hot{border-color:var(--gold);background:var(--soft)}
   .pick{display:flex;gap:8px;width:100%;margin:6px 0}
   .gl{max-height:52vh;overflow:auto;text-align:left;margin:10px 0;display:flex;flex-direction:column;gap:6px}
-  .gi{display:flex;align-items:center;gap:10px;background:#11141a;border:1px solid var(--line);border-radius:11px;padding:10px;font-size:13.5px}
+  .gi{display:flex;align-items:center;gap:10px;background:var(--field);border:1px solid var(--line);border-radius:var(--r);padding:10px;font-size:13.5px}
   .gi input{width:20px;height:20px;accent-color:var(--gold);flex:none}
   .gi span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .gi small{color:var(--muted);flex:none}
   .mrow{display:flex;align-items:center;gap:10px;margin:8px 0}
   .mrow label{flex:1;font-size:13.5px;color:var(--text);display:flex;align-items:center;gap:8px}
   .mrow input[type=checkbox]{width:20px;height:20px;accent-color:var(--gold)}
-  .pickbtn{flex:1;background:#231f18;border:1px solid var(--gold);color:var(--gold);border-radius:12px;padding:13px 6px;font:inherit;font-weight:600;font-size:14px}
+  .pickbtn{flex:1;background:var(--btn);border:none;color:var(--btn-ink);border-radius:var(--r);padding:13px 6px;font:inherit;font-size:14px;box-shadow:4px 4px 0 #A9B0BC}
+  .pickbtn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #A9B0BC}
   input[type=file]{display:none}
   .stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-  .pill{background:#11141a;border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:13px;color:var(--muted)}
-  .pill b{color:var(--text);font-weight:600}
+  .pill{background:var(--field);border:1px solid var(--line);border-radius:var(--r);padding:6px 10px;font-size:13px;color:var(--muted)}
+  .pill b{color:var(--text);font-weight:700}
   .list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-  .row{display:flex;align-items:center;gap:7px;background:#11141a;border:1px solid var(--line);border-radius:14px;padding:8px}
-  .row img{width:56px;height:42px;object-fit:cover;border-radius:9px;flex:none}
+  .row{display:flex;align-items:center;gap:7px;background:var(--field);border:1px solid var(--line);border-radius:var(--r-lg);padding:8px}
+  .row img{width:56px;height:42px;object-fit:cover;border-radius:var(--r);flex:none}
   .row .num{width:22px;text-align:center;color:var(--muted);font-size:12px;flex:none}
   .row select{flex:1;min-width:0;padding:8px 6px;font-size:13px}
   .row .btns{display:flex;gap:4px;flex:none}
-  .ib{width:30px;height:32px;border-radius:10px;border:1px solid var(--line);background:#1b1f27;color:var(--text);font-size:15px;display:grid;place-items:center;padding:0}
-  .ib:active{background:#262b35}
-  select,input[type=text]{width:100%;background:#11141a;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font:inherit;font-size:14px}
-  label.f{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+  .ib{width:30px;height:32px;border-radius:var(--r);border:none;background:var(--btn);color:#fff;font-size:15px;display:grid;place-items:center;padding:0}
+  .ib:active{opacity:.8}
+  select,input[type=text]{width:100%;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:var(--r);padding:10px;font:inherit;font-size:14px}
+  select:focus,input[type=text]:focus{outline:2px solid var(--gold);outline-offset:-1px}
+  label.f{display:block;font-size:13px;font-weight:700;color:var(--text);margin:16px 0 8px}
+  label.f small{font-weight:400;color:var(--muted)}
   .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
   .seg.three{grid-template-columns:repeat(3,1fr)}
   .seg.two{grid-template-columns:repeat(2,1fr)}
-  .seg button{background:#11141a;border:1px solid var(--line);color:var(--text);border-radius:11px;padding:10px 4px;font:inherit;font-size:13px}
-  .seg button.on{border-color:var(--gold);background:#231f18;color:var(--gold)}
+  .seg button{background:var(--card);border:1.5px solid var(--btn);color:var(--text);border-radius:var(--r);padding:10px 4px;font:inherit;font-size:13px;line-height:1.35}
+  .seg button small{color:var(--muted);font-size:11px}
+  .seg button.on{border:1.5px solid var(--btn);background:var(--btn);color:#fff}
+  .seg button.on small{color:#FFFFFF}
   .slider{display:flex;align-items:center;gap:10px}
   .slider input{flex:1;accent-color:var(--gold)}
-  .slider output{width:48px;text-align:right;font-variant-numeric:tabular-nums}
-  .stage{position:relative;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--line)}
+  .slider output{width:48px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  .stage{position:relative;border-radius:var(--r-lg);overflow:hidden;background:#000;border:1px solid var(--line)}
   canvas{display:block;width:100%;height:auto;background:#000}
-  .stage .empty{position:absolute;inset:0;display:grid;place-items:center;color:#555;font-size:14px}
+  .stage .empty{position:absolute;inset:0;display:grid;place-items:center;color:#FFFFFF;font-size:14px}
   .scrub{display:flex;align-items:center;gap:10px;margin-top:10px}
   .scrub input{flex:1;accent-color:var(--gold)}
   .scrub span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:84px;text-align:right}
-  .bar{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
-       background:linear-gradient(180deg,rgba(15,17,21,0),#0f1115 30%);display:flex;gap:10px;justify-content:center}
-  .bar button{flex:1;max-width:360px;border:none;border-radius:16px;padding:16px 10px;font:inherit;font-weight:600;font-size:16px}
-  .b1{background:#232833;color:var(--text)}
-  .b2{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1408}
+
+  /* bottom bar + buttons: sharp, deep purple, chrome-silver shadow */
+  .bar{position:fixed;left:0;right:0;bottom:0;padding:14px 14px calc(10px + env(safe-area-inset-bottom));
+       background:linear-gradient(180deg,transparent,var(--bg) 22%);display:flex;flex-direction:column;align-items:center;gap:8px}
+  .barrow{display:flex;gap:12px;justify-content:center;width:100%;max-width:732px}
+  .bar button{flex:1;max-width:360px;padding:16px 10px;font-size:16px}
+  .closeapp{display:block;width:100%;max-width:727px;margin-right:5px;text-align:center;padding:11px;font-size:14px;font-weight:700;color:var(--btn-ink);text-decoration:none;border-radius:var(--r);background:var(--btn);border:none;box-shadow:4px 4px 0 #A9B0BC}
+  .closeapp:active{color:var(--text);background:var(--soft)}
+  .b1,.b2{position:relative;z-index:0;border:none;border-radius:var(--r);font:inherit;font-weight:700;cursor:pointer}
+  .b1,.b2{background:transparent;color:var(--btn-ink);margin:0 5px 5px 0}
+  .b1::after,.b2::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--btn);z-index:-1}
+  .b1::before,.b2::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--chrome);transform:translate(5px,5px);z-index:-2;transition:transform .15s}
+  .b1:active,.b2:active{transform:translate(3px,3px)}
+  .b1:active::before,.b2:active::before{transform:translate(2px,2px)}
   button:disabled{opacity:.45}
-  .modal{position:fixed;inset:0;background:rgba(5,6,8,.86);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
+  .modal{position:fixed;inset:0;background:rgba(10,10,14,.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
   .modal.show{display:flex}
-  .box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;width:100%;max-width:520px;text-align:center}
-  .box h3{font-family:"Playfair Display",serif;font-size:22px;margin:0 0 6px}
-  .box p{color:var(--muted);font-size:14px;line-height:1.5;margin:6px 0}
-  .prog{height:10px;background:#11141a;border-radius:99px;overflow:hidden;margin:16px 0 8px;border:1px solid var(--line)}
-  .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold))}
-  .box video{width:100%;border-radius:12px;margin:12px 0;background:#000}
-  .box .acts{display:flex;gap:8px;margin-top:10px}
-  .box .acts button{flex:1;border:none;border-radius:13px;padding:13px;font:inherit;font-weight:600}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;width:100%;max-width:520px;text-align:center}
+  .box h3{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0 0 8px}
+  .box p{color:var(--muted);font-size:14px;line-height:1.55;margin:6px 0}
+  .prog{height:8px;background:var(--field);border-radius:var(--r);overflow:hidden;margin:16px 0 8px;border:1px solid var(--line)}
+  .prog i{display:block;height:100%;width:0;background:var(--gold)}
+  .box video{width:100%;border-radius:var(--r);margin:12px 0;background:#000}
+  .box .acts{display:flex;gap:10px;margin-top:12px}
+  .box .acts button{flex:1;padding:13px}
   .presets{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-  .presets button{background:#11141a;border:1px solid var(--line);color:var(--text);border-radius:11px;padding:10px 6px;font:inherit;font-size:13px;line-height:1.3}
+  .presets button{background:var(--card);border:1.5px solid var(--btn);color:var(--text);border-radius:var(--r);padding:10px 6px;font:inherit;font-size:13px;line-height:1.35}
   .presets button small{color:var(--muted);font-size:11px}
-  .presets button.on{border-color:var(--gold);background:#231f18;color:var(--gold)}
+  .presets.one{grid-template-columns:1fr}
+  .box .acts.stack{flex-direction:column;margin-top:0}
+  .box .acts.stack button{padding:15px}
+  .presets button.on{border:1.5px solid var(--btn);background:var(--btn);color:#fff}
   .cnt{font-size:12px;color:var(--muted);text-align:right;margin-top:4px;min-height:15px}
-  .cnt.ok{color:var(--gold)} .cnt.warn{color:#e2b26b} .cnt.bad{color:var(--bad)}
+  .cnt.ok{color:var(--ok)} .cnt.warn{color:var(--warn)} .cnt.bad{color:var(--bad)}
   .msg{font-size:13px;margin-top:8px;min-height:18px}
   .msg.ok{color:var(--ok)} .msg.bad{color:var(--bad)}
-  .tip{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:10px}
-  .tiny{background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:7px 10px;font:inherit;font-size:12.5px}
+  .tip{font-size:12.5px;color:var(--muted);line-height:1.55;margin-top:10px}
+  .tiny{background:var(--btn);border:none;color:var(--btn-ink);border-radius:var(--r);padding:8px 10px;font:inherit;font-size:12.5px}
   .rowtools{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  /* one text size and one darkness everywhere, except headings */
+  body *:not(h1):not(h2):not(h3):not(h1 *):not(h2 *):not(h3 *){font-size:16px !important}
+  .seg button,.presets button{line-height:1.3}
+  .scrub span{min-width:96px}
+  [data-theme="classic"] body{background:linear-gradient(160deg,#F4F6F9 0%,#C3C8D0 22%,#EEF0F3 42%,#AEB4BE 62%,#E6E9EE 82%,#BFC5CE 100%) fixed}
+  /* every word bold */
+  body, body *{font-weight:700 !important}
 </style>
 </head>
 <body>
 <header>
-  <h1 class="brand"><a class="logo md" href="../" aria-label="fionah home"><img src="../logo.svg" alt="" width="40" height="40"><span class="wm" aria-hidden="true"><span class="f">f</span><span class="rest">ionah</span></span></a><span class="title"><span>Motion</span> Studio</span></h1>
-  <p>Turn your images into a smooth, gliding video — zooms and pans, soft fades. Made for your phone.</p>
+  <div class="top">
+    <h1 class="brand"><a class="logo md" href="../" aria-label="fionah home"><img src="../logo.svg" alt="fionah" width="40" height="40"></a><span class="title"><span>Motion</span> Studio</span></h1>
+    <div class="themer" role="group" aria-label="Colour theme">
+      <button class="t1" data-t="pastel" title="White" aria-label="White theme"></button>
+      <button class="t2" data-t="classic" title="Chrome" aria-label="Chrome theme"></button>
+      <button class="t3" data-t="night" title="Night" aria-label="Night theme"></button>
+    </div>
+  </div>
 </header>
 
 <main>
   <!-- 1. Photos -->
   <section class="card">
     <h2>1 · Add your photos</h2>
-    <p class="hint">Add as many as you like. Put your favourite shot first — it opens the video.</p>
     <div class="drop" id="drop">
       <b>Tap to choose images</b>
       <div class="pick">
-        <button type="button" class="pickbtn" data-for="files">📷 Photos</button>
-        <button type="button" class="pickbtn" data-for="files2">📁 Files</button>
-        <button type="button" class="pickbtn" id="driveBtn">🟢 Google Drive</button>
+        <button type="button" class="pickbtn" data-for="files">Photos</button>
+        <button type="button" class="pickbtn" data-for="files2">Files</button>
       </div>
-      <small><b>Photos</b>: your camera roll · <b>Files</b>: iCloud, Dropbox, OneDrive, downloads · <b>Google Drive</b>: picks straight from your Drive</small>
       <input type="file" id="files" accept="image/*" multiple>
       <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
     </div>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
-      <button class="tiny" id="autoAll">✨ Reset all to Auto motion</button>
-      <button class="tiny" id="clearAll">🗑 Remove all</button>
+      <button class="tiny" id="autoAll">Reset all to Auto motion</button>
+      <button class="tiny" id="clearAll">Remove all</button>
     </div>
     <div class="list" id="list"></div>
   </section>
@@ -155,17 +213,11 @@
   <!-- 2. Style -->
   <section class="card">
     <h2>2 · Video style</h2>
-    <label class="f" style="margin-top:8px">Made for… <small>(one tap sets everything)</small></label>
-    <div class="presets" id="presets">
-      <button data-p="ebay">🛒 eBay<br><small>under 1 min</small></button>
-      <button data-p="reels">📱 Reels / TikTok<br><small>tall</small></button>
-      <button data-p="fb">🏷️ Facebook<br><small>Marketplace</small></button>
-      <button data-p="youtube">▶️ YouTube link<br><small>Trade Me · Gumtree · Domain</small></button>
-      <button data-p="rea">🏠 realestate.com.au<br><small>walkthrough reel</small></button>
-      <button data-p="amazon">📦 Amazon<br><small>product video</small></button>
+    <div class="presets one" id="presets" style="margin-top:10px">
+      <button data-p="rea">Real Estate Listing</button>
     </div>
-    <p class="tip" id="presetNote" style="margin-top:8px"></p>
-    <label class="f">Shape (where will you post it?)</label>
+    <p class="tip" id="presetNote" style="display:none"></p>
+    <label class="f">Screen Size</label>
     <div class="seg" id="shape">
       <button data-v="16:9" class="on">Wide<br><small>16:9</small></button>
       <button data-v="9:16">Reels<br><small>9:16</small></button>
@@ -179,41 +231,35 @@
       <button data-v="balanced" class="on">Balanced<br><small>1080 · best pick</small></button>
       <button data-v="best">Best<br><small>1080 · biggest</small></button>
     </div>
-    <p class="tip" style="margin-top:6px">Slow glides squash down really well, so Small and Balanced still keep rich, true colour.</p>
 
-    <label class="f">Time on each photo</label>
+    <label class="f">Edit: Photo Timer</label>
     <div class="slider"><input type="range" id="imgSec" min="3" max="15" step="0.5" value="5"><output id="imgOut">5s</output></div>
 
-    <label class="f">Fade between photos</label>
+    <label class="f">Edit: Fade in/out</label>
     <div class="slider"><input type="range" id="trSec" min="0.5" max="6" step="0.5" value="5"><output id="trOut">5s</output></div>
 
-    <label class="f">Movement speed</label>
-    <div class="seg three" id="strength">
-      <button data-v="0.15">Whisper</button>
-      <button data-v="0.26" class="on">Buttery</button>
-      <button data-v="0.52">Bold</button>
-    </div>
-    <p class="tip" style="margin-top:8px">💡 <b>Speed stays the same</b> whatever time you pick. Give a photo more seconds and the camera simply travels further — like a car at the same speed driving for longer.</p>
+    <label class="f">Edit: Speed <small>(0 = still · 8 = fastest)</small></label>
+    <div class="slider"><input type="range" id="speed" min="0" max="8" step="1" value="4"><output id="speedOut">4</output></div>
   </section>
 
   <!-- 3. Words & music -->
   <section class="card">
     <h2>3 · Words & music <small style="color:var(--muted);text-transform:none;letter-spacing:0">(optional)</small></h2>
-    <label class="f">Opening words (shown on the first photo)</label>
-    <input type="text" id="headline" placeholder="e.g. 12 Ocean View Road, Scarborough" maxlength="80">
+    <label class="f">Intro</label>
+    <input type="text" id="headline" placeholder="e.g. 12 Sample Street, 1234" maxlength="80">
     <div class="cnt" id="headlineCnt" data-lim="25"></div>
-    <label class="f">Small line under it</label>
-    <input type="text" id="subline" placeholder="e.g. 4 bed · 2 bath · 2 car" maxlength="80">
+    <label class="f">Details</label>
+    <input type="text" id="subline" placeholder="e.g. 3 bed, 2 bath, 2 car" maxlength="80">
     <div class="cnt" id="sublineCnt" data-lim="40"></div>
-    <label class="f">Closing words (shown on the last photo)</label>
-    <input type="text" id="closing" placeholder="e.g. Book your viewing today" maxlength="80">
+    <label class="f">Thank you</label>
+    <input type="text" id="closing" placeholder="e.g. Thank you for watching" maxlength="80">
     <div class="cnt" id="closingCnt" data-lim="25"></div>
-    <label class="f">Background music</label>
-    <div class="drop" id="musicDrop" style="padding:14px">
-      <b id="musicName">🎵 Tap to add a song</b>
-      <small>MP3 · M4A · WAV · AAC you're allowed to use · fades out at the end</small>
+    <div class="drop" id="musicDrop" style="padding:14px;margin-top:16px">
+      <b id="musicName">Tap to add Music</b>
       <input type="file" id="music" accept="audio/*,.mp3,.m4a,.wav,.aac,.ogg">
     </div>
+    <label class="f">Volume <small>(0 = no sound · 10 = loudest)</small></label>
+    <div class="slider"><input type="range" id="mVol" min="0" max="10" step="1" value="10"><output id="mVolOut">10</output></div>
     <div id="musicPanel" style="display:none;margin-top:12px">
       <label class="f">Start the song at</label>
       <div class="slider"><input type="range" id="mStart" min="0" max="10" step="0.1" value="0"><output id="mStartOut">0:00</output></div>
@@ -232,22 +278,8 @@
     </div>
   </section>
 
-  <!-- Tips -->
-  <section class="card">
-    <h2>💡 Tips for the best results</h2>
-    <ul class="tip" style="padding-left:18px;margin:8px 0 0">
-      <li>Your phone opens its own picker for photos and music. If it asks, tap <b>Allow Full Access</b> so you can pick lots at once.</li>
-      <li>Songs from Apple Music or Spotify are locked and can't be used. Use a song saved on your phone, in Files or in Drive.</li>
-      <li><b>Bold</b> looks best at 3–6 seconds per photo. Longer times zoom in a lot and photos can look soft.</li>
-      <li>While making the video, keep this screen open and switched on until it finishes.</li>
-      <li>Bright daylight photos with tidy rooms look best.</li>
-    </ul>
-  </section>
-
   <!-- 4. Preview -->
   <section class="card">
-    <h2>4 · Preview</h2>
-    <p class="hint">Watch it here first. Drag the bar to jump around.</p>
     <div class="stage">
       <canvas id="cv"></canvas>
       <div class="empty" id="empty">Add photos to see your video</div>
@@ -258,11 +290,15 @@
       <span id="timeLbl">0:00 / 0:00</span>
     </div>
   </section>
+
 </main>
 
 <div class="bar">
-  <button class="b1" id="previewBtn">▶ Preview</button>
-  <button class="b2" id="makeBtn">🎬 Make video</button>
+  <div class="barrow">
+    <button class="b1" id="previewBtn">▶ Preview</button>
+    <button class="b2" id="makeBtn">Make video</button>
+  </div>
+  <a class="closeapp" href="../">Close App</a>
 </div>
 
 <div class="modal" id="modal">
@@ -346,20 +382,23 @@
   function seen(k) { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } }
   function mark(k) { try { localStorage.setItem(k, '1'); } catch (e) {} }
   function askAccess(kind, input) {
-    const key = 'lms-ok-' + kind;
+    const key = 'fionah-ok-' + kind;
     if (seen(key)) return input.click();
-    const photo = kind === 'photos';
+    if (kind !== 'music') {
+      openModal(`
+      <div class="acts stack"><button class="b2" id="yesx">${kind === 'photos' ? 'Access Your Photos' : 'Access Your Files'}</button><button class="b1" id="nox">Back</button></div>`);
+      $('nox').onclick = closeModal;
+      $('yesx').onclick = () => { mark(key); closeModal(); input.click(); };
+      return;
+    }
     openModal(`
-      <h3>${photo ? '📷 Allow access to your photos?' : '🎵 Allow access to your music?'}</h3>
-      <p>${photo
-        ? 'Your phone will open your Photo Library. If it asks, tap <b style="color:var(--text)">Allow</b> or <b style="color:var(--text)">Allow Full Access</b> so you can pick lots of photos at once.'
-        : 'Your phone will open your music files. Pick a song saved on your phone or in Files.<br><br>Songs from Apple Music or Spotify are locked by those apps and can\'t be used.'}</p>
-      <p class="tip">Your ${photo ? 'photos' : 'music'} stay on your phone — nothing is uploaded anywhere.</p>
-      <div class="acts"><button class="b1" id="nox">Not now</button><button class="b2" id="yesx">Allow</button></div>`);
+      <h3>Allow Access to Your Selected Music</h3>
+      <p><b style="color:var(--text)">Note:</b> You must use music or sounds you certifiably own. Spotify and Apple Music cannot be used.</p>
+      <div class="acts"><button class="b1" id="nox">Back</button><button class="b2" id="yesx">Allow</button></div>`);
     $('nox').onclick = closeModal;
     $('yesx').onclick = () => { mark(key); closeModal(); input.click(); };
   }
-  document.querySelectorAll('.pickbtn[data-for]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); askAccess('photos', $(b.dataset.for)); }));
+  document.querySelectorAll('.pickbtn[data-for]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); askAccess(b.dataset.for === 'files' ? 'photos' : 'files', $(b.dataset.for)); }));
   $('musicDrop').addEventListener('click', e => { if (e.target.id !== 'music') askAccess('music', $('music')); });
   const drop = $('drop');
   ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('hot'); }));
@@ -418,7 +457,9 @@
       sizeCanvas(); renderStats(); draw(S.t);
     }));
   }
-  seg('shape', 'shape'); seg('size', 'size'); seg('strength', 'strength', true);
+  seg('shape', 'shape'); seg('size', 'size');
+  // speed: 0 = no movement … 8 = fastest (4 = the old 'Buttery')
+  $('speed').addEventListener('input', e => { if (S.recording) return; const v = Number(e.target.value); S.strength = v * 0.065; $('speedOut').textContent = v; draw(S.t); });
   $('size').addEventListener('click', () => { S.quality = S.size === 'small' ? 720 : 1080; sizeCanvas(); renderStats(); draw(S.t); });
   function slider(id, out, key) {
     $(id).addEventListener('input', e => { clearPreset(); S[key] = Number(e.target.value); $(out).textContent = S[key] + 's'; renderStats(); draw(Math.min(S.t, total())); });
@@ -427,18 +468,7 @@
 
   // ---------- "Made for" presets ----------
   const PRESETS = {
-    ebay:    { shape: '1:1',  size: 'balanced', img: 3.5, tr: 1.5, max: 58,
-               note: '🛒 <b>eBay</b>: square, kept under 1 minute (eBay\'s limit), MP4. Upload it in the listing\'s <b>Photos & Video</b> section on a computer. Fewer photos = slower, calmer glides.' },
-    reels:   { shape: '9:16', size: 'balanced', img: 4, tr: 1.5,
-               note: '📱 <b>Reels / TikTok</b>: tall full-screen video. Post it straight from your phone.' },
-    fb:      { shape: '4:5',  size: 'balanced', img: 4, tr: 1.5, max: 58,
-               note: '🏷️ <b>Facebook Marketplace</b>: 4:5 shape fills the feed nicely, kept under 1 minute. Add it with your photos when you list.' },
-    youtube: { shape: '16:9', size: 'best', img: 5, tr: 2,
-               note: '▶️ <b>YouTube link</b>: wide, best quality. Upload to YouTube (set it to <b>Unlisted</b>), copy the link, then paste it into Trade Me, Gumtree or Domain.' },
-    rea:     { shape: '9:16', size: 'balanced', img: 5, tr: 2,
-               note: '🏠 <b>realestate.com.au</b>: tall walkthrough reel. Agents upload it through Ignite — private sellers, send it to your agent or listing service.' },
-    amazon:  { shape: '16:9', size: 'balanced', img: 4, tr: 1.5,
-               note: '📦 <b>Amazon</b>: wide product video. Uploading usually needs a brand-registered seller account.' }
+    rea:     { shape: '9:16', size: 'balanced', img: 5, tr: 2, note: '' }
   };
   function setSeg(id, v) { $(id).querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === String(v))); }
   function setSlider(id, out, v) { $(id).value = v; $(out).textContent = v + 's'; }
@@ -476,7 +506,9 @@
   ['headline', 'subline', 'closing'].forEach(id => { countFor(id); $(id).addEventListener('input', () => { countFor(id); draw(S.t); }); });
 
   // ---------- music: choose part, fades ----------
-  const M = { start: 0, end: 0, dur: 0, fi: 2, fo: 3, fadeIn: true, fadeOut: true, loop: true, on: false };
+  const M = { start: 0, end: 0, dur: 0, fi: 2, fo: 3, fadeIn: true, fadeOut: true, loop: true, on: false, vol: 10 };
+  // volume line: 0 = silent … 10 = 60% of the phone's volume
+  $('mVol').addEventListener('input', e => { M.vol = Number(e.target.value); $('mVolOut').textContent = M.vol; });
   const fmt1 = s => { s = Math.max(0, s); const m = Math.floor(s / 60); return m + ':' + (s - m * 60).toFixed(1).padStart(4, '0'); };
   function ensureAudio() {
     if (!music) return;
@@ -497,7 +529,7 @@
     }
   }
   function setGain(g) {
-    g = clamp(g);
+    g = clamp(g) * (M.vol / 10) * 0.6;
     if (audioGain) audioGain.gain.value = g; else { try { music.volume = g; } catch (e) {} }
   }
   const clipLen = () => Math.max(0.5, M.end - M.start);
@@ -531,7 +563,7 @@
     if (music) { music.pause(); }
     if (!music) { music = new Audio(); music.preload = 'auto'; music.loop = false; }
     music.src = URL.createObjectURL(f);
-    $('musicName').textContent = '🎵 ' + f.name;
+    $('musicName').textContent = f.name;
     music.onloadedmetadata = () => {
       M.dur = music.duration || 0; M.start = 0; M.end = M.dur; M.on = true;
       ['mStart', 'mEnd'].forEach(id => { $(id).max = M.dur.toFixed(1); });
@@ -566,12 +598,11 @@
   };
   $('mRemove').onclick = () => {
     stopClip(); if (music) { music.pause(); music.removeAttribute('src'); music.load(); }
-    M.on = false; $('musicPanel').style.display = 'none'; $('musicName').textContent = '🎵 Tap to add a song';
+    M.on = false; $('musicPanel').style.display = 'none'; $('musicName').textContent = 'Tap to add Music';
   };
 
   // ---------- Google Drive picker ----------
   let mcp = null;
-  setTimeout(() => { if (!window.claude) { $('driveBtn').style.display = 'none'; const sm = document.querySelector('#drop small'); if (sm) sm.innerHTML = '<b>Photos</b>: your camera roll · <b>Files</b>: iCloud, Google Drive, Dropbox, OneDrive, downloads'; } }, 1500);
   try { window.claude?.use?.('mcp').then(x => { mcp = x; }).catch(() => {}); } catch (e) {}
   const GD = 'Google Drive';
   function mcpMsg(e) {
@@ -622,7 +653,7 @@
       return `<label class="gi"><input type="checkbox" data-i="${i}"><span>${(f.title || 'image').replace(/</g, '&lt;')}</span><small>${d} ${mb}</small></label>`;
     }).join('') || '<p>No images found.</p>';
     openModal(`
-      <h3>🟢 Google Drive</h3>
+      <h3>Google Drive</h3>
       <input type="text" id="gdq" placeholder="Search by name (or leave empty for newest)" value="${gdQuery.replace(/"/g, '&quot;')}">
       <div class="rowtools"><button class="tiny" id="gdgo">🔍 Search</button><button class="tiny" id="gdall">☑ Select all</button></div>
       <div class="gl">${list}</div>
@@ -637,7 +668,7 @@
   }
   async function gdLoad(more) {
     if ($('gdmsg')) { $('gdmsg').className = 'msg'; $('gdmsg').textContent = 'Looking in your Drive…'; }
-    else openModal('<h3>🟢 Google Drive</h3><p>Looking in your Drive…</p>');
+    else openModal('<h3>Google Drive</h3><p>Looking in your Drive…</p>');
     try { await gdSearch(more); gdRender(); }
     catch (e) { gdRender(`<span style="color:var(--bad)">${mcpMsg(e)}</span>`); }
   }
@@ -663,11 +694,6 @@
     renderList(); renderStats(bad); if (S.preset) applyPreset(S.preset); draw(S.t);
     toast(`Added ${ok} image${ok === 1 ? '' : 's'} from Google Drive${bad ? ` · ${bad} couldn't open (iPhone HEIC files may need Photos instead)` : ''} ✨`);
   }
-  $('driveBtn').addEventListener('click', e => {
-    e.stopPropagation();
-    if (!mcp) return toast('Google Drive works when this app is opened inside Claude with Google Drive connected (claude.ai → Settings → Connectors). For now, use 📁 Files — Google Drive also shows there if the Drive app is on your phone.');
-    gdLoad(false);
-  });
 
   // ---------- drawing ----------
   function drawSlide(i, p, alpha) {
@@ -729,13 +755,13 @@
     ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = u * 0.02;
     let yb = H - pad;
     if (sub) {
-      const f = fitLines(sub, '500 {s}px Inter, sans-serif', u * 0.038, u * 0.03, maxW, 2);
+      const f = fitLines(sub, '400 {s}px Arial, Helvetica, sans-serif', u * 0.038, u * 0.03, maxW, 2);
       ctx.fillStyle = '#e9dcc4';
       for (let i = f.lines.length - 1; i >= 0; i--) { ctx.fillText(f.lines[i], pad, yb, maxW); yb -= f.size * 1.35; }
       yb -= u * 0.012;
     }
     if (main) {
-      const f = fitLines(main, '600 {s}px "Playfair Display", serif', u * 0.068, u * 0.05, maxW, 2);
+      const f = fitLines(main, '700 {s}px Arial, Helvetica, sans-serif', u * 0.068, u * 0.05, maxW, 2);
       ctx.fillStyle = '#ffffff';
       let top = yb;
       for (let i = f.lines.length - 1; i >= 0; i--) { ctx.fillText(f.lines[i], pad, yb, maxW); top = yb; yb -= f.size * 1.18; }
@@ -971,6 +997,15 @@
   // ---------- start ----------
   sizeCanvas(); draw(0); renderStats();
   if (document.fonts) document.fonts.ready.then(() => draw(S.t));
+})();
+</script>
+<script>
+/* theme switcher — shares the visitor's choice with fionah.com */
+(function () {
+  const root = document.documentElement;
+  const setT = t => { root.dataset.theme = t; document.querySelectorAll('.themer button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); try { localStorage.setItem('fionah-theme', t); } catch (e) {} };
+  setT(root.dataset.theme || 'pastel');
+  document.querySelectorAll('.themer button').forEach(b => b.addEventListener('click', () => setT(b.dataset.t)));
 })();
 </script>
 </body>

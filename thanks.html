@@ -6,48 +6,43 @@
 <title>Thank you — fionah</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("fionah-theme")||"pastel"}catch(e){}</script>
 <style>
-  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#FBF7F2;color:#3A3440;font-family:Inter,system-ui,sans-serif;padding:20px}
-  .card{background:#fff;border:1px solid #ECE3DA;border-radius:28px;padding:34px 28px;max-width:520px;box-shadow:0 10px 30px rgba(120,90,90,.10);text-align:center}
-  h1{font-family:Fraunces,serif;font-size:34px;margin:6px 0 10px}
-  p{color:#7D7480;line-height:1.6}
-  ol{text-align:left;line-height:1.7;padding-left:22px;margin:18px 0}
-  .btn{display:inline-block;margin-top:10px;background:#B9787A;color:#fff;text-decoration:none;font-weight:600;border-radius:999px;padding:14px 22px}
-  .big{font-size:46px}
-  .brandbar{background:#000;border-radius:18px;padding:10px 18px;display:inline-flex;margin-bottom:14px}
-  /* fionah logo: chrome lens + calligraphy name */
-  .logo{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
-  .logo img{position:relative;z-index:1;flex:none}
-  .logo .wm{position:relative;z-index:2;display:inline-flex;align-items:baseline;font-family:'Pinyon Script',cursive;font-weight:400;line-height:1.25;white-space:nowrap}
-  .logo .f,.logo .rest{display:inline-block;transform:skewX(16deg)}
-  .logo .f{background:linear-gradient(160deg,#8A6CF0 0%,#5A44C4 45%,#2E2270 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .logo .rest{color:#FFFFFF}
-  .logo.md img{width:40px;height:40px}
-  .logo.md .wm{margin-left:-10px}
-  .logo.md .f{font-size:40px;padding:4px 6px 13px 17px;margin:-4px -2px -13px -12px}
-  .logo.md .rest{font-size:32px;margin-left:-2px}
-  .logo.sm img{width:30px;height:30px}
-  .logo.sm .wm{margin-left:-7px}
-  .logo.sm .f{font-size:30px;padding:3px 4px 10px 13px;margin:-3px -2px -10px -9px}
-  .logo.sm .rest{font-size:24px;margin-left:-1px}
-
+  :root{--chrome:linear-gradient(135deg,#FFFFFF 0%,#9AA3B2 18%,#F4F6F9 36%,#6B7384 54%,#E6E9EE 72%,#8A93A3 88%,#F0F2F5 100%)}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#4B33C4;color:#111014;font-family:Arial,Helvetica,sans-serif;padding:20px;-webkit-font-smoothing:antialiased}
+  .card{background:#fff;border:1px solid #E3DDD3;border-radius:6px;padding:40px 48px 44px;max-width:520px;text-align:center}
+  h1{font-size:34px;font-weight:700;letter-spacing:-.03em;margin:20px 0 26px}
+  p{color:#5F5B66;line-height:1.6}
+  ol{text-align:left;line-height:1.7;padding-left:22px;margin:20px 0 26px;color:#111014}
+  a{color:inherit}
+  .btn{position:relative;z-index:0;display:inline-block;margin:6px 5px 5px 0;color:#fff;text-decoration:none;font-weight:700;border-radius:4px;padding:14px 24px}
+  .btn::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#4B33C4;z-index:-1}
+  .btn::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--chrome);transform:translate(5px,5px);z-index:-2}
+  /* fionah logo: chrome lens + bold Arial name (purple "f") */
+  .logo{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
+  .logo img{flex:none}
+  .logo .wm{display:inline-flex;align-items:baseline;font-family:Arial,Helvetica,sans-serif;font-weight:700;letter-spacing:-.04em;line-height:1;white-space:nowrap}
+  .logo .f{background:linear-gradient(160deg,#8A6CF0 0%,#5A44C4 45%,#2E2270 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em}
+  .logo .rest{color:var(--logo-ink,#111014)}
+  .logo.md img{width:42px;height:42px}
+  .logo.md .wm{font-size:28px}
+  .logo.sm img{width:32px;height:32px}
+  .logo.sm .wm{font-size:22px}
+  [data-theme="classic"] body{background:linear-gradient(160deg,#F4F6F9 0%,#C3C8D0 22%,#EEF0F3 42%,#AEB4BE 62%,#E6E9EE 82%,#BFC5CE 100%) fixed}
+  [data-theme="night"] body{background:#0C0C10;color:#F4F2EE}
+  [data-theme="night"] .card{background:#16161D;border-color:#2A2A33}
+  [data-theme="night"] .btn::after{background:#6A4FE0}
+  body, body *{font-weight:700 !important}
 </style>
 </head>
 <body>
   <div class="card">
-    <div class="brandbar"><a class="logo md" href="./" aria-label="fionah home"><img src="logo.svg" alt="" width="40" height="40"><span class="wm" aria-hidden="true"><span class="f">f</span><span class="rest">ionah</span></span></a></div>
-    <div class="big">🎉</div>
-    <h1>Thank you for your order!</h1>
-    <p>Your payment went through. Here's what happens next:</p>
-    <ol>
-      <li><b>Email your photos</b> to <a id="em" href="mailto:hello@fionah.com">hello@fionah.com</a></li>
-      <li>Include the <b>name on your order</b>, <b>where you'll post</b> the video, and any <b>words</b> you'd like on screen.</li>
-      <li>Your video arrives by email within <b>24–48 hours</b>.</li>
-    </ol>
-    <a class="btn" id="mail" href="mailto:hello@fionah.com?subject=My%20fionah%20video%20order">Email my photos now</a>
-    <p style="margin-top:18px;font-size:14px"><a href="./">← Back to fionah.com</a></p>
+    <a class="logo md" href="./" aria-label="fionah home"><img src="logo.svg" alt="fionah" width="40" height="40"></a>
+    <h1>Thank you</h1>
+    <a class="btn" href="./">Return to Home</a>
   </div>
 </body>
 </html>
