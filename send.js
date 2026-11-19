@@ -86,6 +86,11 @@ const SEND_URL = "";
                       address: $('#sbAddr').value.trim(), notes: $('#sbNotes').value.trim(), length: pick.len, music: pick.music };
       $('.send').disabled = true; $('.prog').style.display = 'block';
       try {
+        // get the next order number from the Google script (e.g. 1042)
+        $('.note').textContent = 'Getting your order number…';
+        const rr = await fetch(SEND_URL + '?reserve=1&code=' + encodeURIComponent(code));
+        order.number = String((await rr.json()).number || '');
+        if (!order.number) throw new Error('no number');
         for (let i = 0; i < photos.length; i++) {
           $('.note').textContent = `Sending photo ${i + 1} of ${photos.length}…`;
           const data = await shrink(photos[i].file);
@@ -93,7 +98,8 @@ const SEND_URL = "";
             body: JSON.stringify({ ...order, index: i + 1, total: photos.length, data }) });
           $('.prog i').style.width = Math.round((i + 1) / photos.length * 100) + '%';
         }
-        $('.done .dmsg').textContent = `Thank you! Your ${photos.length} photos are with us.` + (order.email ? ` We've emailed your code to ${order.email} (we don't keep your email).` : '') + ' Your order code is:';
+        $('.done .dmsg').textContent = `Thank you! Your ${photos.length} photo${photos.length === 1 ? ' is' : 's are'} with us.` + (order.email ? ` We've emailed these to ${order.email} (we don't keep your email).` : '');
+        $('.done .onum').textContent = '#' + order.number;
         $('.done .code').textContent = code;
         box.classList.add('is-done');
       } catch (err) {
@@ -106,37 +112,60 @@ const SEND_URL = "";
   }
 }
 
-/* "Get your video" page: enter the code, download the video */
+/* "Get your video" page: the order board.
+   Each day's order numbers show as tiles. A tile turns chrome when that video is ready.
+   Tap your number, enter your private code, download. */
 {
   const g = document.querySelector('.getbox');
   if (g) {
     const $ = s => g.querySelector(s);
-    const out = $('.result');
+    const board = $('.board'), out = $('.result'), form = g.querySelector('form');
+    let picked = '';
     const norm = v => { v = v.toUpperCase().replace(/[^A-Z0-9]/g, ''); if (v.startsWith('FN')) v = v.slice(2); return v ? 'FN-' + v : ''; };
-    $('#gCode').addEventListener('input', () => { $('.gbtn').disabled = !SEND_URL || norm($('#gCode').value).length < 9; });
-    if (!SEND_URL) out.textContent = 'Video collection opens soon.';
-    g.querySelector('form').addEventListener('submit', async e => {
+
+    async function loadBoard() {
+      if (!SEND_URL) { board.innerHTML = '<p class="bnote">The order board opens soon.</p>'; return; }
+      board.innerHTML = '<p class="bnote">Loading today\'s orders…</p>';
+      try {
+        const d = await (await fetch(SEND_URL + '?board=1')).json();
+        const days = d.days || [];
+        if (!days.some(x => x.orders.length)) { board.innerHTML = '<p class="bnote">No orders yet today.</p>'; return; }
+        board.innerHTML = days.filter(x => x.orders.length).map(x =>
+          `<div class="bday">${x.label}</div><div class="tiles">` +
+          x.orders.map(o => `<button type="button" class="tile${o.ready ? ' ready' : ''}" data-n="${o.n}" ${o.ready ? '' : 'aria-disabled="true"'} aria-label="Order ${o.n}${o.ready ? ', ready' : ', not ready yet'}">#${o.n}</button>`).join('') +
+          '</div>').join('');
+        board.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => {
+          if (!t.classList.contains('ready')) { out.textContent = `Order #${t.dataset.n} isn't ready yet. Please check back soon.`; form.hidden = true; return; }
+          picked = t.dataset.n;
+          board.querySelectorAll('.tile').forEach(x => x.classList.toggle('picked', x === t));
+          $('#gNum').textContent = '#' + picked; form.hidden = false; out.textContent = ''; $('#gCode').focus();
+        }));
+      } catch (err) { board.innerHTML = '<p class="bnote">Something went wrong. Please check your internet and refresh.</p>'; }
+    }
+
+    $('#gCode').addEventListener('input', () => { $('.gbtn').disabled = norm($('#gCode').value).length < 9; });
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       const code = norm($('#gCode').value);
-      if (!SEND_URL || code.length < 9) return;
+      if (!SEND_URL || !picked || code.length < 9) return;
       out.textContent = 'Checking…';
       try {
-        const r = await fetch(SEND_URL + '?code=' + encodeURIComponent(code));
-        const d = await r.json();
+        const d = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code))).json();
         if (d.status === 'ready') {
           out.innerHTML = '<p>Your video is ready!</p><a class="sbtn" href="' + d.url + '">Download your video</a>' +
             '<button type="button" class="sbtn" id="gDone">I\'ve saved my video, delete my files</button>';
           $('#gDone').addEventListener('click', async () => {
-            try { await fetch(SEND_URL + '?code=' + encodeURIComponent(code) + '&done=1'); } catch (err) {}
-            out.innerHTML = '<p>All done. Your photos and video have been deleted. Thank you!</p>';
+            try { await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code) + '&done=1'); } catch (err) {}
+            out.innerHTML = '<p>All done. Your photos and video have been deleted. Thank you!</p>'; form.hidden = true; loadBoard();
           });
         } else if (d.status === 'waiting') {
-          out.textContent = "We've got your photos and your video is on its way. Please check back soon.";
+          out.textContent = 'Your video is on its way. Please check back soon.';
         } else {
-          out.textContent = "We couldn't find that code. Please check it and try again.";
+          out.textContent = "That code doesn't match this order number. Please check it and try again.";
         }
       } catch (err) { out.textContent = 'Something went wrong. Please check your internet and try again.'; }
     });
+
+    loadBoard();
   }
 }
-

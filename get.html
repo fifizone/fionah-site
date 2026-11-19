@@ -267,16 +267,18 @@
 <main class="pol">
   <div class="wrap">
 <div class="sendbox getbox">
-  <form novalidate>
-    <h2>Get your video</h2>
-    <label for="gCode">Your order code</label>
+  <h2>Get your video</h2>
+  <p class="bhelp">Find your order number. When it turns chrome, your video is ready: tap it and enter your private code.</p>
+  <div class="board"></div>
+  <form novalidate hidden>
+    <label for="gCode">Private code for order <span id="gNum"></span></label>
     <div class="getrow">
       <input type="text" id="gCode" maxlength="12" placeholder="FN-XXXXXX" autocomplete="off" autocapitalize="characters">
       <button type="submit" class="sbtn gbtn" disabled>Go</button>
     </div>
-    <div class="result"></div>
-    <a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a>
   </form>
+  <div class="result"></div>
+  <a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a>
 </div>
   </div>
 </main>
