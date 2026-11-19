@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>fionah Motion Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#4B33C4">
@@ -51,7 +54,7 @@
     --r:4px; --r-lg:6px;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;font-size:15px;transition:background .3s,color .3s;-webkit-font-smoothing:antialiased}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Arimo,Helvetica,sans-serif;font-size:15px;transition:background .3s,color .3s;-webkit-font-smoothing:antialiased}
   body{padding-bottom:160px}
   header{padding:22px 18px 10px;max-width:760px;margin:0 auto}
   header .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -62,7 +65,7 @@
   /* fionah logo: chrome lens + bold Arial name (purple "f") */
   .logo{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
   .logo img{flex:none}
-  .logo .wm{display:inline-flex;align-items:baseline;font-family:Arial,Helvetica,sans-serif;font-weight:700;letter-spacing:-.04em;line-height:1;white-space:nowrap}
+  .logo .wm{display:inline-flex;align-items:baseline;font-family:Arial,Arimo,Helvetica,sans-serif;font-weight:700;letter-spacing:-.04em;line-height:1;white-space:nowrap}
   .logo .f{background:linear-gradient(160deg,#8A6CF0 0%,#5A44C4 45%,#2E2270 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em}
   .logo .rest{color:var(--logo-ink,#111014)}
   .logo.md img{width:42px;height:42px}
@@ -777,13 +780,13 @@
     ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = u * 0.02;
     let yb = H - pad;
     if (sub) {
-      const f = fitLines(sub, '400 {s}px Arial, Helvetica, sans-serif', u * 0.038, u * 0.03, maxW, 2);
+      const f = fitLines(sub, '400 {s}px Arial, Arimo, Helvetica, sans-serif', u * 0.038, u * 0.03, maxW, 2);
       ctx.fillStyle = '#e9dcc4';
       for (let i = f.lines.length - 1; i >= 0; i--) { ctx.fillText(f.lines[i], pad, yb, maxW); yb -= f.size * 1.35; }
       yb -= u * 0.012;
     }
     if (main) {
-      const f = fitLines(main, '700 {s}px Arial, Helvetica, sans-serif', u * 0.068, u * 0.05, maxW, 2);
+      const f = fitLines(main, '700 {s}px Arial, Arimo, Helvetica, sans-serif', u * 0.068, u * 0.05, maxW, 2);
       ctx.fillStyle = '#ffffff';
       let top = yb;
       for (let i = f.lines.length - 1; i >= 0; i--) { ctx.fillText(f.lines[i], pad, yb, maxW); top = yb; yb -= f.size * 1.18; }
@@ -834,7 +837,7 @@
     const x = W - pad - sz, y = H - pad - sz;
     ctx.save();
     ctx.globalAlpha = 0.92;
-    ctx.font = `700 ${Math.round(sz * 0.36)}px Arial, Helvetica, sans-serif`;
+    ctx.font = `700 ${Math.round(sz * 0.36)}px Arial, Arimo, Helvetica, sans-serif`;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = Math.round(sz * 0.12);
     ctx.fillStyle = '#fff'; ctx.fillText('Made with', x - sz * 0.18, y + sz / 2);

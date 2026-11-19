@@ -1,7 +1,7 @@
 /* fionah — "Send your photos" box (used on send.html and thanks.html) */
 .sendbox{--sb-card:#FFFFFF;--sb-ink:#111014;--sb-line:#E4E2EC;--sb-field:#F7F6FB;--sb-btn:#4B33C4;
   background:var(--sb-card);color:var(--sb-ink);border-radius:6px;padding:24px 22px;max-width:560px;margin:0 auto;text-align:left;
-  font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;line-height:1.5}
+  font-family:Arial,Arimo,Helvetica,sans-serif;font-size:16px;font-weight:700;line-height:1.5}
 [data-look="night"] .sendbox{--sb-card:#16161D;--sb-ink:#F4F2EE;--sb-line:#2A2A33;--sb-field:#101016;--sb-btn:#6A4FE0}
 .sendbox *{box-sizing:border-box;font-weight:700}
 .sendbox h2{font-size:26px;line-height:1.15;letter-spacing:-.02em;margin:0 0 16px;color:inherit}
