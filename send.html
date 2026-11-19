@@ -269,10 +269,8 @@
 <div class="sendbox">
   <form novalidate>
     <h2>Send your photos</h2>
-    <label for="sbName">Name</label>
-    <input type="text" id="sbName" autocomplete="name" maxlength="60" required>
-    <label for="sbEmail">Email</label>
-    <input type="email" id="sbEmail" autocomplete="email" maxlength="80" required>
+    <label for="sbEmail">Email (optional, only to send you your code)</label>
+    <input type="email" id="sbEmail" autocomplete="email" maxlength="80" placeholder="Not saved">
     <label for="sbAddr">Property address (25 characters)</label>
     <input type="text" id="sbAddr" maxlength="25" data-lim="25" placeholder="e.g. 12 Sample Street, 1234">
     <div class="cnt" data-for="sbAddr"></div>
@@ -301,7 +299,7 @@
     <div class="note"></div>
     <a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a>
   </form>
-  <div class="done"><h2>All sent!</h2><p></p><a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a></div>
+  <div class="done"><h2>All sent!</h2><p class="dmsg"></p><div class="code"></div><p>Keep this code safe: take a screenshot or write it down. When your video is ready, enter it on the <a href="get.html">Get your video</a> page.</p><a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a></div>
 </div>
   </div>
 </main>
@@ -309,7 +307,7 @@
 <footer>
   <div class="wrap">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><a class="logo sm" href="./" aria-label="fionah home"><img src="logo.svg" alt="fionah" width="40" height="40"></a><span>www.fionah.com 2026</span></div>
-    <div class="flinks"><a href="send.html">Send photos</a><a href="policies.html#about">About</a><a href="policies.html#contact">Contact</a><a href="policies.html#refunds">Refunds</a><a href="policies.html#terms">Terms</a><a href="policies.html#privacy">Privacy</a></div>
+    <div class="flinks"><a href="send.html">Send photos</a><a href="get.html">Get your video</a><a href="policies.html#about">About</a><a href="policies.html#contact">Contact</a><a href="policies.html#refunds">Refunds</a><a href="policies.html#terms">Terms</a><a href="policies.html#privacy">Privacy</a></div>
   </div>
 </footer>
 

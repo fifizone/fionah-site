@@ -5,7 +5,7 @@
 const SEND_URL = "";
 /* ================================= */
 {
-  const box = document.querySelector('.sendbox');
+  const box = document.querySelector('.sendbox:not(.getbox)');
   if (box) {
     const $ = s => box.querySelector(s);
     const MAX = 15;                    // photos per send (matches the packs: up to 15 images per video)
@@ -55,10 +55,11 @@ const SEND_URL = "";
 
     const okEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     function check() {
-      const ready = $('#sbName').value.trim() && okEmail($('#sbEmail').value.trim()) && photos.length && pick.len;
+      const em = $('#sbEmail').value.trim();
+      const ready = (!em || okEmail(em)) && photos.length && pick.len;
       $('.send').disabled = !SEND_URL || !ready;
       $('.note').textContent = !SEND_URL ? 'Sending opens soon.'
-        : ready ? 'Ready to send.' : 'Add your name, email, video length and at least one photo.';
+        : ready ? 'Ready to send.' : 'Choose a video length and add at least one photo.';
     }
     box.querySelectorAll('input').forEach(i => i.addEventListener('input', check));
 
@@ -78,7 +79,10 @@ const SEND_URL = "";
     box.querySelector('form').addEventListener('submit', async e => {
       e.preventDefault();
       if ($('.send').disabled) return;
-      const order = { id: Date.now().toString(36), name: $('#sbName').value.trim(), email: $('#sbEmail').value.trim(),
+      // private order code, e.g. FN-7K3Q2X (no names kept)
+      const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', rnd = new Uint32Array(6); crypto.getRandomValues(rnd);
+      const code = 'FN-' + Array.from(rnd, n => A[n % A.length]).join('');
+      const order = { id: code, email: $('#sbEmail').value.trim(),
                       address: $('#sbAddr').value.trim(), notes: $('#sbNotes').value.trim(), length: pick.len, music: pick.music };
       $('.send').disabled = true; $('.prog').style.display = 'block';
       try {
@@ -89,7 +93,8 @@ const SEND_URL = "";
             body: JSON.stringify({ ...order, index: i + 1, total: photos.length, data }) });
           $('.prog i').style.width = Math.round((i + 1) / photos.length * 100) + '%';
         }
-        $('.done p').textContent = `Thanks, ${order.name}! Your ${photos.length} photos are with us. We've emailed ${order.email} to say they arrived, and your video will come to the same address.`;
+        $('.done .dmsg').textContent = `Thank you! Your ${photos.length} photos are with us.` + (order.email ? ` We've emailed your code to ${order.email} (we don't keep your email).` : '') + ' Your order code is:';
+        $('.done .code').textContent = code;
         box.classList.add('is-done');
       } catch (err) {
         $('.note').textContent = 'Something went wrong. Please check your internet and tap Send again.';
@@ -100,3 +105,38 @@ const SEND_URL = "";
     draw();
   }
 }
+
+/* "Get your video" page: enter the code, download the video */
+{
+  const g = document.querySelector('.getbox');
+  if (g) {
+    const $ = s => g.querySelector(s);
+    const out = $('.result');
+    const norm = v => { v = v.toUpperCase().replace(/[^A-Z0-9]/g, ''); if (v.startsWith('FN')) v = v.slice(2); return v ? 'FN-' + v : ''; };
+    $('#gCode').addEventListener('input', () => { $('.gbtn').disabled = !SEND_URL || norm($('#gCode').value).length < 9; });
+    if (!SEND_URL) out.textContent = 'Video collection opens soon.';
+    g.querySelector('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const code = norm($('#gCode').value);
+      if (!SEND_URL || code.length < 9) return;
+      out.textContent = 'Checking…';
+      try {
+        const r = await fetch(SEND_URL + '?code=' + encodeURIComponent(code));
+        const d = await r.json();
+        if (d.status === 'ready') {
+          out.innerHTML = '<p>Your video is ready!</p><a class="sbtn" href="' + d.url + '">Download your video</a>' +
+            '<button type="button" class="sbtn" id="gDone">I\'ve saved my video, delete my files</button>';
+          $('#gDone').addEventListener('click', async () => {
+            try { await fetch(SEND_URL + '?code=' + encodeURIComponent(code) + '&done=1'); } catch (err) {}
+            out.innerHTML = '<p>All done. Your photos and video have been deleted. Thank you!</p>';
+          });
+        } else if (d.status === 'waiting') {
+          out.textContent = "We've got your photos and your video is on its way. Please check back soon.";
+        } else {
+          out.textContent = "We couldn't find that code. Please check it and try again.";
+        }
+      } catch (err) { out.textContent = 'Something went wrong. Please check your internet and try again.'; }
+    });
+  }
+}
+
