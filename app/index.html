@@ -15,34 +15,37 @@
 <link rel="icon" type="image/svg+xml" href="../logo.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
 <link rel="shortcut icon" href="../favicon.ico">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("fionah-theme")||"pastel"}catch(e){}</script>
+<script>try{document.documentElement.dataset.look=localStorage.getItem("fionah-theme")||"pastel"}catch(e){}</script>
 <style>
   /* =========================================================
      fionah Motion Studio — minimal design system
      Font: Arial everywhere, logo included
      Same 3 themes as fionah.com (Cream / Classic / Night)
      ========================================================= */
-  :root, [data-theme="pastel"]{
+  :root, [data-look="pastel"]{
     --bg:#4B33C4; --card:#FFFFFF; --field:#F7F6FB; --line:#E4E2EC; --text:#111014; --muted:#111014;
     --gold:#4B33C4; --gold-hover:#3A2699; --soft:#EEEAFB; --on-accent:#FFFFFF; --logo-ink:#111014;
     --ok:#2F7D4F; --bad:#C2413B; --warn:#A86A12;
   }
-  [data-theme="classic"]{
+  [data-look="classic"]{
     --bg:#D6DAE0; --card:#FFFFFF; --field:#EEF0F3; --line:#B9BFC9; --text:#0A0A0A; --muted:#0A0A0A;
     --gold:#4B33C4; --gold-hover:#3A2699; --soft:#EEEAFB; --on-accent:#FFFFFF; --logo-ink:#0A0A0A;
     --ok:#2F7D4F; --bad:#C2413B; --warn:#A86A12;
   }
-  [data-theme="night"]{
+  [data-look="night"]{
     --bg:#0C0C10; --card:#16161D; --field:#101016; --line:#2A2A33; --text:#F4F2EE; --muted:#F4F2EE;
     --gold:#A996FF; --gold-hover:#BBAEFF; --soft:#1F1B33; --on-accent:#FFFFFF; --logo-ink:#FFFFFF;
     --ok:#7CC79A; --bad:#E58A8A; --warn:#E2B26B;
   }
   :root{--btn:#4B33C4;--btn-ink:#FFFFFF}
-  [data-theme="night"]{--btn:#6A4FE0}
+  [data-look="night"]{--btn:#6A4FE0}
   /* purple / white: white buttons on the purple page, purple buttons inside white boxes */
-  [data-theme="pastel"]{--btn:#FFFFFF;--btn-ink:#4B33C4}
-  [data-theme="pastel"] .card,[data-theme="pastel"] .box{--btn:#4B33C4;--btn-ink:#FFFFFF}
-  [data-theme="pastel"] header .brand .title,[data-theme="pastel"] header .brand .title span{color:#FFFFFF}
+  [data-look="pastel"]{--btn:#FFFFFF;--btn-ink:#111014}
+  /* purple/white look: every button and tile is white with a thin purple edge */
+  [data-look="pastel"] .b1::after,[data-look="pastel"] .b2::after{box-shadow:inset 0 0 0 1.5px #4B33C4}
+  [data-look="pastel"] .pickbtn,[data-look="pastel"] .tiny,[data-look="pastel"] .ib,[data-look="pastel"] .seg button:not(.on),[data-look="pastel"] .presets button:not(.on),[data-look="pastel"] .trialtile,[data-look="pastel"] .trialnote,[data-look="pastel"] .closeapp{box-shadow:inset 0 0 0 1.5px #4B33C4,4px 4px 0 #A9B0BC}
+  [data-look="pastel"] .b2:disabled::after{background:#FFFFFF;box-shadow:inset 0 0 0 1.5px #C9C1F0}
+  [data-look="pastel"] header .brand .title,[data-look="pastel"] header .brand .title span{color:#FFFFFF}
   :root{
     --chrome:linear-gradient(135deg,#FFFFFF 0%,#9AA3B2 18%,#F4F6F9 36%,#6B7384 54%,#E6E9EE 72%,#8A93A3 88%,#F0F2F5 100%);
     --r:4px; --r-lg:6px;
@@ -55,7 +58,7 @@
   header h1{font-weight:700;font-size:22px;margin:0;letter-spacing:-.02em}
   header .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   header .brand .title{font-weight:700;font-size:20px;letter-spacing:-.02em;color:var(--text)}
-  header .brand .title span{color:var(--gold)}
+  header .brand .title span{color:inherit}
   /* fionah logo: chrome lens + bold Arial name (purple "f") */
   .logo{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
   .logo img{flex:none}
@@ -66,7 +69,7 @@
   .logo.md .wm{font-size:28px}
   .logo.sm img{width:32px;height:32px}
   .logo.sm .wm{font-size:22px}
-  [data-theme="night"] .logo .f{background-image:linear-gradient(160deg,#C9BCFF 0%,#8A6CF0 100%)}
+  [data-look="night"] .logo .f{background-image:linear-gradient(160deg,#C9BCFF 0%,#8A6CF0 100%)}
 
   /* theme switcher (same as fionah.com) */
   .themer{display:flex;gap:5px;background:#FFFFFF;border:1px solid #2A2A33;padding:5px;border-radius:var(--r-lg);flex:none}
@@ -79,7 +82,7 @@
   header p{margin:10px 0 0;color:var(--muted);font-size:14px;line-height:1.5}
   main{padding:4px 14px;max-width:760px;margin:0 auto}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 16px;margin:14px 0}
-  .card h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;font-weight:700}
+  .card h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text);margin:0 0 6px;font-weight:700}
   .card .hint{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.5}
   .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
         border:1.5px dashed var(--line);border-radius:var(--r-lg);padding:24px 12px;text-align:center;cursor:pointer;background:var(--field)}
@@ -116,10 +119,10 @@
   .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
   .seg.three{grid-template-columns:repeat(3,1fr)}
   .seg.two{grid-template-columns:repeat(2,1fr)}
-  .seg button{background:var(--card);border:1.5px solid var(--btn);color:var(--text);border-radius:var(--r);padding:10px 4px;font:inherit;font-size:13px;line-height:1.35}
-  .seg button small{color:var(--muted);font-size:11px}
-  .seg button.on{border:1.5px solid var(--btn);background:var(--btn);color:#fff}
-  .seg button.on small{color:#FFFFFF}
+  .seg button{background:var(--btn);border:none;color:var(--btn-ink);box-shadow:4px 4px 0 #A9B0BC;border-radius:var(--r);padding:10px 4px;font:inherit;font-size:13px;line-height:1.35}
+  .seg button small{color:inherit;font-size:11px}
+  .seg button.on{border:none;background:var(--chrome);color:#111014}
+  .seg button.on small{color:#111014}
   .slider{display:flex;align-items:center;gap:10px}
   .slider input{flex:1;accent-color:var(--gold)}
   .slider output{width:48px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
@@ -155,12 +158,12 @@
   .box .acts{display:flex;gap:10px;margin-top:12px}
   .box .acts button{flex:1;padding:13px}
   .presets{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-  .presets button{background:var(--card);border:1.5px solid var(--btn);color:var(--text);border-radius:var(--r);padding:10px 6px;font:inherit;font-size:13px;line-height:1.35}
-  .presets button small{color:var(--muted);font-size:11px}
+  .presets button{background:var(--btn);border:none;color:var(--btn-ink);box-shadow:4px 4px 0 #A9B0BC;border-radius:var(--r);padding:10px 6px;font:inherit;font-size:13px;line-height:1.35}
+  .presets button small{color:inherit;font-size:11px}
   .presets.one{grid-template-columns:1fr}
   .box .acts.stack{flex-direction:column;margin-top:0}
   .box .acts.stack button{padding:15px}
-  .presets button.on{border:1.5px solid var(--btn);background:var(--btn);color:#fff}
+  .presets button.on{border:none;background:var(--chrome);color:#111014}
   .cnt{font-size:12px;color:var(--muted);text-align:right;margin-top:4px;min-height:15px}
   .cnt.ok{color:var(--ok)} .cnt.warn{color:var(--warn)} .cnt.bad{color:var(--bad)}
   .msg{font-size:13px;margin-top:8px;min-height:18px}
@@ -172,7 +175,24 @@
   body *:not(h1):not(h2):not(h3):not(h1 *):not(h2 *):not(h3 *){font-size:16px !important}
   .seg button,.presets button{line-height:1.3}
   .scrub span{min-width:96px}
-  [data-theme="classic"] body{background:linear-gradient(160deg,#F4F6F9 0%,#C3C8D0 22%,#EEF0F3 42%,#AEB4BE 62%,#E6E9EE 82%,#BFC5CE 100%) fixed}
+  [data-look="classic"] body{background:linear-gradient(160deg,#F4F6F9 0%,#C3C8D0 22%,#EEF0F3 42%,#AEB4BE 62%,#E6E9EE 82%,#BFC5CE 100%) fixed}
+  .trialnote{width:100%;max-width:727px;margin-right:5px;text-align:center;color:var(--btn-ink);background:var(--btn);border:none;border-radius:var(--r);padding:9px 10px;box-shadow:4px 4px 0 #A9B0BC}
+  a.b2.lnk{display:flex;align-items:center;justify-content:center;text-decoration:none;padding:15px}
+  .b2:disabled::after{background:#A79BE6}
+  [data-look="night"] .b2:disabled::after{background:#3B3170}
+  body{padding-bottom:210px}
+  .themer{align-items:center}
+  .themer .tl{color:#111014;font-size:12px !important;padding:0 3px 0 2px;line-height:1}
+  /* tap = chrome flash, so people can see what they pressed */
+  .pickbtn:active,.tiny:active,.closeapp:active,.ib:active,.seg button:active,.presets button:active{background:var(--chrome) !important;color:#111014 !important}
+  .b1:active::after,.b2:active::after{background:var(--chrome)}
+  .b1:active,.b2:active{color:#111014}
+  .trialtile{margin:14px 4px 4px 0;text-align:center;background:var(--btn);color:var(--btn-ink);border:none;border-radius:var(--r);padding:11px;box-shadow:4px 4px 0 #A9B0BC}
+  /* no blue tap flash or blue focus ring; keyboard users still see a ring, in purple */
+  *{-webkit-tap-highlight-color:transparent}
+  a:focus,button:focus,summary:focus,input:focus,select:focus,[tabindex]:focus{outline:none}
+  a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #8A6CF0;outline-offset:2px}
+  input[type=range]{accent-color:#4B33C4}
   /* every word bold */
   body, body *{font-weight:700 !important}
 </style>
@@ -181,8 +201,8 @@
 <header>
   <div class="top">
     <h1 class="brand"><a class="logo md" href="../" aria-label="fionah home"><img src="../logo.svg" alt="fionah" width="40" height="40"></a><span class="title"><span>Motion</span> Studio</span></h1>
-    <div class="themer" role="group" aria-label="Colour theme">
-      <button class="t1" data-t="pastel" title="White" aria-label="White theme"></button>
+    <div class="themer" role="group" aria-label="Colour theme"><span class="tl">Colour</span>
+      <button class="t1" data-t="pastel" title="Purple" aria-label="Purple theme"></button>
       <button class="t2" data-t="classic" title="Chrome" aria-label="Chrome theme"></button>
       <button class="t3" data-t="night" title="Night" aria-label="Night theme"></button>
     </div>
@@ -202,6 +222,7 @@
       <input type="file" id="files" accept="image/*" multiple>
       <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
     </div>
+    <div class="trialtile">2 free trial videos</div>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
       <button class="tiny" id="autoAll">Reset all to Auto motion</button>
@@ -298,6 +319,7 @@
     <button class="b1" id="previewBtn">▶ Preview</button>
     <button class="b2" id="makeBtn">Make video</button>
   </div>
+  <div class="trialnote" id="trialNote"></div>
   <a class="closeapp" href="../">Close App</a>
 </div>
 
@@ -798,6 +820,31 @@
     const fin = 1 - clamp(t / 1.2), fout = clamp((t - (T - tr)) / tr);
     const blk = Math.max(fin, easeSine(fout));
     if (blk > 0) { ctx.globalAlpha = blk; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
+    drawMark(W, H);
+  }
+
+  // ---------- free trial: 'Made with [lens]' mark, small in the bottom-right corner ----------
+  const TRIAL_FREE = 2;
+  const lensImg = new Image(); lensImg.src = '../logo.svg';
+  const trialMade = () => { try { return Number(localStorage.getItem('fionah-trial-made') || 0); } catch (e) { return 0; } };
+  setTimeout(updTrial, 0);
+  const trialAdd = () => { try { localStorage.setItem('fionah-trial-made', String(trialMade() + 1)); } catch (e) {} updTrial(); };
+  function drawMark(W, H) {
+    const u = Math.min(W, H), sz = Math.round(u * 0.075), pad = Math.round(u * 0.035);
+    const x = W - pad - sz, y = H - pad - sz;
+    ctx.save();
+    ctx.globalAlpha = 0.92;
+    ctx.font = `700 ${Math.round(sz * 0.36)}px Arial, Helvetica, sans-serif`;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = Math.round(sz * 0.12);
+    ctx.fillStyle = '#fff'; ctx.fillText('Made with', x - sz * 0.18, y + sz / 2);
+    ctx.shadowBlur = 0;
+    if (lensImg.complete && lensImg.naturalWidth) ctx.drawImage(lensImg, x, y, sz, sz);
+    ctx.restore();
+  }
+  function updTrial() {
+    const left = Math.max(0, TRIAL_FREE - trialMade());
+    $('trialNote').innerHTML = `The <img src="../logo.svg" alt="fionah lens" width="18" height="18" style="vertical-align:-4px"> is watermark at the bottom of the video`;
   }
 
   // ---------- preview ----------
@@ -859,13 +906,21 @@
 
   $('makeBtn').onclick = () => {
     if (!S.slides.length) return toast('Add your photos first 📷');
+    if (trialMade() >= TRIAL_FREE) {
+      openModal(`
+      <h3>Your free trial is finished</h3>
+      <p>You've made your ${TRIAL_FREE} free videos. Want more?</p>
+      <div class="acts stack"><button class="b2" id="credx" disabled>Buy credits (coming soon)</button><a class="b2 lnk" href="../#pricing">See done-for-you packs</a><button class="b1" id="nox">Back</button></div>`);
+      $('nox').onclick = closeModal;
+      return;
+    }
     if (!cv.captureStream || pickMime() === null) return toast('Sorry — this phone\'s browser can\'t record video. Try Chrome on Android or Safari on a recent iPhone.');
     pause();
     const T = total();
     openModal(`
       <h3>Ready to make your video?</h3>
       <p><b style="color:var(--text)">${S.slides.length} photos · ${fmt(T)} long</b></p>
-      <p>Your video is recorded live, so it takes the same time as the video — about <b style="color:var(--gold)">${fmt(T)}</b>.</p>
+      <p>Your video is recorded live, so it takes the same time as the video — about <b style="color:var(--text)">${fmt(T)}</b>.</p>
       <p>📱 Keep this screen open and switched on until it finishes.</p>
       <div class="acts"><button class="b1" id="nox">Not yet</button><button class="b2" id="go">Start 🎬</button></div>`);
     $('nox').onclick = closeModal;
@@ -941,6 +996,7 @@
     const type = (rec.mimeType || mime || 'video/webm').split(';')[0];
     const blob = new Blob(chunks, { type });
     const ext = type.includes('mp4') ? 'mp4' : 'webm';
+    trialAdd();
     showResult(blob, ext);
   }
 
@@ -1003,8 +1059,8 @@
 /* theme switcher — shares the visitor's choice with fionah.com */
 (function () {
   const root = document.documentElement;
-  const setT = t => { root.dataset.theme = t; document.querySelectorAll('.themer button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); try { localStorage.setItem('fionah-theme', t); } catch (e) {} };
-  setT(root.dataset.theme || 'pastel');
+  const setT = t => { root.dataset.look = t; document.querySelectorAll('.themer button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); try { localStorage.setItem('fionah-theme', t); } catch (e) {} };
+  setT(root.dataset.look || 'pastel');
   document.querySelectorAll('.themer button').forEach(b => b.addEventListener('click', () => setT(b.dataset.t)));
 })();
 </script>

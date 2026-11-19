@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>fionah — smooth photo videos for listings & sellers</title>
-<meta name="description" content="Turn your photos into smooth, gliding videos for real estate, eBay, Facebook Marketplace, Reels and more. Order a done-for-you video or use the free app.">
+<title>fionah — Photos to Videos</title>
+<meta name="description" content="Turn your listing photos into scroll-stopping videos in 24 hours. Order a done-for-you video, or try the free Motion Studio trial on your phone.">
 <meta name="theme-color" content="#000000">
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("fionah-theme")||"pastel"}catch(e){}</script>
+<script>try{document.documentElement.dataset.look=localStorage.getItem("fionah-theme")||"pastel"}catch(e){}</script>
 <style>
   /* =========================================================
      fionah — minimal design system
@@ -18,15 +18,15 @@
      Look: sharp corners, thin lines, deep purple buttons
            with a chrome-silver shadow
      ========================================================= */
-  :root, [data-theme="pastel"]{          /* "Purple / white" — the default look */
+  :root, [data-look="pastel"]{          /* "Purple / white" — the default look */
     --bg:#4B33C4; --bg2:#432DB0; --card:#FFFFFF; --ink:#FFFFFF; --muted:#FFFFFF; --line:rgba(255,255,255,.28);
-    --accent:#FFFFFF; --accent-hover:#EEEAFB; --accent-ink:#4B33C4; --logo-ink:#FFFFFF;
+    --accent:#FFFFFF; --accent-hover:#EEEAFB; --accent-ink:#111014; --logo-ink:#FFFFFF;
   }
-  [data-theme="classic"]{                /* "Classic" — crisp white + black */
+  [data-look="classic"]{                /* "Classic" — crisp white + black */
     --bg:#D6DAE0; --bg2:#E4E7EC; --card:#FFFFFF; --ink:#0A0A0A; --muted:#0A0A0A; --line:#B9BFC9;
     --accent:#4B33C4; --accent-hover:#3A2699; --accent-ink:#FFFFFF; --logo-ink:#0A0A0A;
   }
-  [data-theme="night"]{                  /* "Night" — dark + lighter purple */
+  [data-look="night"]{                  /* "Night" — dark + lighter purple */
     --bg:#0C0C10; --bg2:#121218; --card:#16161D; --ink:#F4F2EE; --muted:#F4F2EE; --line:#2A2A33;
     --accent:#6A4FE0; --accent-hover:#7D65EA; --accent-ink:#FFFFFF; --logo-ink:#FFFFFF;
   }
@@ -47,7 +47,7 @@
   p{margin:0}
   .muted{color:var(--muted)}
   .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
-  [data-theme="night"] .eyebrow{color:#A996FF}
+  [data-look="night"] .eyebrow{color:#A996FF}
 
   /* buttons: sharp, deep purple, chrome-silver shadow */
   .btn{position:relative;z-index:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--r);padding:14px 24px;font-weight:700;font-size:15px;letter-spacing:.01em;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font-family:inherit;transition:transform .15s,background .15s}
@@ -76,7 +76,7 @@
   .logo.md .wm{font-size:28px}
   .logo.sm img{width:32px;height:32px}
   .logo.sm .wm{font-size:22px}
-  [data-theme="night"] .logo .f{background-image:linear-gradient(160deg,#C9BCFF 0%,#8A6CF0 100%)}
+  [data-look="night"] .logo .f{background-image:linear-gradient(160deg,#C9BCFF 0%,#8A6CF0 100%)}
   .navlinks{display:flex;gap:10px;align-items:center}
   .navlinks a.l{padding:8px 12px;text-decoration:none;font-size:14px;color:var(--muted)}
   .navlinks a.l:hover{color:var(--ink)}
@@ -108,10 +108,10 @@
   @keyframes kb1{0%{transform:scale(1)}14.44%{transform:scale(1.12) translate(2%,-1%)}100%{transform:scale(1.12) translate(2%,-1%)}}
   @keyframes kb2{0%{transform:scale(1.1) translateX(3%)}14.44%{transform:scale(1.1) translateX(-3%)}100%{transform:scale(1.1) translateX(-3%)}}
   @keyframes kb3{0%{transform:scale(1.13)}14.44%{transform:scale(1.0)}100%{transform:scale(1.0)}}
-  .demo .cap{position:absolute;left:0;right:0;bottom:0;padding:24px 22px 20px;background:linear-gradient(180deg,transparent,rgba(10,10,14,.62));color:#fff}
+  .demo .demovid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;background:transparent}
+  .demo .cap{z-index:2;position:absolute;left:0;right:0;bottom:0;padding:24px 22px 20px;background:linear-gradient(180deg,transparent,rgba(10,10,14,.62));color:#fff}
   .demo .cap b{font-size:20px;font-weight:700;letter-spacing:-.01em;display:block}
   .demo .cap small{font-size:13px}
-  @media (prefers-reduced-motion:reduce){.scene,.scene img{animation:none}.scene:first-child{opacity:1}}
 
   section{padding:80px 0;border-top:1px solid var(--line)}
   @media (max-width:820px){section{padding:56px 0}}
@@ -125,7 +125,7 @@
   .card:last-child{border-right:none}
   @media (max-width:820px){.card{border-right:none;border-bottom:1px solid var(--line)}.card:last-child{border-bottom:none}}
   .card .num{display:block;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:18px}
-  [data-theme="night"] .card .num{color:#A996FF}
+  [data-look="night"] .card .num{color:#A996FF}
   .card p{color:var(--muted);margin-top:8px;font-size:15px}
 
   /* made for */
@@ -137,7 +137,7 @@
   @media (max-width:880px){.prices{grid-template-columns:1fr}}
   .price{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px 28px;display:flex;flex-direction:column;position:relative}
   .price{border:2px solid var(--accent) !important}
-  [data-theme="night"] .price{border-color:#8A6CF0 !important}
+  [data-look="night"] .price{border-color:#8A6CF0 !important}
   .price .tag{position:absolute;top:-12px;left:26px;background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:var(--r);padding:5px 10px}
   .price .amt{font-size:44px;font-weight:700;letter-spacing:-.03em;margin:14px 0 4px;line-height:1.1;min-height:50px;display:flex;align-items:baseline;gap:6px;white-space:nowrap}
   .price .amt small{font-size:16px;color:var(--muted);letter-spacing:0}
@@ -146,7 +146,7 @@
   .price ul{list-style:none;padding:0;margin:18px 0 26px;flex:1;border-top:1px solid var(--line)}
   .price li{padding:10px 0 10px 24px;position:relative;font-size:15px;border-bottom:1px solid var(--line)}
   .price li::before{content:"";position:absolute;left:2px;top:17px;width:9px;height:5px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
-  [data-theme="night"] .price li::before{border-color:#A996FF}
+  [data-look="night"] .price li::before{border-color:#A996FF}
   .price .btn{width:calc(100% - 5px)}
   .cur{display:inline-flex;margin:6px 0 40px;border:1.5px solid var(--accent);border-radius:var(--r);overflow:hidden}
   .cur button{font:inherit;font-weight:700;font-size:15px;padding:10px 26px;border:none;background:transparent;color:var(--ink);cursor:pointer;min-width:90px}
@@ -165,8 +165,8 @@
   summary{cursor:pointer;font-weight:700;list-style:none;padding-right:28px;position:relative}
   summary::-webkit-details-marker{display:none}
   summary::after{content:"+";position:absolute;right:0;top:-3px;color:var(--accent);font-size:22px;font-weight:400}
-  [data-theme="night"] summary::after{color:#A996FF}
-  details[open] summary::after{content:"–"}
+  [data-look="night"] summary::after{color:#A996FF}
+  details[open]>summary::after{content:"–"}
   details p{color:var(--muted);margin-top:10px}
 
   footer{padding:36px 0 90px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
@@ -188,12 +188,57 @@
   body *:not(h1):not(h2):not(h3):not(h1 *):not(h2 *):not(h3 *):not(.amt){font-size:16px !important;line-height:1.5}
   .trust span::before{width:8px;height:8px}
   .secure,.nznote{max-width:760px;margin-left:auto;margin-right:auto}
-  [data-theme="classic"] body{background:linear-gradient(160deg,#F4F6F9 0%,#C3C8D0 22%,#EEF0F3 42%,#AEB4BE 62%,#E6E9EE 82%,#BFC5CE 100%) fixed}
+  [data-look="classic"] body{background:linear-gradient(160deg,#F4F6F9 0%,#C3C8D0 22%,#EEF0F3 42%,#AEB4BE 62%,#E6E9EE 82%,#BFC5CE 100%) fixed}
   /* white boxes keep dark words and purple buttons (all themes) */
   .price,.band{--ink:#111014;--muted:#111014;--line:#E4E2EC;--accent:#4B33C4;--accent-hover:#3A2699;--accent-ink:#FFFFFF;color:#111014}
-  [data-theme="night"] .price,[data-theme="night"] .band{--ink:#F4F2EE;--muted:#F4F2EE;--line:#2A2A33;--accent:#6A4FE0;--accent-hover:#7D65EA;color:#F4F2EE}
-  [data-theme="pastel"] .price{border-color:#FFFFFF !important}
-  [data-theme="pastel"] .price .tag{background:#111014;color:#fff}
+  [data-look="night"] .price,[data-look="night"] .band{--ink:#F4F2EE;--muted:#F4F2EE;--line:#2A2A33;--accent:#6A4FE0;--accent-hover:#7D65EA;color:#F4F2EE}
+  [data-look="pastel"] .price{border-color:#FFFFFF !important}
+  [data-look="pastel"] .price .tag{background:#FFFFFF;color:#111014;box-shadow:inset 0 0 0 1.5px #4B33C4}
+  /* purple/white look: every button is white (bottom colour of the widget square) with a thin purple edge */
+  [data-look="pastel"] .price,[data-look="pastel"] .band{--accent:#FFFFFF;--accent-hover:#F3F0FF;--accent-ink:#111014}
+  [data-look="pastel"] .price li::before{border-color:#4B33C4}
+  [data-look="pastel"] .btn-main::after,[data-look="pastel"] .cur button::after{box-shadow:inset 0 0 0 1.5px #4B33C4}
+  [data-look="pastel"] .btn-main:hover::after{background:#F3F0FF}
+  [data-look="pastel"] .cur button.on::after{box-shadow:none}
+  /* promise line, drawers, steps, footer links */
+  .promise{font-size:18px !important;margin-top:16px;max-width:520px}
+  details.drawer{border:none;padding:0}
+  details.drawer>summary{display:flex;align-items:center;justify-content:center;gap:12px;padding-right:0}
+  details.drawer>summary h2{margin:0}
+  details.drawer>summary::after{position:static;order:3;font-size:30px !important;line-height:1;color:var(--ink)}
+  details.drawer>summary::before{content:"Tap to view";order:2;font-size:13px !important;opacity:.85}
+  details.drawer[open]>summary::before{content:"Tap to close"}
+  .steps{list-style:none;counter-reset:s;padding:0;margin:28px auto 0;max-width:720px;display:grid;gap:12px}
+  .steps li{counter-increment:s;background:var(--card);color:#111014;border-radius:var(--r-lg);padding:18px 20px 18px 64px;position:relative;display:flex;flex-direction:column;gap:4px}
+  [data-look="night"] .steps li{color:#F4F2EE}
+  .steps li::before{content:counter(s);position:absolute;left:18px;top:16px;width:32px;height:32px;border-radius:var(--r);background:#4B33C4;color:#fff;display:grid;place-items:center}
+  #faq .faq{max-width:760px;margin:22px auto 0;background:var(--card);color:#111014;border-radius:var(--r-lg);padding:4px 22px;border-top:none}
+  [data-look="night"] #faq .faq{color:#F4F2EE}
+  #faq .faq details{border-bottom:1px solid #E4E2EC}
+  [data-look="night"] #faq .faq details{border-color:#2A2A33}
+  #faq .faq details:last-child{border-bottom:none}
+  #faq .faq summary::after{color:inherit}
+  #faq .faq p{color:inherit}
+  .flinks{display:flex;gap:6px 18px;flex-wrap:wrap}
+  .flinks a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+  /* currency: chosen = solid with a tick, other = outline */
+  .cur{gap:8px;border:none;overflow:visible;margin-bottom:12px}
+  .finalp{display:none;width:max-content;margin:0 auto 34px;background:var(--chrome);color:#111014;border-radius:var(--r);padding:5px 12px;font-size:13px !important}
+  .cur button{position:relative;z-index:0;border:none;border-radius:var(--r);background:transparent;color:var(--accent-ink);padding:14px 24px;margin:0 5px 5px 0;opacity:1}
+  .cur button::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--accent);z-index:-1}
+  .cur button::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--chrome);transform:translate(5px,5px);z-index:-2}
+  .cur button.on{color:#111014}
+  .cur button.on::after{background:var(--chrome)}
+  /* more room above "Standard" for the MOST POPULAR tag */
+  .price.best{padding-top:44px}
+  .price .tag{top:-14px}
+  .themer{align-items:center}
+  .themer .tl{color:#111014;font-size:12px !important;padding:0 3px 0 2px;line-height:1}
+  /* no blue tap flash or blue focus ring; keyboard users still see a ring, in purple */
+  *{-webkit-tap-highlight-color:transparent}
+  a:focus,button:focus,summary:focus,input:focus,select:focus,[tabindex]:focus{outline:none}
+  a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #8A6CF0;outline-offset:2px}
+  input[type=range]{accent-color:#4B33C4}
   /* every word bold */
   body, body *{font-weight:700 !important}
 </style>
@@ -205,10 +250,10 @@
     <a class="logo md" href="./" aria-label="fionah home"><img src="logo.svg" alt="fionah" width="40" height="40"></a>
     <div class="navlinks">
       <a class="l" href="#pricing">Pricing</a>
-      <a class="l" href="app/">Free app</a>
+      <a class="l" href="app/">Free trial</a>
       <a class="btn btn-main" href="#pricing">Buy now</a>
-      <div class="themer" role="group" aria-label="Colour theme">
-        <button class="t1" data-t="pastel" title="White" aria-label="White theme"></button>
+      <div class="themer" role="group" aria-label="Colour theme"><span class="tl">Colour</span>
+        <button class="t1" data-t="pastel" title="Purple" aria-label="Purple theme"></button>
         <button class="t2" data-t="classic" title="Chrome" aria-label="Chrome theme"></button>
         <button class="t3" data-t="night" title="Night" aria-label="Night theme"></button>
       </div>
@@ -220,13 +265,15 @@
   <div class="wrap grid">
     <div>
       <h1>Photos to Videos</h1>
+      <p class="promise">Turn your listing photos into scroll-stopping videos in 24 hours.</p>
       <div class="ctas">
-        <a class="btn btn-main" href="app/">Try the free app</a>
+        <a class="btn btn-main" href="app/">Try the free trial</a>
       </div>
       <div class="trust"><span>Secure checkout with Stripe</span></div>
     </div>
 
     <div class="demo" aria-label="Example of a smooth photo video">
+      <video class="demovid" src="img/sample-video.mp4" poster="img/sample-front.jpg" autoplay muted loop playsinline preload="auto" aria-label="Sample fionah video of a house, made from 9 photos"></video>
       <div class="scene"><img src="img/sample-front.jpg" alt="Front of a modern single-storey family home on a sunny day" width="896" height="1120" decoding="async"></div>
       <div class="scene"><img src="img/sample-living.jpg" alt="Bright living room with a cream sofa and timber floors" width="896" height="1120" decoding="async"></div>
       <div class="scene"><img src="img/sample-kitchen.jpg" alt="Light kitchen with a white island bench and brass pendant lights" width="896" height="1120" decoding="async" loading="lazy"></div>
@@ -241,14 +288,42 @@
   </div>
 </header>
 
+<section id="how">
+  <div class="wrap">
+    <details class="drawer">
+      <summary><h2>How it works</h2></summary>
+      <ol class="steps">
+        <li><b>Choose a plan</b><span>Pick Starter, Standard or the Agent Pack.</span></li>
+        <li><b>Send your photos</b><span>Take or choose photos on your phone and tap Send.</span></li>
+        <li><b>Get your video</b><span>Your finished video is ready within 24 hours.</span></li>
+      </ol>
+    </details>
+  </div>
+</section>
+
 <section id="pricing">
   <div class="wrap">
     <div class="center"><h2>Prices in AUD and NZD</h2>
       <div class="cur" role="group" aria-label="Choose currency"><button data-c="AUD" class="on">AUD</button><button data-c="NZD">NZD</button></div>
+      <div class="finalp" id="finalP">Final price on checkout</div>
     </div>
     <div class="prices" id="prices"></div>
-    <p class="nznote" id="nzNote">NZD prices are a guide using today's exchange rate. At checkout, Stripe shows the exact NZD price before you pay.</p>
     <div class="secure">Payments are handled securely by Stripe. We never see your card details.</div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <details class="drawer">
+      <summary><h2>Questions</h2></summary>
+      <div class="faq">
+        <details><summary>Do the photos actually move?</summary><p>The camera gently zooms and glides across each photo, with soft fades between them. The photos themselves stay still. It's a smooth moving slideshow, saved as an MP4 video.</p></details>
+        <details><summary>How long is each video?</summary><p>Every pack offers 30 sec, 60 sec or 1 min 30 sec, you choose. If you use the free trial app, you can choose your length.</p></details>
+        <details><summary>What will I get?</summary><p>An MP4 video in 1080p, in the shape you choose: wide, tall for Reels, post size or square.</p></details>
+        <details><summary>How do I send my photos?</summary><p>Choose your package, and a short form will open. Upload photos or take live ones, choose your video length, place your photos in order, write a short message, add sound, then tap Send when you're finished.</p></details>
+        <details><summary>Is the music OK to use?</summary><p>Yes. We only use royalty-free music, so you can post your video anywhere.</p></details>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -257,9 +332,9 @@
     <div class="band">
       <div>
         <h2 style="margin:0;font-size:clamp(24px,3.4vw,32px)">Prefer to do it yourself?</h2>
-        <p>Use the free Motion Studio App on your phone.</p>
+        <p>Try the Motion Studio app on your phone. Your free trial includes 2 videos.</p>
       </div>
-      <a class="btn btn-main" href="app/">Open the free app</a>
+      <a class="btn btn-main" href="app/">Open free trial app</a>
     </div>
   </div>
 </section>
@@ -267,6 +342,7 @@
 <footer>
   <div class="wrap">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><a class="logo sm" href="#top" aria-label="Back to top"><img src="logo.svg" alt="fionah" width="40" height="40"></a><span>www.fionah.com 2026</span></div>
+    <div class="flinks"><a href="send.html">Send photos</a><a href="policies.html#about">About</a><a href="policies.html#contact">Contact</a><a href="policies.html#refunds">Refunds</a><a href="policies.html#terms">Terms</a><a href="policies.html#privacy">Privacy</a></div>
   </div>
 </footer>
 
@@ -287,8 +363,8 @@ const CONFIG = {
       points: ["1 video", "Up to 10 images", "Royalty-free music", "Ready within 24 hours"] },
     { name: "Standard", aud: 79, stripe: "", best: true,
       points: ["3 videos", "Up to 15 images per video", "Royalty-free music", "Ready within 24 hours"] },
-    { name: "Agent Pack", aud: 379, stripe: "",
-      points: ["8 videos", "Up to 15 images per video", "Royalty-free music"] }
+    { name: "Agent Pack", aud: 199, stripe: "",
+      points: ["8 videos", "Up to 15 images per video", "Royalty-free music", "Ready within 24 hours"] }
   ]
 };
 /* ========================================================= */
@@ -297,7 +373,7 @@ const CONFIG = {
   const box = document.getElementById('prices');
   const money = v => '$' + (Number.isInteger(v) ? v : v.toFixed(2));
   let cur = 'AUD'; try { cur = localStorage.getItem('fionah-cur') || 'AUD'; } catch (e) {}
-  let rate = null;   // live AUD -> NZD rate (filled in below)
+  let rate = 1.12;   // AUD -> NZD guide rate; replaced by today's live rate below when it loads
   function render() {
     document.querySelectorAll('.cur button').forEach(b => b.classList.toggle('on', b.dataset.c === cur));
     const nz = cur === 'NZD';
@@ -314,7 +390,8 @@ const CONFIG = {
       </div>`;
     }).join('');
     box.querySelectorAll('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
-    document.getElementById('nzNote').style.display = nz ? 'block' : 'none';
+    document.getElementById('finalP').style.display = nz ? 'block' : 'none';
+    document.querySelector('.cur').style.marginBottom = nz ? '12px' : '40px';
   }
   document.querySelectorAll('.cur button').forEach(b => b.addEventListener('click', () => { cur = b.dataset.c; try { localStorage.setItem('fionah-cur', cur); } catch (e) {} render(); }));
   render();
@@ -325,10 +402,14 @@ const CONFIG = {
     }
   })();
 
+  // sample video: if the phone won't autoplay it, remove it so the moving photo slideshow shows instead
+  { const v = document.querySelector('.demovid');
+    if (v) { const p = v.play(); if (p && p.catch) p.catch(() => v.remove()); v.addEventListener('error', () => v.remove()); } }
+
   // theme switcher (remembers the visitor's choice)
   const root = document.documentElement;
-  const setT = t => { root.dataset.theme = t; document.querySelectorAll('.themer button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); try { localStorage.setItem('fionah-theme', t); } catch (e) {} };
-  setT(root.dataset.theme || 'pastel');
+  const setT = t => { root.dataset.look = t; document.querySelectorAll('.themer button').forEach(b => b.classList.toggle('on', b.dataset.t === t)); try { localStorage.setItem('fionah-theme', t); } catch (e) {} };
+  setT(root.dataset.look || 'pastel');
   document.querySelectorAll('.themer button').forEach(b => b.addEventListener('click', () => setT(b.dataset.t)));
 })();
 </script>
