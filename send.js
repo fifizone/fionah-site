@@ -98,7 +98,6 @@ const SEND_URL = "";
             body: JSON.stringify({ ...order, index: i + 1, total: photos.length, data }) });
           $('.prog i').style.width = Math.round((i + 1) / photos.length * 100) + '%';
         }
-        $('.done .dmsg').textContent = `Thank you! Your ${photos.length} photo${photos.length === 1 ? ' is' : 's are'} with us.` + (order.email ? ` We've emailed these to ${order.email} (we don't keep your email).` : '');
         $('.done .onum').textContent = '#' + order.number;
         $('.done .code').textContent = code;
         box.classList.add('is-done');
@@ -152,8 +151,8 @@ const SEND_URL = "";
       try {
         const d = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code))).json();
         if (d.status === 'ready') {
-          out.innerHTML = '<p>Your video is ready!</p><a class="sbtn" href="' + d.url + '">Download your video</a>' +
-            '<button type="button" class="sbtn" id="gDone">I\'ve saved my video, delete my files</button>';
+          out.innerHTML = '<a class="sbtn hl" href="' + d.url + '">Download your video</a>' +
+            '<button type="button" class="sbtn hl" id="gDone">Delete my files</button>';
           $('#gDone').addEventListener('click', async () => {
             try { await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code) + '&done=1'); } catch (err) {}
             out.innerHTML = '<p>All done. Your photos and video have been deleted. Thank you!</p>'; form.hidden = true; loadBoard();
