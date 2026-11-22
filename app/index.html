@@ -198,6 +198,9 @@
   input[type=range]{accent-color:#4B33C4}
   /* every word bold */
   body, body *{font-weight:700 !important}
+  a.mail{color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+  .mailnote{text-align:center;margin:18px 0 8px;font-size:16px}
+  :root:not([data-look="classic"]):not([data-look="night"]) .mailnote{color:#fff}
 </style>
 </head>
 <body>
@@ -314,6 +317,8 @@
       <span id="timeLbl">0:00 / 0:00</span>
     </div>
   </section>
+
+  <p class="mailnote">Need help? Email <a class="mail" href="mailto:support@fionah.com">support@fionah.com</a></p>
 
 </main>
 

@@ -76,3 +76,6 @@
 .sendbox .sbtn.hl{color:#111014 !important}
 .sendbox .sbtn.hl::after{background:linear-gradient(135deg,#FFFFFF 0%,#9AA3B2 18%,#F4F6F9 36%,#6B7384 54%,#E6E9EE 72%,#8A93A3 88%,#F0F2F5 100%) !important;box-shadow:none !important}
 .sendbox .lensnote{text-align:center;margin:10px 0 0}
+/* email lines (22 Nov) */
+.mailnote{text-align:center;margin:14px 0 0;font-size:16px}
+.mailnote a.mail,a.mail{color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
