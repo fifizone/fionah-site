@@ -26,7 +26,7 @@
     var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
     if (!a) return;
     var addr = a.getAttribute('href').replace(/^mailto:/, '').split('?')[0];
-    copy(addr).then(function () { note('Email address copied ✓  ' + addr); },
+    copy(addr).then(function () { note('Email address copied ✓ Paste it into your email to write to us.'); },
                     function () { note('Our email: ' + addr); });
   });
 })();
