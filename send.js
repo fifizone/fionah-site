@@ -2,7 +2,7 @@
    ============ EDIT ME ============
    Paste the Google Apps Script web-app link between the quotes to switch sending on.
    Leave it empty and the Send button stays off ("Sending opens soon").            */
-const SEND_URL = "";
+const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgoXJjKUPFwYhAC4bE25h_-nZVOwmg0u1jZrh6nSTxhlCKYNyg/exec";
 /* ================================= */
 {
   const box = document.querySelector('.sendbox:not(.getbox)');
