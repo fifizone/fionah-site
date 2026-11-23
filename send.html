@@ -288,6 +288,7 @@
     <div class="seg3 two" id="sbMusic" role="group" aria-label="Music">
       <button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button>
     </div>
+    <details class="warntile"><summary>Warning</summary><p>Every photo and word is checked automatically by a safety service, which doesn&#39;t keep your photos. Words like &#39;sex&#39;, &#39;kill&#39; or anything similar, rude or insulting words, swearing, and sexual, violent or cruel images will be red flagged.</p></details>
     <div class="row2">
       <button type="button" class="sbtn" id="sbTake">Take photos</button>
       <button type="button" class="sbtn" id="sbPick">Choose photos</button>
@@ -298,6 +299,7 @@
     <div class="ordnote">Your photos show in this order. Use the arrows to move them.</div>
     <div class="count"></div>
     <div class="prog"><i></i></div>
+    <label class="agree"><input type="checkbox" id="sbAgree"> I agree to the <a href="policies.html#terms" target="_blank">Terms</a></label>
     <button type="submit" class="sbtn send" disabled>Send</button>
     <div class="note"></div>
     <a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a>
@@ -323,6 +325,7 @@
   document.querySelectorAll('.themer button').forEach(b => b.addEventListener('click', () => setT(b.dataset.t)));
 }
 </script>
+<script src="safety/safety.js"></script>
 <script src="send.js"></script>
 <script src="mail.js"></script>
 </body>

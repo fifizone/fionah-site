@@ -80,6 +80,19 @@
 .mailnote{text-align:center;margin:14px 0 0;font-size:16px}
 .mailnote a.mail,a.mail{color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
 
+/* safety guard */
+.sendbox .note.warnnote{color:#C2413B}
+.sendbox .stopmsg{margin:14px 0 0;padding:12px 14px;border:2px solid #C2413B;border-radius:4px;background:#fff;color:#1a1a1a;text-align:center;line-height:1.45}
+.sendbox.is-stopped .row2,.sendbox.is-stopped .send{opacity:.45}
+.sendbox .warntile{margin:16px 5px 8px 0}
+.sendbox .warntile summary{list-style:none;cursor:pointer;text-align:center;padding:14px 10px;border-radius:4px;background:var(--sb-btn);color:#fff;box-shadow:4px 4px 0 #A9B0BC}
+.sendbox .warntile summary::-webkit-details-marker{display:none}
+:root:not([data-look="classic"]):not([data-look="night"]) .sendbox .warntile summary{background:#FFFFFF;color:#111014;box-shadow:inset 0 0 0 1.5px #4B33C4,4px 4px 0 #A9B0BC}
+.sendbox .warntile[open] summary{background:linear-gradient(135deg,#FFFFFF 0%,#9AA3B2 18%,#F4F6F9 36%,#6B7384 54%,#E6E9EE 72%,#8A93A3 88%,#F0F2F5 100%) !important;color:#111014 !important;box-shadow:4px 4px 0 #A9B0BC !important}
+.sendbox .warntile p{margin:12px 2px 4px;line-height:1.45}
+.sendbox .agree{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 10px;font-size:16px;cursor:pointer}
+.sendbox .agree input{width:22px;height:22px;margin:0;accent-color:#4B33C4;flex:none}
+.sendbox .agree a{color:inherit;text-decoration:underline}
 /* pack code under its box */
 .sendbox .packnote{min-height:1.2em;margin:4px 0 2px;font-size:14px}
 .sendbox .packnote.ok::before{content:"✓ "}
