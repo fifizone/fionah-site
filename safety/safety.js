@@ -12,7 +12,7 @@
   const LIMITS = { Porn: 0.6, Hentai: 0.6, Sexy: 0.9 };   // block if the checker is this sure or more
   // ===========================================================================================
 
-  // ---- Guard 3: words that aren't accepted (whole words only, so "Middlesex" or "Essex" are fine) ----
+  // ---- Guard 3: words that are not accepted (whole words only, so "Middlesex" or "Essex" are fine) ----
   const WORDS = [
     'sex', 'porn', 'porno', 'pornography', 'xxx', 'nude', 'nudes', 'naked', 'nsfw', 'fuck', 'fucking', 'fucker',
     'cunt', 'cock', 'pussy', 'penis', 'vagina', 'boobs', 'tits', 'blowjob', 'cum', 'orgasm', 'horny', 'slut', 'whore',
@@ -45,7 +45,7 @@
   }
 
   /* checkPhoto(img or canvas) → { ok: true } or { ok: false }
-     If the checker can't run (very old phone, no internet), the photo is let through here
+     If the checker cannot run (very old phone, no internet), the photo is let through here
      and checked again by Google's guard when it is sent (Guard 2). */
   async function checkPhoto(el) {
     try {

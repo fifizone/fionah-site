@@ -242,7 +242,7 @@
       <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
     </div>
     <div class="trialtile">2 free trial videos</div>
-    <details class="warntile"><summary>Warning</summary><p>Every photo and word is checked automatically on your phone. Words like &#39;sex&#39;, &#39;kill&#39; or anything similar, rude or insulting words, swearing, and sexual, violent or cruel images will be red flagged and can&#39;t be used.</p></details>
+    <details class="warntile"><summary>Warning</summary><p>Every photo and word is checked automatically on your phone. Words like &#39;sex&#39;, &#39;kill&#39; or anything similar, rude or insulting words, swearing, and sexual, violent or cruel images will be red flagged and cannot be used.</p></details>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
       <button class="tiny" id="autoAll">Reset all to Auto motion</button>
@@ -390,8 +390,8 @@
 
   // ---------- loading photos ----------
   const BLOCKED = { blocked: true };
-  const BLOCK_MSG = "One or more of your images has been red flagged and can't be used.";
-  const WORDS_MSG = "Please change these words. Motion Studio doesn't accept rude, sexual or violent words.";
+  const BLOCK_MSG = "One or more of your images has been red flagged and cannot be used.";
+  const WORDS_MSG = "Please change these words. Motion Studio does not accept rude, sexual or violent words.";
   async function loadFile(file) {
     const url = URL.createObjectURL(file);
     try {
@@ -408,7 +408,7 @@
       const tk = 160 / Math.max(c.width, c.height);
       t.width = Math.round(c.width * tk); t.height = Math.round(c.height * tk);
       t.getContext('2d').drawImage(c, 0, 0, t.width, t.height);
-      // safety guard: sexual, violent or cruel pictures can't be used
+      // safety guard: sexual, violent or cruel pictures cannot be used
       if (window.fionahSafety && !(await window.fionahSafety.checkPhoto(c)).ok) return BLOCKED;
       return { src: c, thumb: t.toDataURL('image/jpeg', 0.7), motion: 'auto', name: file.name };
     } catch (e) { return null; }
@@ -464,7 +464,7 @@
       <span class="pill"><b>${n}</b> photos</span>
       <span class="pill">Video length <b>${fmt(total())}</b></span>
       <span class="pill">File about <b>${Math.max(1, Math.round(bitrate() * total() / 8 / 1048576))} MB</b></span>
-      ${bad ? `<span class="pill" style="color:var(--bad)">${bad} couldn't open</span>` : ''}` : '';
+      ${bad ? `<span class="pill" style="color:var(--bad)">${bad} could not open</span>` : ''}` : '';
     $('timeLbl').textContent = `${fmt(S.t)} / ${fmt(total())}`;
     if (typeof musicInfo === 'function') musicInfo();
   }
@@ -662,11 +662,11 @@
   function mcpMsg(e) {
     const c = e && e.code;
     if (c === 'needs_reauth') return 'Google Drive needs reconnecting. In claude.ai go to Settings → Connectors and reconnect Google Drive.';
-    if (c === 'server_not_connected' || c === 'selection_required') return 'Google Drive isn\'t connected. In claude.ai go to Settings → Connectors and add Google Drive.';
-    if (c === 'not_in_manifest' || c === 'approval_required') return 'Google Drive access wasn\'t allowed for this app. Tap Google Drive again and choose Allow.';
+    if (c === 'server_not_connected' || c === 'selection_required') return 'Google Drive is not connected. In claude.ai go to Settings → Connectors and add Google Drive.';
+    if (c === 'not_in_manifest' || c === 'approval_required') return 'Google Drive access was not allowed for this app. Tap Google Drive again and choose Allow.';
     if (c === 'blocked_by_policy') return 'Your account settings block Google Drive here.';
     if (c === 'server_unavailable') return 'Google Drive is busy right now — try again in a moment.';
-    return 'Google Drive didn\'t answer — please try again.';
+    return 'Google Drive did not answer — please try again.';
   }
   function b64ToBlob(b64, type) {
     b64 = String(b64).replace(/^data:[^,]*,/, '').replace(/\s+/g, '');
@@ -746,7 +746,7 @@
       }
     }
     renderList(); renderStats(bad); if (S.preset) applyPreset(S.preset); draw(S.t);
-    toast(`Added ${ok} image${ok === 1 ? '' : 's'} from Google Drive${bad ? ` · ${bad} couldn't open (iPhone HEIC files may need Photos instead)` : ''} ✨`);
+    toast(`Added ${ok} image${ok === 1 ? '' : 's'} from Google Drive${bad ? ` · ${bad} could not open (iPhone HEIC files may need Photos instead)` : ''} ✨`);
   }
 
   // ---------- drawing ----------
@@ -882,7 +882,7 @@
     { credits: 10, aud: 24.95, stripe: "https://buy.stripe.com/test_8x25kE5Aq04g6du4qx4AU04", best: true }
   ];
   // The fionah helper (Google script) checks each payment with Stripe before credits are added,
-  // so copying the thank-you web address can't give free credits.
+  // so copying the thank-you web address cannot give free credits.
   const HELPER_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgoXJjKUPFwYhAC4bE25h_-nZVOwmg0u1jZrh6nSTxhlCKYNyg/exec";
   const credits = () => { try { return Math.max(0, Number(localStorage.getItem('fionah-credits') || 0)); } catch (e) { return 0; } };
   const useCredit = () => { try { localStorage.setItem('fionah-credits', String(Math.max(0, credits() - 1))); } catch (e) {} updTrial(); };
@@ -931,7 +931,7 @@
         openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
       } else throw new Error('not paid');
     } catch (err) {
-      openModal('<h3>We couldn\'t confirm your payment yet</h3><p>Please try again in a minute.</p><p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="tryx">Try again</button></div>');
+      openModal('<h3>We could not confirm your payment yet</h3><p>Please try again in a minute.</p><p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="tryx">Try again</button></div>');
       const t = $('tryx'); if (t) t.onclick = () => checkPaid(id);
     }
     const ok = $('okx'); if (ok) ok.onclick = closeModal;
@@ -1003,7 +1003,7 @@
     if (!S.slides.length) return toast('Add your photos first 📷');
     if (!allWordsOk()) return toast(WORDS_MSG);
     if (credits() < 1 && trialMade() >= TRIAL_FREE) return openCredits();
-    if (!cv.captureStream || pickMime() === null) return toast('Sorry — this phone\'s browser can\'t record video. Try Chrome on Android or Safari on a recent iPhone.');
+    if (!cv.captureStream || pickMime() === null) return toast('Sorry — this phone\'s browser cannot record video. Try Chrome on Android or Safari on a recent iPhone.');
     pause();
     const T = total();
     openModal(`
@@ -1054,7 +1054,7 @@
       <p>Photo <b id="pn" style="color:var(--text)">1</b> of ${S.slides.length}</p>
       <div class="prog"><i id="pb"></i></div>
       <p id="pt">0:00 of ${fmt(T)}</p>
-      <p class="tip">Keep this screen on 🙂 The preview behind is what's being recorded.</p>
+      <p class="tip">Keep this screen on 🙂 The preview behind is what is being recorded.</p>
       <div class="acts"><button class="b1" id="cancel">Cancel</button></div>`);
     $('cancel').onclick = () => { cancelled = true; rec.stop(); };
 

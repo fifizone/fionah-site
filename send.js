@@ -7,8 +7,8 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
 
 /* Safety guard wording (Fi to approve the exact words) */
 const STOP_MSG = "One or more of your images has been red flagged, so this order has been stopped. If you think this is a mistake, email orders@fionah.com.";
-const BUSY_MSG = "We're very busy right now. Please try again in about an hour.";
-const WORDS_MSG = "Please change the words in the address or message. fionah doesn't accept rude, sexual or violent words.";
+const BUSY_MSG = "We are very busy right now. Please try again in about an hour.";
+const WORDS_MSG = "Please change the words in the address or message. fionah does not accept rude, sexual or violent words.";
 const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard 3 words)
 {
   const box = document.querySelector('.sendbox:not(.getbox)');
@@ -80,7 +80,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
 
     // ---------- Stripe receipt number: proves the order was paid for, and how many videos are left to send ----------
     // One payment = one receipt number + one order number + one private code for all the videos in the order.
-    // The thank-you page fills it in. If Stripe hasn't sent the receipt yet, the payment's checkout id is used behind the scenes.
+    // The thank-you page fills it in. If Stripe has not sent the receipt yet, the payment's checkout id is used behind the scenes.
     const normRef = v => { v = String(v || '').trim(); if (/^cs_(test|live)_/.test(v)) return v; const dg = v.replace(/\D/g, ''); return dg.length === 8 ? dg.slice(0, 4) + '-' + dg.slice(4) : ''; };
     let pack = { ref: '', left: 0, number: '' };
     let hiddenRef = '';                                 // checkout id from the thank-you page, until the receipt number arrives
@@ -94,7 +94,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       packNote('Checking your receipt number…');
       try {
         const d = await (await fetch(SEND_URL + '?packinfo=1&ref=' + encodeURIComponent(v))).json();
-        if (!d.ok) packNote("That receipt number wasn't found. Please check it and try again.");
+        if (!d.ok) packNote("That receipt number was not found. Please check it and try again.");
         else if (d.left < 1) packNote(`Order #${d.number} has no videos left to send. You can buy another pack on the home page.`);
         else {
           pack = { ref: v, left: d.left, number: d.number }; MAX = d.images || 15; draw();
@@ -168,7 +168,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           try {
             const st = await (await fetch(SEND_URL + '?status=1&code=' + encodeURIComponent(code))).json();
             if (st && st.blocked) { $('.prog').style.display = 'none'; return stopOrder(); }
-          } catch (err) { /* can't ask — the helper still holds back anything it blocked */ }
+          } catch (err) { /* cannot ask — the helper still holds back anything it blocked */ }
         }
         $('.done .onum').textContent = '#' + order.number;
         $('.done .code').textContent = code;
@@ -210,7 +210,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           x.orders.map(o => `<button type="button" class="tile${o.ready ? ' ready' : ''}" data-n="${o.n}" ${o.ready ? '' : 'aria-disabled="true"'} aria-label="Order ${o.n}${o.ready ? ', ready' : ', not ready yet'}">#${o.n}</button>`).join('') +
           '</div>').join('');
         board.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => {
-          if (!t.classList.contains('ready')) { out.textContent = `Order #${t.dataset.n} isn't ready yet. Please check back soon.`; form.hidden = true; return; }
+          if (!t.classList.contains('ready')) { out.textContent = `Order #${t.dataset.n} is not ready yet. Please check back soon.`; form.hidden = true; return; }
           picked = t.dataset.n;
           board.querySelectorAll('.tile').forEach(x => x.classList.toggle('picked', x === t));
           $('#gNum').textContent = '#' + picked; form.hidden = false; out.textContent = ''; $('#gCode').focus();
@@ -243,7 +243,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         } else if (d.status === 'waiting') {
           out.textContent = 'Your video is on its way. Please check back soon.';
         } else {
-          out.textContent = "That code doesn't match this order number. Please check it and try again.";
+          out.textContent = "That code does not match this order number. Please check it and try again.";
         }
       } catch (err) { out.textContent = 'Something went wrong. Please check your internet and try again.'; }
     });
@@ -282,7 +282,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         else { $id('payWait').textContent = 'Your receipt number is in the receipt email from Stripe.'; $id('payWait').hidden = false; }
       } catch (err) {
         if (++tries < 4) return setTimeout(ask, 3000);
-        $id('payHead').innerHTML = 'We couldn\'t confirm your payment yet. <a href="#" id="packTry">Try again</a>';
+        $id('payHead').innerHTML = 'We could not confirm your payment yet. <a href="#" id="packTry">Try again</a>';
         $id('payWait').innerHTML = 'Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.';
         $id('payWait').hidden = false;
         $id('packTry').onclick = e => { e.preventDefault(); tries = 0; $id('payHead').textContent = 'Checking your payment…'; ask(); };
