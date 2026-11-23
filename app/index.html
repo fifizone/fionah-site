@@ -190,6 +190,12 @@
   .pickbtn:active,.tiny:active,.closeapp:active,.ib:active,.seg button:active,.presets button:active{background:var(--chrome) !important;color:#111014 !important}
   .b1:active::after,.b2:active::after{background:var(--chrome)}
   .b1:active,.b2:active{color:#111014}
+  .warntile{margin:12px 4px 4px 0}
+  .warntile summary{list-style:none;cursor:pointer;text-align:center;background:var(--btn);color:var(--btn-ink);border-radius:var(--r);padding:11px;box-shadow:4px 4px 0 #A9B0BC}
+  .warntile summary::-webkit-details-marker{display:none}
+  [data-look="pastel"] .warntile summary{box-shadow:inset 0 0 0 1.5px #4B33C4,4px 4px 0 #A9B0BC}
+  .warntile[open] summary{background:var(--chrome);color:#111014;box-shadow:4px 4px 0 #A9B0BC}
+  .warntile p{margin:10px 2px 2px;line-height:1.45;color:var(--text)}
   .trialtile{margin:14px 4px 4px 0;text-align:center;background:var(--btn);color:var(--btn-ink);border:none;border-radius:var(--r);padding:11px;box-shadow:4px 4px 0 #A9B0BC}
   /* no blue tap flash or blue focus ring; keyboard users still see a ring, in purple */
   *{-webkit-tap-highlight-color:transparent}
@@ -236,6 +242,7 @@
       <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
     </div>
     <div class="trialtile">2 free trial videos</div>
+    <details class="warntile"><summary>Warning</summary><p>Every photo and word is checked automatically on your phone. Words like &#39;sex&#39;, &#39;kill&#39; or anything similar, rude or insulting words, swearing, and sexual, violent or cruel images will be red flagged and can&#39;t be used.</p></details>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
       <button class="tiny" id="autoAll">Reset all to Auto motion</button>
