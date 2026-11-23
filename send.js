@@ -14,7 +14,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
   const box = document.querySelector('.sendbox:not(.getbox)');
   if (box) {
     const $ = s => box.querySelector(s);
-    const MAX = 15;                    // photos per send (matches the packs: up to 15 images per video)
+    let MAX = 15;                      // photos per send: Starter 10, Standard + Agent Pack 15 (set from the pack code)
     let photos = [];                   // { file, url }
     const pick = { len: '', music: 'Yes' };
     const segs = [['#sbLen', 'len'], ['#sbMusic', 'music']];
@@ -94,7 +94,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         const d = await (await fetch(SEND_URL + '?packinfo=1&pack=' + encodeURIComponent(v))).json();
         if (!d.ok) packNote("That pack code wasn't found. Please check it and try again.");
         else if (d.left < 1) packNote('This pack has no videos left. You can buy another pack on the home page.');
-        else { pack = { code: v, left: d.left }; packNote(`${d.left} of ${d.total} video${d.total === 1 ? '' : 's'} left in this pack`, true); try { localStorage.setItem('fionah-pack', v); } catch (e) {} }
+        else { pack = { code: v, left: d.left }; MAX = d.images || 15; draw(); packNote(`${d.left} of ${d.total} video${d.total === 1 ? '' : 's'} left in this pack`, true); try { localStorage.setItem('fionah-pack', v); } catch (e) {} }
       } catch (err) { packNote('Something went wrong. Please check your internet and try again.'); }
       check();
     }
@@ -103,22 +103,20 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     box.fillPack = v => { $('#sbPack').value = v; checkPack(); };   // used by the thank-you page
     try { const saved = localStorage.getItem('fionah-pack'); if (saved && !new URLSearchParams(location.search).get('session_id')) setTimeout(() => box.fillPack(saved), 0); } catch (e) {}
 
-    const okEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     const wordsOk = () => !guard || guard.checkWords($('#sbAddr').value + ' ' + $('#sbNotes').value).ok;
     function check() {
       if (stopped) { $('.send').disabled = true; $('.note').textContent = ''; return; }
       if (checking) { $('.send').disabled = true; return; }
-      const em = $('#sbEmail').value.trim();
       const words = wordsOk();
       const agreed = $('#sbAgree').checked;
-      const filled = (!em || okEmail(em)) && photos.length && pick.len;
+      const filled = photos.length && photos.length <= MAX && pick.len;
       const paid = pack.code && pack.left > 0;
       const ready = paid && filled && words && agreed;
       $('.send').disabled = !SEND_URL || !ready;
       $('.note').textContent = !SEND_URL ? 'Sending opens soon.'
         : !paid ? 'Enter your pack code to send your photos.'
         : !words ? WORDS_MSG
-        : !filled ? 'Choose a video length and add at least one photo.'
+        : photos.length > MAX ? `This pack allows up to ${MAX} photos. Please remove ${photos.length - MAX}.` : !filled ? 'Choose a video length and add at least one photo.'
         : !agreed ? 'Please tick to agree to the Terms.' : 'Ready to send.';
       $('.note').classList.toggle('warnnote', !!SEND_URL && !words);
     }
@@ -143,7 +141,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       // private order code, e.g. FN-7K3Q2X (no names kept)
       const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', rnd = new Uint32Array(6); crypto.getRandomValues(rnd);
       const code = 'FN-' + Array.from(rnd, n => A[n % A.length]).join('');
-      const order = { id: code, pack: pack.code, email: $('#sbEmail').value.trim(),
+      const order = { id: code, pack: pack.code,
                       address: $('#sbAddr').value.trim(), notes: $('#sbNotes').value.trim(), length: pick.len, music: pick.music };
       $('.send').disabled = true; $('.prog').style.display = 'block';
       try {
