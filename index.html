@@ -389,7 +389,7 @@ const CONFIG = {
         <div class="amt">${amt ? `${amt}<small>${cur}</small>` : '<span class="nzwait">See NZD at checkout</span>'}</div>
         <ul>${p.points.map(x => `<li>${x}</li>`).join('')}</ul>
         <a class="btn btn-main" ${live ? `href="${p.stripe}"` : 'aria-disabled="true" href="#pricing"'}>Buy ${p.name}</a>
-        <div class="soon">${live ? 'Secure checkout · card, Apple Pay, Google Pay' : 'Online checkout coming soon'}</div>
+        <div class="soon">${live ? 'Secure checkout · Card, Apple Pay, Google Pay' : 'Online checkout coming soon'}</div>
       </div>`;
     }).join('');
     box.querySelectorAll('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
