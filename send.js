@@ -172,6 +172,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         }
         $('.done .onum').textContent = '#' + order.number;
         $('.done .code').textContent = code;
+        box.querySelectorAll('.onum2').forEach(x => { x.textContent = '#' + order.number; });
         pack.left -= 1;
         const vn = box.querySelector('.vidnote');
         if (vn) vn.textContent = rj.total > 1 ? `Video ${rj.video} of ${rj.total} sent.${pack.left ? ` You have ${pack.left} more to send with your receipt number. Your private code stays the same.` : ''}` : '';
@@ -268,7 +269,6 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         if (!d.ok) throw new Error('not paid');
         $id('payHead').textContent = 'Payment accepted ✓';
         $id('payNum').textContent = '#' + d.number;
-        $id('payLeft').textContent = `${d.left} of ${d.total} video${d.total === 1 ? '' : 's'} to send`;
         $id('payRow').hidden = false;
         if (d.receipt) {
           $id('payReceipt').textContent = d.receipt; $id('payWait').hidden = true;
@@ -276,10 +276,10 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           try { localStorage.setItem('fionah-receipt', d.receipt); } catch (e) {}
           return;
         }
-        $id('payReceipt').textContent = '…'; $id('payWait').hidden = false;
+        $id('payReceipt').textContent = '…';
         if (!filled && sb && sb.fillPack) { sb.fillPack('', sid); filled = true; }   // they can send photos already
         if (++tries < 15) setTimeout(ask, 4000);
-        else $id('payWait').textContent = 'Your receipt number is in the receipt email from Stripe.';
+        else { $id('payWait').textContent = 'Your receipt number is in the receipt email from Stripe.'; $id('payWait').hidden = false; }
       } catch (err) {
         if (++tries < 4) return setTimeout(ask, 3000);
         $id('payHead').innerHTML = 'We couldn\'t confirm your payment yet. <a href="#" id="packTry">Try again</a>';
