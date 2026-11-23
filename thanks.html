@@ -47,6 +47,10 @@
   a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #8A6CF0;outline-offset:2px}
   input[type=range]{accent-color:#4B33C4}
   body, body *{font-weight:700 !important}
+  .packcard{border:1.5px solid #E3DDD3;border-radius:6px;padding:18px;margin:0 auto 22px;max-width:560px}
+  .packcard .pkcode{display:inline-block;margin:8px 0;padding:8px 16px;border-radius:4px;background:var(--chrome);color:#111014;font-size:26px;letter-spacing:.06em}
+  .packcard p{margin:8px 0 0}
+  [data-look="night"] .packcard{border-color:#2A2A33}
 </style>
 <link rel="stylesheet" href="send.css">
 </head>
@@ -54,9 +58,18 @@
   <div class="card">
     <a class="logo md" href="./" aria-label="fionah home"><img src="logo.svg" alt="fionah" width="40" height="40"></a>
     <h1>Thank you</h1>
+    <div class="packcard" id="packCard" hidden>
+      <div class="pklabel">Your pack code</div>
+      <div class="pkcode" id="packCode"></div>
+      <div id="packLeft"></div>
+      <p>Please keep it safe. You'll need it each time you send photos.</p>
+    </div>
 <div class="sendbox" style="padding:4px 0 10px">
   <form novalidate>
     <h2>Send your photos</h2>
+    <label for="sbPack">Pack code (from your thank-you page)</label>
+    <input type="text" id="sbPack" autocomplete="off" autocapitalize="characters" maxlength="12" placeholder="e.g. PK-7K3Q2X">
+    <div class="packnote"></div>
     <label for="sbEmail">Email (optional, only to send you your code)</label>
     <input type="email" id="sbEmail" autocomplete="email" maxlength="80" placeholder="Not saved">
     <label for="sbAddr">Property address (25 characters)</label>

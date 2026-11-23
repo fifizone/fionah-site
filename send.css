@@ -79,3 +79,7 @@
 /* email lines (22 Nov) */
 .mailnote{text-align:center;margin:14px 0 0;font-size:16px}
 .mailnote a.mail,a.mail{color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+
+/* pack code under its box */
+.sendbox .packnote{min-height:1.2em;margin:4px 0 2px;font-size:14px}
+.sendbox .packnote.ok::before{content:"✓ "}
