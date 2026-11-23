@@ -6,7 +6,7 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
 /* ================================= */
 
 /* Safety guard wording (Fi to approve the exact words) */
-const STOP_MSG = "Sorry, we can't accept this photo. fionah doesn't accept sexual, violent or cruel pictures, so this order has been stopped. If you've already paid, email accounts@fionah.com with your Stripe receipt and we'll refund you in full. If you think we've made a mistake, email orders@fionah.com.";
+const STOP_MSG = "One or more of your images has been red flagged, so this order has been stopped. If you think this is a mistake, email orders@fionah.com.";
 const WORDS_MSG = "Please change the words in the address or message. fionah doesn't accept rude, sexual or violent words.";
 const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard 3 words)
 {

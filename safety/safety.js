@@ -17,7 +17,9 @@
     'sex', 'porn', 'porno', 'pornography', 'xxx', 'nude', 'nudes', 'naked', 'nsfw', 'fuck', 'fucking', 'fucker',
     'cunt', 'cock', 'pussy', 'penis', 'vagina', 'boobs', 'tits', 'blowjob', 'cum', 'orgasm', 'horny', 'slut', 'whore',
     'rape', 'raped', 'rapist', 'molest', 'pedo', 'paedo', 'pedophile', 'paedophile', 'bestiality', 'zoophilia',
-    'kill', 'murder', 'torture', 'behead', 'gore', 'massacre', 'mutilate', 'cruelty', 'abuse'
+    'kill', 'murder', 'torture', 'behead', 'gore', 'massacre', 'mutilate', 'cruelty', 'abuse',
+    // swearing, insults and slurs (derogatory words)
+    'shit', 'bullshit', 'motherfucker', 'bitch', 'bastard', 'asshole', 'arsehole', 'dickhead', 'wanker', 'retard', 'nigger', 'nigga', 'faggot', 'fag', 'tranny', 'chink', 'gook', 'kike', 'wog', 'coon', 'abo', 'paki', 'spic'
   ];
   const norm = s => String(s || '').toLowerCase()
     .replace(/[0@4]/g, m => ({ '0': 'o', '@': 'a', '4': 'a' })[m])

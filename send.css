@@ -84,3 +84,4 @@
 .sendbox .note.warnnote{color:#C2413B}
 .sendbox .stopmsg{margin:14px 0 0;padding:12px 14px;border:2px solid #C2413B;border-radius:4px;background:#fff;color:#1a1a1a;text-align:center;line-height:1.45}
 .sendbox.is-stopped .row2,.sendbox.is-stopped .send{opacity:.45}
+.sendbox .safenote{margin:14px 0 6px;font-size:16px;line-height:1.45}
