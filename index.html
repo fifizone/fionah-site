@@ -84,6 +84,21 @@
   .navlinks a.l{padding:8px 12px;text-decoration:none;font-size:14px;color:var(--muted)}
   .navlinks a.l:hover{color:var(--ink)}
   @media (max-width:640px){.navlinks a.l{display:none}}
+  @media (max-width:640px){
+    .navlinks{gap:6px}
+    .navlinks a.l.sp{display:inline-block;padding:6px 2px;font-size:14px;white-space:nowrap}
+    .navlinks .btn{padding:9px 12px;font-size:14px;white-space:nowrap}
+    .themer .tl{display:none}
+  }
+  @media (max-width:380px){
+    nav .wrap{padding-left:12px;padding-right:12px}
+    nav .logo.md img{width:34px;height:34px}
+    .navlinks{gap:5px}
+    .navlinks a.l.sp{font-size:13px}
+    .navlinks .btn{padding:8px 10px;font-size:13px}
+    .themer{gap:3px;padding:4px}
+    .themer button{width:20px;height:20px}
+  }
   .navlinks .btn{padding:10px 16px;font-size:14px}
 
   /* hero */
@@ -253,8 +268,7 @@
     <a class="logo md" href="./" aria-label="fionah home"><img src="logo.svg" alt="fionah" width="40" height="40"></a>
     <div class="navlinks">
       <a class="l" href="#pricing">Pricing</a>
-      <a class="l" href="app/">Free trial</a>
-      <a class="l" href="send.html">Send Photos</a>
+      <a class="l sp" href="send.html">Send Photos</a>
       <a class="btn btn-main" href="#pricing">Buy now</a>
       <div class="themer" role="group" aria-label="Colour theme"><span class="tl">Colour</span>
         <button class="t1" data-t="pastel" title="Purple" aria-label="Purple theme"></button>
