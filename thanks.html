@@ -50,6 +50,9 @@
   .packcard{border:1.5px solid #E3DDD3;border-radius:6px;padding:18px;margin:0 auto 22px;max-width:560px}
   .packcard .pkcode{display:inline-block;margin:8px 0;padding:8px 16px;border-radius:4px;background:var(--chrome);color:#111014;font-size:26px;letter-spacing:.06em}
   .packcard p{margin:8px 0 0}
+  .packcard .paypair{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:6px 0}
+  .packcard .paypair span{display:block;font-size:14px}
+  .packcard .pkcode{font-size:22px}
   [data-look="night"] .packcard{border-color:#2A2A33}
 </style>
 <link rel="stylesheet" href="send.css">
@@ -59,16 +62,19 @@
     <a class="logo md" href="./" aria-label="fionah home"><img src="logo.svg" alt="fionah" width="40" height="40"></a>
     <h1>Thank you</h1>
     <div class="packcard" id="packCard" hidden>
-      <div class="pklabel">Your pack code</div>
-      <div class="pkcode" id="packCode"></div>
-      <div id="packLeft"></div>
-      <p>Please keep it safe. You'll need it each time you send photos.</p>
+      <div class="pklabel" id="payHead">Checking your payment…</div>
+      <div id="payRow" hidden>
+        <div class="paypair"><div><span>Stripe receipt number</span><div class="pkcode" id="payReceipt"></div></div><div><span>Order number</span><div class="pkcode" id="payNum"></div></div></div>
+        <div id="payLeft"></div>
+        <p id="payWait" hidden>Your receipt number is on its way…</p>
+        <p>Please keep your receipt number. You'll use it each time you send photos, and it's also in the receipt email from Stripe.</p>
+      </div>
     </div>
 <div class="sendbox" style="padding:4px 0 10px">
   <form novalidate>
     <h2>Send your photos</h2>
-    <label for="sbPack">Pack code (from your thank-you page)</label>
-    <input type="text" id="sbPack" autocomplete="off" autocapitalize="characters" maxlength="12" placeholder="e.g. PK-7K3Q2X">
+    <label for="sbPack">Stripe receipt number (on your thank-you page and Stripe email)</label>
+    <input type="text" id="sbPack" autocomplete="off" inputmode="numeric" maxlength="12" placeholder="e.g. 1234-5678">
     <div class="packnote"></div>
     <label for="sbAddr">Property address (25 characters)</label>
     <input type="text" id="sbAddr" maxlength="25" data-lim="25" placeholder="e.g. 12 Sample Street, 1234">
@@ -100,7 +106,7 @@
     <div class="note"></div>
     <a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a>
   </form>
-  <div class="done"><h2>Sent</h2><p class="dmsg">Thank you. Your order is with us.</p><div class="pair"><div><span>Order number</span><div class="onum"></div></div><div><span>Private code</span><div class="code"></div></div></div><p>Please keep these safe.</p><p>Check the <a href="get.html">Get Your Video</a> Board within 24 hours. If your order number is Chrome, tap to enter your private code.</p><a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a><p class="lensnote">Press the icon to go back to the homepage or close when finished. Thank you</p></div>
+  <div class="done"><h2>Sent</h2><p class="dmsg">Thank you. Your order is with us.</p><div class="pair"><div><span>Order number</span><div class="onum"></div></div><div><span>Private code</span><div class="code"></div></div></div><p>Please keep these safe.</p><p class="vidnote"></p><p>Check the <a href="get.html">Get Your Video</a> Board within 24 hours. If your order number is Chrome, tap to enter your private code.</p><a class="toplens" href="./#top" aria-label="Back to the top of the home page"><img src="logo.svg" alt="" width="44" height="44"></a><p class="lensnote">Press the icon to go back to the homepage or close when finished. Thank you</p></div>
 </div>
     <p class="mailnote">Questions about your order? Email <a class="mail" href="mailto:orders@fionah.com">orders@fionah.com</a></p>
     <a class="btn" href="./">Return to Home</a>

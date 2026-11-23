@@ -78,30 +78,37 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       check();
     }
 
-    // ---------- pack code: proves the pack was paid for, and how many videos are left ----------
-    // The thank-you page gets it from the helper after Stripe confirms the payment. One video is used per send.
-    const normPack = v => { v = String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); if (v.startsWith('PK')) v = v.slice(2); return v ? 'PK-' + v : ''; };
-    const okPack = v => /^PK-[A-Z0-9]{6}$/.test(v);
-    let pack = { code: '', left: 0 };
+    // ---------- Stripe receipt number: proves the order was paid for, and how many videos are left to send ----------
+    // One payment = one receipt number + one order number + one private code for all the videos in the order.
+    // The thank-you page fills it in. If Stripe hasn't sent the receipt yet, the payment's checkout id is used behind the scenes.
+    const normRef = v => { v = String(v || '').trim(); if (/^cs_(test|live)_/.test(v)) return v; const dg = v.replace(/\D/g, ''); return dg.length === 8 ? dg.slice(0, 4) + '-' + dg.slice(4) : ''; };
+    let pack = { ref: '', left: 0, number: '' };
+    let hiddenRef = '';                                 // checkout id from the thank-you page, until the receipt number arrives
     const packNote = (t, ok) => { const n = $('.packnote'); n.textContent = t; n.classList.toggle('ok', !!ok); };
     async function checkPack() {
-      const v = normPack($('#sbPack').value);
-      pack = { code: '', left: 0 };
-      if (!okPack(v)) { packNote(v ? 'Pack codes look like PK-7K3Q2X.' : ''); check(); return; }
+      const typed = $('#sbPack').value.trim();
+      const v = normRef(typed) || (!typed ? hiddenRef : '');
+      pack = { ref: '', left: 0, number: '' };
+      if (!v) { packNote(typed ? 'Receipt numbers look like 1234-5678.' : ''); check(); return; }
       if (!SEND_URL) { check(); return; }
-      packNote('Checking your pack code…');
+      packNote('Checking your receipt number…');
       try {
-        const d = await (await fetch(SEND_URL + '?packinfo=1&pack=' + encodeURIComponent(v))).json();
-        if (!d.ok) packNote("That pack code wasn't found. Please check it and try again.");
-        else if (d.left < 1) packNote('This pack has no videos left. You can buy another pack on the home page.');
-        else { pack = { code: v, left: d.left }; MAX = d.images || 15; draw(); packNote(`${d.left} of ${d.total} video${d.total === 1 ? '' : 's'} left in this pack`, true); try { localStorage.setItem('fionah-pack', v); } catch (e) {} }
+        const d = await (await fetch(SEND_URL + '?packinfo=1&ref=' + encodeURIComponent(v))).json();
+        if (!d.ok) packNote("That receipt number wasn't found. Please check it and try again.");
+        else if (d.left < 1) packNote(`Order #${d.number} has no videos left to send. You can buy another pack on the home page.`);
+        else {
+          pack = { ref: v, left: d.left, number: d.number }; MAX = d.images || 15; draw();
+          packNote(`Order #${d.number} · ${d.left} of ${d.total} video${d.total === 1 ? '' : 's'} left to send`, true);
+          if (d.receipt && !typed) $('#sbPack').value = d.receipt;
+          try { localStorage.setItem('fionah-receipt', d.receipt || v); } catch (e) {}
+        }
       } catch (err) { packNote('Something went wrong. Please check your internet and try again.'); }
       check();
     }
     let packT = 0;
     $('#sbPack').addEventListener('input', () => { clearTimeout(packT); packT = setTimeout(checkPack, 500); });
-    box.fillPack = v => { $('#sbPack').value = v; checkPack(); };   // used by the thank-you page
-    try { const saved = localStorage.getItem('fionah-pack'); if (saved && !new URLSearchParams(location.search).get('session_id')) setTimeout(() => box.fillPack(saved), 0); } catch (e) {}
+    box.fillPack = (receipt, sid) => { if (sid) hiddenRef = sid; if (receipt) $('#sbPack').value = receipt; checkPack(); };   // used by the thank-you page
+    try { const saved = localStorage.getItem('fionah-receipt'); if (saved && !/^cs_/.test(saved) && !new URLSearchParams(location.search).get('session_id')) setTimeout(() => box.fillPack(saved), 0); } catch (e) {}
 
     const wordsOk = () => !guard || guard.checkWords($('#sbAddr').value + ' ' + $('#sbNotes').value).ok;
     function check() {
@@ -110,11 +117,11 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       const words = wordsOk();
       const agreed = $('#sbAgree').checked;
       const filled = photos.length && photos.length <= MAX && pick.len;
-      const paid = pack.code && pack.left > 0;
+      const paid = pack.ref && pack.left > 0;
       const ready = paid && filled && words && agreed;
       $('.send').disabled = !SEND_URL || !ready;
       $('.note').textContent = !SEND_URL ? 'Sending opens soon.'
-        : !paid ? 'Enter your pack code to send your photos.'
+        : !paid ? 'Enter your Stripe receipt number to send your photos.'
         : !words ? WORDS_MSG
         : photos.length > MAX ? `This pack allows up to ${MAX} photos. Please remove ${photos.length - MAX}.` : !filled ? 'Choose a video length and add at least one photo.'
         : !agreed ? 'Please tick to agree to the Terms.' : 'Ready to send.';
@@ -138,18 +145,16 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     box.querySelector('form').addEventListener('submit', async e => {
       e.preventDefault();
       if ($('.send').disabled || stopped || !wordsOk() || !$('#sbAgree').checked) return;
-      // private order code, e.g. FN-7K3Q2X (no names kept)
-      const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', rnd = new Uint32Array(6); crypto.getRandomValues(rnd);
-      const code = 'FN-' + Array.from(rnd, n => A[n % A.length]).join('');
-      const order = { id: code, pack: pack.code,
-                      address: $('#sbAddr').value.trim(), notes: $('#sbNotes').value.trim(), length: pick.len, music: pick.music };
+      let code = '';                     // the order's private code comes from the helper (one code for all videos in the order)
+      const order = { address: $('#sbAddr').value.trim(), notes: $('#sbNotes').value.trim(), length: pick.len, music: pick.music };
       $('.send').disabled = true; $('.prog').style.display = 'block';
       try {
         // get the next order number from the Google script (e.g. 1042)
-        $('.note').textContent = 'Getting your order number…';
-        const rr = await fetch(SEND_URL + '?reserve=1&code=' + encodeURIComponent(code) + '&pack=' + encodeURIComponent(pack.code));
+        $('.note').textContent = 'Getting your order ready…';
+        const rr = await fetch(SEND_URL + '?reserve=1&ref=' + encodeURIComponent(pack.ref));
         const rj = await rr.json();
-        if (rj.nopack) { packNote('This pack has no videos left. You can buy another pack on the home page.'); pack.left = 0; throw new Error('no pack'); }
+        if (rj.nopack) { packNote('This order has no videos left to send. You can buy another pack on the home page.'); pack.left = 0; throw new Error('no pack'); }
+        code = rj.code; order.id = code; order.video = rj.video;
         if (rj.busy) { $('.prog').style.display = 'none'; $('.note').textContent = BUSY_MSG; $('.send').disabled = false; return; }
         order.number = String(rj.number || '');
         if (!order.number) throw new Error('no number');
@@ -168,6 +173,8 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         $('.done .onum').textContent = '#' + order.number;
         $('.done .code').textContent = code;
         pack.left -= 1;
+        const vn = box.querySelector('.vidnote');
+        if (vn) vn.textContent = rj.total > 1 ? `Video ${rj.video} of ${rj.total} sent.${pack.left ? ` You have ${pack.left} more to send with your receipt number. Your private code stays the same.` : ''}` : '';
         box.classList.add('is-done');
       } catch (err) {
         $('.note').textContent = 'Something went wrong. Please check your internet and tap Send again.';
@@ -219,11 +226,18 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       try {
         const d = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code))).json();
         if (d.status === 'ready') {
-          out.innerHTML = '<a class="sbtn hl" href="' + d.url + '">Download your video</a>' +
+          const vids = d.videos && d.videos.length ? d.videos : [{ name: 'Video', url: d.url }];
+          const many = vids.length > 1 || d.waiting > 0 || d.left > 0;
+          out.innerHTML = vids.map(v => '<a class="sbtn hl" href="' + v.url + '">Download ' + (many ? 'your ' + v.name : 'your video') + '</a>').join('') +
+            (d.waiting > 0 ? `<p>${d.waiting} more video${d.waiting === 1 ? ' is' : 's are'} on the way.</p>` : '') +
             '<button type="button" class="sbtn hl" id="gDone">Delete my files</button>';
           $('#gDone').addEventListener('click', async () => {
-            try { await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code) + '&done=1'); } catch (err) {}
-            out.innerHTML = '<p>All done. Your photos and video have been deleted. Thank you!</p>'; form.hidden = true; loadBoard();
+            let r = {};
+            try { r = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code) + '&done=1')).json(); } catch (err) {}
+            out.innerHTML = r.left > 0
+              ? `<p>Your downloaded videos and their photos have been deleted. You still have ${r.left} video${r.left === 1 ? '' : 's'} to send with your receipt number.</p>`
+              : '<p>All done. Your photos and video have been deleted. Thank you!</p>';
+            form.hidden = true; loadBoard();
           });
         } else if (d.status === 'waiting') {
           out.textContent = 'Your video is on its way. Please check back soon.';
@@ -238,25 +252,40 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
 }
 
 /* Thank-you page: Stripe sends the buyer here with ?session_id=cs_…
-   The helper checks the payment with Stripe and gives back the pack code (the same code if the page is opened again). */
+   The helper checks the payment with Stripe and shows: Payment accepted, the Stripe receipt number and the order number.
+   Stripe gives the receipt number once it has emailed the receipt, so the page checks again for up to a minute. */
 {
   const card = document.getElementById('packCard');
   const sid = new URLSearchParams(location.search).get('session_id');
   if (card && SEND_URL && sid && /^cs_(test|live)_[A-Za-z0-9]{10,200}$/.test(sid)) {
     card.hidden = false;
-    const left = document.getElementById('packLeft'), codeEl = document.getElementById('packCode');
+    const $id = i => document.getElementById(i);
+    const sb = document.querySelector('.sendbox:not(.getbox)');
+    let tries = 0, filled = false;
     const ask = async () => {
-      left.textContent = 'Checking your payment…'; codeEl.textContent = '';
       try {
-        const d = await (await fetch(SEND_URL + '?pack=' + encodeURIComponent(sid))).json();
+        const d = await (await fetch(SEND_URL + '?pay=' + encodeURIComponent(sid))).json();
         if (!d.ok) throw new Error('not paid');
-        codeEl.textContent = d.code;
-        left.textContent = `${d.left} of ${d.total} video${d.total === 1 ? '' : 's'} left to send`;
-        const sb = document.querySelector('.sendbox:not(.getbox)'); if (sb && sb.fillPack) sb.fillPack(d.code);
-        try { localStorage.setItem('fionah-pack', d.code); } catch (e) {}
+        $id('payHead').textContent = 'Payment accepted ✓';
+        $id('payNum').textContent = '#' + d.number;
+        $id('payLeft').textContent = `${d.left} of ${d.total} video${d.total === 1 ? '' : 's'} to send`;
+        $id('payRow').hidden = false;
+        if (d.receipt) {
+          $id('payReceipt').textContent = d.receipt; $id('payWait').hidden = true;
+          if (sb && sb.fillPack) sb.fillPack(d.receipt, sid);
+          try { localStorage.setItem('fionah-receipt', d.receipt); } catch (e) {}
+          return;
+        }
+        $id('payReceipt').textContent = '…'; $id('payWait').hidden = false;
+        if (!filled && sb && sb.fillPack) { sb.fillPack('', sid); filled = true; }   // they can send photos already
+        if (++tries < 15) setTimeout(ask, 4000);
+        else $id('payWait').textContent = 'Your receipt number is in the receipt email from Stripe.';
       } catch (err) {
-        left.innerHTML = 'We couldn\'t confirm your payment yet. <a href="#" id="packTry">Try again</a><br>Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.';
-        document.getElementById('packTry').onclick = e => { e.preventDefault(); ask(); };
+        if (++tries < 4) return setTimeout(ask, 3000);
+        $id('payHead').innerHTML = 'We couldn\'t confirm your payment yet. <a href="#" id="packTry">Try again</a>';
+        $id('payWait').innerHTML = 'Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.';
+        $id('payWait').hidden = false;
+        $id('packTry').onclick = e => { e.preventDefault(); tries = 0; $id('payHead').textContent = 'Checking your payment…'; ask(); };
       }
     };
     ask();
