@@ -219,7 +219,8 @@
   [data-look="pastel"] .btn-main:hover::after{background:#F3F0FF}
   [data-look="pastel"] .cur button.on::after{box-shadow:none}
   /* promise line, drawers, steps, footer links */
-  .promise{font-size:18px !important;margin-top:16px;max-width:520px}
+  .promise{font-size:18px !important;margin-top:16px;max-width:520px;min-height:1.6em;transition:opacity .6s ease}
+  .promise.fade{opacity:0}
   details.drawer{border:none;padding:0}
   details.drawer>summary{display:flex;align-items:center;justify-content:center;gap:12px;padding-right:0}
   details.drawer>summary h2{margin:0}
@@ -283,7 +284,7 @@
   <div class="wrap grid">
     <div>
       <h1>Photos to Videos</h1>
-      <p class="promise">Turn your listing photos into scroll-stopping videos in 24 hours.</p>
+      <p class="promise" id="hook">Stop scrolling starts here.</p>
       <div class="ctas">
         <a class="btn btn-main" href="app/">Try the free trial</a>
       </div>
@@ -430,6 +431,18 @@ const CONFIG = {
   setT(root.dataset.look || 'pastel');
   document.querySelectorAll('.themer button').forEach(b => b.addEventListener('click', () => setT(b.dataset.t)));
 })();
+</script>
+<script>
+/* Hook lines at the top: each shows for 5 seconds, then fades to the next (Fi's 4 favourites) */
+{
+  const HOOKS = ["Stop scrolling starts here.", "Your listing, in motion.", "Turn a glance into a viewing.", "A home tour in their pocket."];
+  const el = document.getElementById('hook');
+  let i = 0;
+  if (el) setInterval(() => {
+    el.classList.add('fade');
+    setTimeout(() => { i = (i + 1) % HOOKS.length; el.textContent = HOOKS[i]; el.classList.remove('fade'); }, 600);
+  }, 5000);
+}
 </script>
 </body>
 </html>
