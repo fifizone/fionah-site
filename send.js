@@ -7,6 +7,7 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
 
 /* Safety guard wording (Fi to approve the exact words) */
 const STOP_MSG = "One or more of your images has been red flagged, so this order has been stopped. If you think this is a mistake, email orders@fionah.com.";
+const BUSY_MSG = "We're very busy right now. Please try again in about an hour.";
 const WORDS_MSG = "Please change the words in the address or message. fionah doesn't accept rude, sexual or violent words.";
 const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard 3 words)
 {
@@ -84,11 +85,14 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       if (checking) { $('.send').disabled = true; return; }
       const em = $('#sbEmail').value.trim();
       const words = wordsOk();
-      const ready = (!em || okEmail(em)) && photos.length && pick.len && words;
+      const agreed = $('#sbAgree').checked;
+      const filled = (!em || okEmail(em)) && photos.length && pick.len;
+      const ready = filled && words && agreed;
       $('.send').disabled = !SEND_URL || !ready;
       $('.note').textContent = !SEND_URL ? 'Sending opens soon.'
         : !words ? WORDS_MSG
-        : ready ? 'Ready to send.' : 'Choose a video length and add at least one photo.';
+        : !filled ? 'Choose a video length and add at least one photo.'
+        : !agreed ? 'Please tick to agree to the Terms.' : 'Ready to send.';
       $('.note').classList.toggle('warnnote', !!SEND_URL && !words);
     }
     box.querySelectorAll('input').forEach(i => i.addEventListener('input', check));
@@ -108,7 +112,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
 
     box.querySelector('form').addEventListener('submit', async e => {
       e.preventDefault();
-      if ($('.send').disabled || stopped || !wordsOk()) return;
+      if ($('.send').disabled || stopped || !wordsOk() || !$('#sbAgree').checked) return;
       // private order code, e.g. FN-7K3Q2X (no names kept)
       const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', rnd = new Uint32Array(6); crypto.getRandomValues(rnd);
       const code = 'FN-' + Array.from(rnd, n => A[n % A.length]).join('');
@@ -119,7 +123,9 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         // get the next order number from the Google script (e.g. 1042)
         $('.note').textContent = 'Getting your order number…';
         const rr = await fetch(SEND_URL + '?reserve=1&code=' + encodeURIComponent(code));
-        order.number = String((await rr.json()).number || '');
+        const rj = await rr.json();
+        if (rj.busy) { $('.prog').style.display = 'none'; $('.note').textContent = BUSY_MSG; $('.send').disabled = false; return; }
+        order.number = String(rj.number || '');
         if (!order.number) throw new Error('no number');
         for (let i = 0; i < photos.length; i++) {
           $('.note').textContent = `Sending photo ${i + 1} of ${photos.length}…`;
