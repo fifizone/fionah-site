@@ -362,11 +362,11 @@ const CONFIG = {
   // Prices are set in AUD. NZ customers: Stripe shows the exact NZD price at checkout
   // (Stripe "Adaptive Pricing"), so each package needs just ONE Stripe link.
   packages: [
-    { name: "Starter", aud: 29.95, stripe: "",
+    { name: "Starter", aud: 29.95, stripe: "https://buy.stripe.com/test_9B6eVe8MCdV67hy5uB4AU00",
       points: ["1 video", "Up to 10 images", "Royalty-free music", "Ready within 24 hours"] },
-    { name: "Standard", aud: 79, stripe: "", best: true,
+    { name: "Standard", aud: 79, stripe: "https://buy.stripe.com/test_14A8wQ5Aq7wIbxO3mt4AU01", best: true,
       points: ["3 videos", "Up to 15 images per video", "Royalty-free music", "Ready within 24 hours"] },
-    { name: "Agent Pack", aud: 199, stripe: "",
+    { name: "Agent Pack", aud: 199, stripe: "https://buy.stripe.com/test_6oUbJ20g62co31i1el4AU02",
       points: ["8 videos", "Up to 15 images per video", "Royalty-free music", "Ready within 24 hours"] }
   ]
 };

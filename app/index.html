@@ -860,9 +860,12 @@
   // ---------- credits: 1 credit = 1 video without the watermark (saved on this phone) ----------
   // Stripe links go here once Stripe is set up (empty = "Coming soon").
   const CREDIT_PACKS = [
-    { credits: 3, aud: 9.95, stripe: "" },
-    { credits: 10, aud: 24.95, stripe: "", best: true }
+    { credits: 3, aud: 9.95, stripe: "https://buy.stripe.com/test_fZuaEY9QGaIUdFW8GN4AU03" },
+    { credits: 10, aud: 24.95, stripe: "https://buy.stripe.com/test_8x25kE5Aq04g6du4qx4AU04", best: true }
   ];
+  // The fionah helper (Google script) checks each payment with Stripe before credits are added,
+  // so copying the thank-you web address can't give free credits.
+  const HELPER_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgoXJjKUPFwYhAC4bE25h_-nZVOwmg0u1jZrh6nSTxhlCKYNyg/exec";
   const credits = () => { try { return Math.max(0, Number(localStorage.getItem('fionah-credits') || 0)); } catch (e) { return 0; } };
   const useCredit = () => { try { localStorage.setItem('fionah-credits', String(Math.max(0, credits() - 1))); } catch (e) {} updTrial(); };
   const showMark = () => credits() < 1;
@@ -880,7 +883,7 @@
         <div class="pk">${p.credits} credits · $${p.aud.toFixed(2)} AUD</div>
         <div>about $${(p.aud / p.credits).toFixed(2)} a video</div>
         ${p.best ? '<div class="best">Best value</div>' : ''}
-        <div class="acts">${p.stripe ? `<a class="b2 lnk" style="flex:1" href="${p.stripe}">Buy</a>` : '<button class="b2" disabled>Buy (coming soon)</button>'}</div>
+        <div class="acts">${p.stripe ? `<a class="b2 lnk" style="flex:1" href="${p.stripe}" target="_blank" rel="noopener">Buy</a>` : '<button class="b2" disabled>Buy (coming soon)</button>'}</div>
       </div>`).join('');
     openModal(`
       <h3>Credits</h3>
@@ -894,6 +897,32 @@
     box.classList.add('credbox');
     $('nox').onclick = closeModal;
   }
+  // ---------- coming back from Stripe: check the payment, then add the credits ----------
+  // Stripe sends the buyer to fionah.com/app/?paid=<checkout id>. The helper asks Stripe if it was really paid.
+  const addCredits = k => { try { localStorage.setItem('fionah-credits', String(credits() + k)); } catch (e) {} updTrial(); };
+  async function checkPaid(id) {
+    openModal('<h3>Checking your payment…</h3><p>This only takes a moment.</p>');
+    try {
+      const d = await (await fetch(HELPER_URL + '?paid=' + encodeURIComponent(id))).json();
+      if (d.ok && d.credits > 0) {
+        addCredits(d.credits);
+        try { history.replaceState(null, '', location.pathname); } catch (e) {}
+        openModal(`<h3>Thank you</h3><div class="credbal">${d.credits} credits added ✓</div><p>You now have ${credits()} credit${credits() === 1 ? '' : 's'}. Your next video will be made without the watermark.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+      } else if (d.used) {
+        try { history.replaceState(null, '', location.pathname); } catch (e) {}
+        openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
+      } else throw new Error('not paid');
+    } catch (err) {
+      openModal('<h3>We couldn\'t confirm your payment yet</h3><p>Please try again in a minute.</p><p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="tryx">Try again</button></div>');
+      const t = $('tryx'); if (t) t.onclick = () => checkPaid(id);
+    }
+    const ok = $('okx'); if (ok) ok.onclick = closeModal;
+  }
+  const paidId = new URLSearchParams(location.search).get('paid');
+  if (paidId && /^cs_(test|live)_[A-Za-z0-9]{10,200}$/.test(paidId)) setTimeout(() => checkPaid(paidId), 0);
+  // credits bought in another tab: refresh the count when the buyer comes back to this tab
+  window.addEventListener('storage', e => { if (e.key === 'fionah-credits') updTrial(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) updTrial(); });
 
   // ---------- preview ----------
   let raf = 0, t0 = 0;
