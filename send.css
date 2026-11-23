@@ -79,3 +79,8 @@
 /* email lines (22 Nov) */
 .mailnote{text-align:center;margin:14px 0 0;font-size:16px}
 .mailnote a.mail,a.mail{color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+
+/* safety guard */
+.sendbox .note.warnnote{color:#C2413B}
+.sendbox .stopmsg{margin:14px 0 0;padding:12px 14px;border:2px solid #C2413B;border-radius:4px;background:#fff;color:#1a1a1a;text-align:center;line-height:1.45}
+.sendbox.is-stopped .row2,.sendbox.is-stopped .send{opacity:.45}

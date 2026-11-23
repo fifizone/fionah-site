@@ -4,6 +4,11 @@
    Leave it empty and the Send button stays off ("Sending opens soon").            */
 const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgoXJjKUPFwYhAC4bE25h_-nZVOwmg0u1jZrh6nSTxhlCKYNyg/exec";
 /* ================================= */
+
+/* Safety guard wording (Fi to approve the exact words) */
+const STOP_MSG = "Sorry, we can't accept this photo. fionah doesn't accept sexual, violent or cruel pictures, so this order has been stopped. If you've already paid, email accounts@fionah.com with your Stripe receipt and we'll refund you in full. If you think we've made a mistake, email orders@fionah.com.";
+const WORDS_MSG = "Please change the words in the address or message. fionah doesn't accept rude, sexual or violent words.";
+const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard 3 words)
 {
   const box = document.querySelector('.sendbox:not(.getbox)');
   if (box) {
@@ -27,12 +32,31 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
     // photo buttons
     $('#sbTake').addEventListener('click', () => $('#sbCam').click());
     $('#sbPick').addEventListener('click', () => $('#sbFiles').click());
-    const add = list => {
-      for (const f of list) {
-        if (!f.type.startsWith('image/')) continue;
+    let stopped = false, checking = false;
+    // Safety guard: an unacceptable photo stops the whole order (Fi's choice: stop + refund)
+    function stopOrder() {
+      stopped = true;
+      photos.forEach(p => URL.revokeObjectURL(p.url)); photos = [];
+      box.classList.add('is-stopped');
+      box.querySelectorAll('button, input').forEach(el => { el.disabled = true; });
+      let m = box.querySelector('.stopmsg');
+      if (!m) { m = document.createElement('p'); m.className = 'stopmsg'; m.setAttribute('role', 'alert'); $('.note').after(m); }
+      m.textContent = STOP_MSG;
+      draw();
+    }
+    const add = async list => {
+      if (stopped) return;
+      checking = true;
+      const files = [...list].filter(f => f.type.startsWith('image/'));
+      for (let i = 0; i < files.length; i++) {
         if (photos.length >= MAX) break;
-        photos.push({ file: f, url: URL.createObjectURL(f) });
+        $('.note').textContent = `Checking photo ${i + 1} of ${files.length}…`;
+        const r = guard ? await guard.checkFile(files[i]) : { ok: true };
+        if (!r.ok) { checking = false; return stopOrder(); }
+        photos.push({ file: files[i], url: URL.createObjectURL(files[i]) });
+        draw();
       }
+      checking = false;
       draw();
     };
     $('#sbCam').addEventListener('change', e => { add(e.target.files); e.target.value = ''; });
@@ -54,12 +78,18 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
     }
 
     const okEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    const wordsOk = () => !guard || guard.checkWords($('#sbAddr').value + ' ' + $('#sbNotes').value).ok;
     function check() {
+      if (stopped) { $('.send').disabled = true; $('.note').textContent = ''; return; }
+      if (checking) { $('.send').disabled = true; return; }
       const em = $('#sbEmail').value.trim();
-      const ready = (!em || okEmail(em)) && photos.length && pick.len;
+      const words = wordsOk();
+      const ready = (!em || okEmail(em)) && photos.length && pick.len && words;
       $('.send').disabled = !SEND_URL || !ready;
       $('.note').textContent = !SEND_URL ? 'Sending opens soon.'
+        : !words ? WORDS_MSG
         : ready ? 'Ready to send.' : 'Choose a video length and add at least one photo.';
+      $('.note').classList.toggle('warnnote', !!SEND_URL && !words);
     }
     box.querySelectorAll('input').forEach(i => i.addEventListener('input', check));
 
@@ -78,7 +108,7 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
 
     box.querySelector('form').addEventListener('submit', async e => {
       e.preventDefault();
-      if ($('.send').disabled) return;
+      if ($('.send').disabled || stopped || !wordsOk()) return;
       // private order code, e.g. FN-7K3Q2X (no names kept)
       const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', rnd = new Uint32Array(6); crypto.getRandomValues(rnd);
       const code = 'FN-' + Array.from(rnd, n => A[n % A.length]).join('');
@@ -97,6 +127,11 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
           await fetch(SEND_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({ ...order, index: i + 1, total: photos.length, data }) });
           $('.prog i').style.width = Math.round((i + 1) / photos.length * 100) + '%';
+          // Guard 2: ask the helper whether Google's check stopped this order
+          try {
+            const st = await (await fetch(SEND_URL + '?status=1&code=' + encodeURIComponent(code))).json();
+            if (st && st.blocked) { $('.prog').style.display = 'none'; return stopOrder(); }
+          } catch (err) { /* can't ask — the helper still holds back anything it blocked */ }
         }
         $('.done .onum').textContent = '#' + order.number;
         $('.done .code').textContent = code;

@@ -342,6 +342,7 @@
   <div class="box" id="box"></div>
 </div>
 
+<script src="../safety/safety.js"></script>
 <script>
 (() => {
   // ---------- state ----------
@@ -381,6 +382,9 @@
   }
 
   // ---------- loading photos ----------
+  const BLOCKED = { blocked: true };
+  const BLOCK_MSG = "Sorry, this photo can't be used. Motion Studio doesn't accept sexual, violent or cruel pictures.";
+  const WORDS_MSG = "Please change these words. Motion Studio doesn't accept rude, sexual or violent words.";
   async function loadFile(file) {
     const url = URL.createObjectURL(file);
     try {
@@ -397,6 +401,8 @@
       const tk = 160 / Math.max(c.width, c.height);
       t.width = Math.round(c.width * tk); t.height = Math.round(c.height * tk);
       t.getContext('2d').drawImage(c, 0, 0, t.width, t.height);
+      // safety guard: sexual, violent or cruel pictures can't be used
+      if (window.fionahSafety && !(await window.fionahSafety.checkPhoto(c)).ok) return BLOCKED;
       return { src: c, thumb: t.toDataURL('image/jpeg', 0.7), motion: 'auto', name: file.name };
     } catch (e) { return null; }
     finally { URL.revokeObjectURL(url); }
@@ -404,14 +410,15 @@
   async function addFiles(list) {
     const files = [...list].filter(f => f.type.startsWith('image/') || /\.(heic|heif|jpe?g|png|webp|gif|bmp|tiff?|avif)$/i.test(f.name));
     if (!files.length) return;
-    let bad = 0;
-    $('stats').innerHTML = `<span class="pill">Loading ${files.length} photos…</span>`;
+    let bad = 0, blocked = 0;
+    $('stats').innerHTML = `<span class="pill">Loading and checking ${files.length} photos…</span>`;
     for (const f of files) {
       const s = await loadFile(f);
-      if (s) S.slides.push(s); else bad++;
+      if (s === BLOCKED) blocked++; else if (s) S.slides.push(s); else bad++;
       renderStats(bad);
     }
     renderList(); renderStats(bad); if (S.preset) applyPreset(S.preset); draw(S.t);
+    if (blocked) toast(BLOCK_MSG);
   }
   ['files', 'files2'].forEach(id => $(id).addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; }));
 
@@ -533,8 +540,11 @@
     sizeCanvas(); renderStats(); draw(Math.min(S.t, total()));
   }
   $('presets').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { if (!S.recording) applyPreset(b.dataset.p); }));
+  const wordsOk = id => !window.fionahSafety || window.fionahSafety.checkWords($(id).value).ok;
+  const allWordsOk = () => ['headline', 'subline', 'closing'].every(wordsOk);
   function countFor(id) {
     const el = $(id), c = $(id + 'Cnt'), lim = Number(c.dataset.lim), n = el.value.trim().length;
+    if (!wordsOk(id)) { c.textContent = WORDS_MSG; c.className = 'cnt bad'; return; }
     if (!n) { c.textContent = `Best up to ${lim} characters`; c.className = 'cnt'; return; }
     if (n <= lim) { c.textContent = `${n} / ${lim} ✓ fits on one line`; c.className = 'cnt ok'; }
     else if (n <= lim * 2) { c.textContent = `${n} / ${lim} · will wrap neatly onto 2 lines`; c.className = 'cnt warn'; }
@@ -722,7 +732,7 @@
         if (!b64) throw new Error('no data');
         const blob = b64ToBlob(b64, f.mimeType);
         const s = await loadFile(new File([blob], f.title || 'drive-image', { type: f.mimeType }));
-        if (s) { S.slides.push(s); ok++; } else bad++;
+        if (s === BLOCKED) { bad++; toast(BLOCK_MSG); } else if (s) { S.slides.push(s); ok++; } else bad++;
       } catch (e) {
         bad++;
         if (e && e.code && e.code !== 'tool_error') { closeModal(); renderList(); renderStats(); draw(S.t); return toast(mcpMsg(e)); }
@@ -821,7 +831,8 @@
     } else drawSlide(k, local / D, 1);
 
     // words
-    const h = $('headline').value.trim(), sl = $('subline').value.trim(), cl = $('closing').value.trim();
+    const safe = id => wordsOk(id) ? $(id).value.trim() : '';   // blocked words are never drawn
+    const h = safe('headline'), sl = safe('subline'), cl = safe('closing');
     if (h || sl) {
       const a = Math.min(clamp((t - 1) / 1.2), clamp((st - 0.5 - t) / 1.2));
       drawText(h, sl, easeSine(a));
@@ -954,6 +965,7 @@
 
   $('makeBtn').onclick = () => {
     if (!S.slides.length) return toast('Add your photos first 📷');
+    if (!allWordsOk()) return toast(WORDS_MSG);
     if (credits() < 1 && trialMade() >= TRIAL_FREE) return openCredits();
     if (!cv.captureStream || pickMime() === null) return toast('Sorry — this phone\'s browser can\'t record video. Try Chrome on Android or Safari on a recent iPhone.');
     pause();
