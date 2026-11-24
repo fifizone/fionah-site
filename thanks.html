@@ -56,6 +56,14 @@
   [data-look="night"] .packcard{border-color:#2A2A33}
 </style>
 <link rel="stylesheet" href="send.css">
+<style id="tapfix">
+  /* No grey/blue flash or leftover outline when tapping; outline stays for keyboard users */
+  html{-webkit-tap-highlight-color:transparent}
+  a,button,summary,label,[role="button"],.tile,.sbtn{-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;caret-color:transparent}
+  :focus:not(:focus-visible){outline:none}
+  summary:focus:not(:focus-visible){outline:none}
+  input,textarea{-webkit-user-select:text;user-select:text;caret-color:auto}
+</style>
 </head>
 <body>
   <div class="card">
