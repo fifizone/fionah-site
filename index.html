@@ -265,8 +265,9 @@
   input[type=range]{accent-color:#4B33C4}
   /* every word bold */
   body, body *{font-weight:700 !important}
-  .ctas-stack{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
-  .ctas-stack .btn{min-width:220px;text-align:center;justify-content:center}
+  .hero .ctas.ctas-stack{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:stretch;gap:12px}
+  .hero .ctas.ctas-stack .btn{text-align:center;justify-content:center;white-space:nowrap;padding:14px 18px}
+  @media (max-width:640px){.hero .ctas.ctas-stack{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.hero .ctas.ctas-stack .btn{white-space:normal;padding:10px 4px;font-size:14px !important;line-height:1.25;min-width:0;margin:0 4px 4px 0}}
 </style>
 <style id="tapfix">
   /* No grey/blue flash or leftover outline when tapping; outline stays for keyboard users */
