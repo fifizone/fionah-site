@@ -242,7 +242,7 @@
       <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
     </div>
     <div class="trialtile">2 free trial videos</div>
-    <details class="warntile"><summary>Warning</summary><p>Every photo and word is checked automatically on your phone. Words like &#39;sex&#39;, &#39;kill&#39; or anything similar, rude or insulting words, swearing, and sexual, violent or cruel images will be red flagged and cannot be used.</p></details>
+    <details class="warntile"><summary>Warning</summary><p>As a friendly reminder, our safety check automatically flags profanity, insults, or terms like &#39;sex&#39;, &#39;kill&#39; (and similar words). Images that are sexual, violent, or show cruel acts will be flagged. We appreciate your help keeping everything appropriate!</p></details>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
       <button class="tiny" id="autoAll">Reset All To Auto Motion</button>
@@ -258,7 +258,7 @@
       <button data-p="rea">Real Estate Listing</button>
     </div>
     <p class="tip" id="presetNote" style="display:none"></p>
-    <label class="f">Screen Size</label>
+    <label class="f">Screen Size:</label>
     <div class="seg" id="shape">
       <button data-v="16:9" class="on">Wide<br><small>16:9</small></button>
       <button data-v="9:16">Reels<br><small>9:16</small></button>
@@ -266,7 +266,7 @@
       <button data-v="1:1">Square<br><small>1:1</small></button>
     </div>
 
-    <label class="f">File size</label>
+    <label class="f">File size:</label>
     <div class="seg three" id="size">
       <button data-v="small">Small<br><small>720 · for sharing</small></button>
       <button data-v="balanced" class="on">Balanced<br><small>1080 · best pick</small></button>
@@ -286,13 +286,13 @@
   <!-- 3. Words & music -->
   <section class="card">
     <h2>3 · Words & music <small style="color:var(--muted);text-transform:none;letter-spacing:0">(optional)</small></h2>
-    <label class="f">Intro</label>
+    <label class="f">Intro:</label>
     <input type="text" id="headline" placeholder="e.g. 12 Sample Street, 1234" maxlength="80">
     <div class="cnt" id="headlineCnt" data-lim="25"></div>
-    <label class="f">Details</label>
+    <label class="f">Details:</label>
     <input type="text" id="subline" placeholder="e.g. 3 bed, 2 bath, 2 car" maxlength="80">
     <div class="cnt" id="sublineCnt" data-lim="40"></div>
-    <label class="f">Thank you</label>
+    <label class="f">Thank you:</label>
     <input type="text" id="closing" placeholder="e.g. Thank you for watching" maxlength="80">
     <div class="cnt" id="closingCnt" data-lim="25"></div>
     <div class="drop" id="musicDrop" style="padding:14px;margin-top:16px">
@@ -302,9 +302,9 @@
     <label class="f">Volume <small>(0 = no sound · 10 = loudest)</small></label>
     <div class="slider"><input type="range" id="mVol" min="0" max="10" step="1" value="10"><output id="mVolOut">10</output></div>
     <div id="musicPanel" style="display:none;margin-top:12px">
-      <label class="f">Start the song at</label>
+      <label class="f">Start the song at:</label>
       <div class="slider"><input type="range" id="mStart" min="0" max="10" step="0.1" value="0"><output id="mStartOut">0:00</output></div>
-      <label class="f">End the song at</label>
+      <label class="f">End the song at:</label>
       <div class="slider"><input type="range" id="mEnd" min="0" max="10" step="0.1" value="10"><output id="mEndOut">0:00</output></div>
       <p class="tip" id="mInfo" style="margin-top:4px"></p>
       <div class="mrow"><label><input type="checkbox" id="mFadeIn" checked> Fade in</label>
@@ -925,7 +925,7 @@
       if (d.ok && d.credits > 0) {
         addCredits(d.credits);
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
-        openModal(`<h3>Thank you</h3><div class="credbal">${d.credits} credits added ✓</div><p>You now have ${credits()} credit${credits() === 1 ? '' : 's'}. Your next video will be made without the watermark.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+        openModal(`<h3>Thank you:</h3><div class="credbal">${d.credits} credits added ✓</div><p>You now have ${credits()} credit${credits() === 1 ? '' : 's'}. Your next video will be made without the watermark.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
       } else if (d.used) {
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
