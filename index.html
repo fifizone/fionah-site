@@ -260,6 +260,8 @@
   input[type=range]{accent-color:#4B33C4}
   /* every word bold */
   body, body *{font-weight:700 !important}
+  .ctas-stack{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+  .ctas-stack .btn{min-width:220px;text-align:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -270,7 +272,7 @@
     <div class="navlinks">
       <a class="l" href="#pricing">Pricing</a>
       <a class="l sp" href="send.html">Send Photos</a>
-      <a class="btn btn-main" href="#pricing">Buy now</a>
+      <a class="btn btn-main" href="#pricing">Buy Now</a>
       <div class="themer" role="group" aria-label="Colour theme"><span class="tl">Colour</span>
         <button class="t1" data-t="pastel" title="Purple" aria-label="Purple theme"></button>
         <button class="t2" data-t="classic" title="Chrome" aria-label="Chrome theme"></button>
@@ -284,11 +286,11 @@
   <div class="wrap grid">
     <div>
       <h1>Photos to Videos</h1>
-      <p class="promise" id="hook">Stop scrolling starts here.</p>
-      <div class="ctas">
-        <a class="btn btn-main" href="app/">Try the free trial</a>
+      <p class="promise">Secure checkout with Stripe</p>
+      <div class="ctas ctas-stack">
+        <a class="btn btn-main" href="app/">Try The Free Trial</a>
+        <a class="btn btn-main" href="#pricing">Pricing</a>
       </div>
-      <div class="trust"><span>Secure checkout with Stripe</span></div>
     </div>
 
     <div class="demo" aria-label="Example of a smooth photo video">
@@ -353,7 +355,7 @@
         <h2 style="margin:0;font-size:clamp(24px,3.4vw,32px)">Prefer to do it yourself?</h2>
         <p>Try the Motion Studio app on your phone. Your free trial includes 2 videos.</p>
       </div>
-      <a class="btn btn-main" href="app/">Open free trial app</a>
+      <a class="btn btn-main" href="app/">Open Free Trial App</a>
     </div>
   </div>
 </section>
@@ -361,7 +363,7 @@
 <footer>
   <div class="wrap">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><a class="logo sm" href="#top" aria-label="Back to top"><img src="logo.svg" alt="fionah" width="40" height="40"></a><span>www.fionah.com 2026</span></div>
-    <div class="flinks"><a href="send.html">Send photos</a><a href="get.html">Get your video</a><a href="policies.html#about">About</a><a href="policies.html#contact">Contact</a><a href="policies.html#refunds">Refunds</a><a href="policies.html#terms">Terms</a><a href="policies.html#privacy">Privacy</a></div>
+    <div class="flinks"><a href="send.html">Send Photos</a><a href="get.html">Get Your Video</a><a href="policies.html#about">About</a><a href="policies.html#contact">Contact</a><a href="policies.html#refunds">Refunds</a><a href="policies.html#terms">Terms</a><a href="policies.html#privacy">Privacy</a></div>
   </div>
 </footer>
 
@@ -431,18 +433,6 @@ const CONFIG = {
   setT(root.dataset.look || 'pastel');
   document.querySelectorAll('.themer button').forEach(b => b.addEventListener('click', () => setT(b.dataset.t)));
 })();
-</script>
-<script>
-/* Hook lines at the top: each shows for 5 seconds, then fades to the next (Fi's 4 favourites) */
-{
-  const HOOKS = ["Stop scrolling starts here.", "Your listing, in motion.", "Turn a glance into a viewing.", "A home tour in your pocket."];
-  const el = document.getElementById('hook');
-  let i = 0;
-  if (el) setInterval(() => {
-    el.classList.add('fade');
-    setTimeout(() => { i = (i + 1) % HOOKS.length; el.textContent = HOOKS[i]; el.classList.remove('fade'); }, 600);
-  }, 5000);
-}
 </script>
 </body>
 </html>

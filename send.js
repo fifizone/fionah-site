@@ -229,9 +229,9 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         if (d.status === 'ready') {
           const vids = d.videos && d.videos.length ? d.videos : [{ name: 'Video', url: d.url }];
           const many = vids.length > 1 || d.waiting > 0 || d.left > 0;
-          out.innerHTML = vids.map(v => '<a class="sbtn hl" href="' + v.url + '">Download ' + (many ? 'your ' + v.name : 'your video') + '</a>').join('') +
+          out.innerHTML = vids.map(v => '<a class="sbtn hl" href="' + v.url + '">Download ' + (many ? 'Your ' + v.name : 'Your Video') + '</a>').join('') +
             (d.waiting > 0 ? `<p>${d.waiting} more video${d.waiting === 1 ? ' is' : 's are'} on the way.</p>` : '') +
-            '<button type="button" class="sbtn hl" id="gDone">Delete my files</button>';
+            '<button type="button" class="sbtn hl" id="gDone">Delete My Files</button>';
           $('#gDone').addEventListener('click', async () => {
             let r = {};
             try { r = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code) + '&done=1')).json(); } catch (err) {}

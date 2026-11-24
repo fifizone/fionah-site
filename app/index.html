@@ -245,8 +245,8 @@
     <details class="warntile"><summary>Warning</summary><p>Every photo and word is checked automatically on your phone. Words like &#39;sex&#39;, &#39;kill&#39; or anything similar, rude or insulting words, swearing, and sexual, violent or cruel images will be red flagged and cannot be used.</p></details>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
-      <button class="tiny" id="autoAll">Reset all to Auto motion</button>
-      <button class="tiny" id="clearAll">Remove all</button>
+      <button class="tiny" id="autoAll">Reset All To Auto Motion</button>
+      <button class="tiny" id="clearAll">Remove All</button>
     </div>
     <div class="list" id="list"></div>
   </section>
@@ -313,8 +313,8 @@
         <div class="slider" style="flex:1"><input type="range" id="mFo" min="0.5" max="8" step="0.5" value="3"><output id="mFoOut">3s</output></div></div>
       <div class="mrow"><label><input type="checkbox" id="mLoop" checked> Repeat the clip if the video is longer</label></div>
       <div class="rowtools">
-        <button class="tiny" id="mPlay">▶ Hear my clip</button>
-        <button class="tiny" id="mRemove">✕ Remove song</button>
+        <button class="tiny" id="mPlay">▶ Hear My Clip</button>
+        <button class="tiny" id="mRemove">✕ Remove Song</button>
       </div>
     </div>
   </section>
@@ -339,7 +339,7 @@
 <div class="bar">
   <div class="barrow">
     <button class="b1" id="previewBtn">▶ Preview</button>
-    <button class="b2" id="makeBtn">Make video</button>
+    <button class="b2" id="makeBtn">Make Video</button>
   </div>
   <div class="trialnote" id="trialNote"></div>
   <a class="closeapp" href="../">Close App</a>
@@ -637,7 +637,7 @@
   $('mFi').oninput = e => { M.fi = Number(e.target.value); $('mFiOut').textContent = M.fi + 's'; };
   $('mFo').oninput = e => { M.fo = Number(e.target.value); $('mFoOut').textContent = M.fo + 's'; };
   let clipRaf = 0;
-  function stopClip() { cancelAnimationFrame(clipRaf); clipRaf = 0; $('mPlay').textContent = '▶ Hear my clip'; if (music && !S.playing && !S.recording) music.pause(); }
+  function stopClip() { cancelAnimationFrame(clipRaf); clipRaf = 0; $('mPlay').textContent = '▶ Hear My Clip'; if (music && !S.playing && !S.recording) music.pause(); }
   $('mPlay').onclick = () => {
     if (clipRaf) return stopClip();
     if (S.playing) pause();
@@ -709,11 +709,11 @@
     openModal(`
       <h3>Google Drive</h3>
       <input type="text" id="gdq" placeholder="Search by name (or leave empty for newest)" value="${gdQuery.replace(/"/g, '&quot;')}">
-      <div class="rowtools"><button class="tiny" id="gdgo">🔍 Search</button><button class="tiny" id="gdall">☑ Select all</button></div>
+      <div class="rowtools"><button class="tiny" id="gdgo">🔍 Search</button><button class="tiny" id="gdall">☑ Select All</button></div>
       <div class="gl">${list}</div>
-      ${gdToken ? '<button class="tiny" id="gdmore">Show more</button>' : ''}
+      ${gdToken ? '<button class="tiny" id="gdmore">Show More</button>' : ''}
       <div class="msg" id="gdmsg">${note || ''}</div>
-      <div class="acts"><button class="b1" id="gdx">Cancel</button><button class="b2" id="gdadd">Add selected</button></div>`);
+      <div class="acts"><button class="b1" id="gdx">Cancel</button><button class="b2" id="gdadd">Add Selected</button></div>`);
     $('gdx').onclick = closeModal;
     $('gdgo').onclick = () => { gdQuery = $('gdq').value; gdLoad(false); };
     $('gdall').onclick = () => box.querySelectorAll('.gi input').forEach(c => c.checked = true);
@@ -901,7 +901,7 @@
         <div class="pk">${p.credits} credits · $${p.aud.toFixed(2)} AUD</div>
         <div>about $${(p.aud / p.credits).toFixed(2)} a video</div>
         ${p.best ? '<div class="best">Best value</div>' : ''}
-        <div class="acts">${p.stripe ? `<a class="b2 lnk" style="flex:1" href="${p.stripe}" target="_blank" rel="noopener">Buy</a>` : '<button class="b2" disabled>Buy (coming soon)</button>'}</div>
+        <div class="acts">${p.stripe ? `<a class="b2 lnk" style="flex:1" href="${p.stripe}" target="_blank" rel="noopener">Buy</a>` : '<button class="b2" disabled>Buy (Coming Soon)</button>'}</div>
       </div>`).join('');
     openModal(`
       <h3>Credits</h3>
@@ -931,7 +931,7 @@
         openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
       } else throw new Error('not paid');
     } catch (err) {
-      openModal('<h3>We could not confirm your payment yet</h3><p>Please try again in a minute.</p><p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="tryx">Try again</button></div>');
+      openModal('<h3>We could not confirm your payment yet</h3><p>Please try again in a minute.</p><p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="tryx">Try Again</button></div>');
       const t = $('tryx'); if (t) t.onclick = () => checkPaid(id);
     }
     const ok = $('okx'); if (ok) ok.onclick = closeModal;
@@ -1011,7 +1011,7 @@
       <p><b style="color:var(--text)">${S.slides.length} photos · ${fmt(T)} long</b></p>
       <p>Your video is recorded live, so it takes the same time as the video — about <b style="color:var(--text)">${fmt(T)}</b>.</p>
       <p>📱 Keep this screen open and switched on until it finishes.</p>
-      <div class="acts"><button class="b1" id="nox">Not yet</button><button class="b2" id="go">Start 🎬</button></div>`);
+      <div class="acts"><button class="b1" id="nox">Not Yet</button><button class="b2" id="go">Start 🎬</button></div>`);
     $('nox').onclick = closeModal;
     $('go').onclick = record;
   };
@@ -1098,7 +1098,7 @@
       <h3>Your video is ready ✨</h3>
       <video src="${url}" controls playsinline></video>
       <p>${name} · ${mb} MB</p>
-      <div class="acts"><button class="b1" id="closeR">Close</button><button class="b2" id="saveR">⬇ Save video</button></div>
+      <div class="acts"><button class="b1" id="closeR">Close</button><button class="b2" id="saveR">⬇ Save Video</button></div>
       <div class="msg" id="saveMsg"></div>
       ${ext === 'webm' ? '<p class="tip">This phone made a .webm file. It plays on YouTube, Facebook and Android. For Instagram on iPhone you may need a free converter app to .mp4.</p>' : ''}`);
     $('closeR').onclick = () => { closeModal(); };
