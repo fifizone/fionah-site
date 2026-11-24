@@ -173,6 +173,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         $('.done .onum').textContent = '#' + order.number;
         $('.done .code').textContent = code;
         box.querySelectorAll('.onum2').forEach(x => { x.textContent = '#' + order.number; });
+        box.querySelectorAll('.done a[href="get.html"]').forEach(a => { a.href = 'get.html?n=' + order.number; });
         pack.left -= 1;
         const vn = box.querySelector('.vidnote');
         if (vn) vn.textContent = rj.total > 1 ? `Video ${rj.video} of ${rj.total} sent.${pack.left ? ` You have ${pack.left} more to send with your receipt number. Your private code stays the same.` : ''}` : '';
@@ -187,68 +188,51 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
   }
 }
 
-/* "Get your video" page: the order board.
-   Each day's order numbers show as tiles. A tile turns chrome when that video is ready.
-   Tap your number, enter your private code, download. */
+/* "Get Your Video" page: Find My Order.
+   The customer types their order number and private code, then taps Find My Order.
+   No list of order numbers is shown, so nobody sees other people's orders. */
 {
   const g = document.querySelector('.getbox');
   if (g) {
     const $ = s => g.querySelector(s);
-    const board = $('.board'), out = $('.result'), form = g.querySelector('form');
-    let picked = '';
+    const out = $('.result'), form = g.querySelector('form');
     const norm = v => { v = v.toUpperCase().replace(/[^A-Z0-9]/g, ''); if (v.startsWith('FN')) v = v.slice(2); return v ? 'FN-' + v : ''; };
-
-    async function loadBoard() {
-      if (!SEND_URL) { board.innerHTML = '<p class="bnote">The order board opens soon.</p>'; return; }
-      board.innerHTML = '<p class="bnote">Loading today\'s orders…</p>';
-      try {
-        const d = await (await fetch(SEND_URL + '?board=1')).json();
-        const days = d.days || [];
-        if (!days.some(x => x.orders.length)) { board.innerHTML = '<p class="bnote">No orders yet today.</p>'; return; }
-        board.innerHTML = days.filter(x => x.orders.length).map(x =>
-          `<div class="bday">${x.label}</div><div class="tiles">` +
-          x.orders.map(o => `<button type="button" class="tile${o.ready ? ' ready' : ''}" data-n="${o.n}" ${o.ready ? '' : 'aria-disabled="true"'} aria-label="Order ${o.n}${o.ready ? ', ready' : ', not ready yet'}">#${o.n}</button>`).join('') +
-          '</div>').join('');
-        board.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => {
-          if (!t.classList.contains('ready')) { out.textContent = `Order #${t.dataset.n} is not ready yet. Please check back soon.`; form.hidden = true; return; }
-          picked = t.dataset.n;
-          board.querySelectorAll('.tile').forEach(x => x.classList.toggle('picked', x === t));
-          $('#gNum').textContent = '#' + picked; form.hidden = false; out.textContent = ''; $('#gCode').focus();
-        }));
-      } catch (err) { board.innerHTML = '<p class="bnote">Something went wrong. Please check your internet connection and refresh.</p>'; }
-    }
-
-    $('#gCode').addEventListener('input', () => { $('.gbtn').disabled = norm($('#gCode').value).length < 9; });
+    const num = () => $('#gOrder').value.replace(/\D/g, '');
+    const check = () => { $('.findbtn').disabled = !(num().length >= 4 && norm($('#gCode').value).length >= 9); };
+    // the Sent screen links here with ?n=1001, so the order number fills itself in
+    const pre = new URLSearchParams(location.search).get('n');
+    if (pre && /^\d{4,8}$/.test(pre)) $('#gOrder').value = pre;
+    $('#gOrder').addEventListener('input', check);
+    $('#gCode').addEventListener('input', check);
+    check();
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      const code = norm($('#gCode').value);
-      if (!SEND_URL || !picked || code.length < 9) return;
-      out.textContent = 'Checking…';
+      const n = num(), code = norm($('#gCode').value);
+      if (!SEND_URL || n.length < 4 || code.length < 9) return;
+      out.textContent = 'Finding your order…';
       try {
-        const d = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code))).json();
+        const d = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code))).json();
         if (d.status === 'ready') {
           const vids = d.videos && d.videos.length ? d.videos : [{ name: 'Video', url: d.url }];
           const many = vids.length > 1 || d.waiting > 0 || d.left > 0;
-          out.innerHTML = vids.map(v => '<a class="sbtn hl" href="' + v.url + '">Download ' + (many ? 'Your ' + v.name : 'Your Video') + '</a>').join('') +
+          out.innerHTML = '<p>Order #' + n + ' is ready.</p>' +
+            vids.map(v => '<a class="sbtn hl" href="' + v.url + '">Download ' + (many ? 'Your ' + v.name : 'Your Video') + '</a>').join('') +
             (d.waiting > 0 ? `<p>${d.waiting} more video${d.waiting === 1 ? ' is' : 's are'} on the way.</p>` : '') +
             '<button type="button" class="sbtn hl" id="gDone">Delete My Files</button>';
           $('#gDone').addEventListener('click', async () => {
             let r = {};
-            try { r = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(picked) + '&code=' + encodeURIComponent(code) + '&done=1')).json(); } catch (err) {}
+            try { r = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code) + '&done=1')).json(); } catch (err) {}
             out.innerHTML = r.left > 0
               ? `<p>Your downloaded videos and their photos have been deleted. You still have ${r.left} video${r.left === 1 ? '' : 's'} to send with your receipt number.</p>`
               : '<p>All done. Your photos and video have been deleted. Thank you!</p>';
-            form.hidden = true; loadBoard();
           });
         } else if (d.status === 'waiting') {
-          out.textContent = 'Your video is on its way. Please check back soon.';
+          out.textContent = 'Order #' + n + ' is not ready yet. Your video is on its way, so please check back soon.';
         } else {
-          out.textContent = "That code does not match this order number. Please check it and try again.";
+          out.textContent = 'We could not find that order. Please check your order number and private code, and try again.';
         }
       } catch (err) { out.textContent = 'Something went wrong. Please check your internet connection and try again.'; }
     });
-
-    loadBoard();
   }
 }
 

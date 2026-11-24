@@ -96,3 +96,5 @@
 /* pack code under its box */
 .sendbox .packnote{min-height:1.2em;margin:4px 0 2px;font-size:14px}
 .sendbox .packnote.ok::before{content:"✓ "}
+.getbox .findbtn{display:block;width:calc(100% - 5px);margin-top:18px}
+.getbox .result p{margin:14px 0 10px}
