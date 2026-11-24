@@ -102,7 +102,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           if (d.receipt && !typed) $('#sbPack').value = d.receipt;
           try { localStorage.setItem('fionah-receipt', d.receipt || v); } catch (e) {}
         }
-      } catch (err) { packNote('Something went wrong. Please check your internet and try again.'); }
+      } catch (err) { packNote('Something went wrong. Please check your internet connection and try again.'); }
       check();
     }
     let packT = 0;
@@ -178,7 +178,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         if (vn) vn.textContent = rj.total > 1 ? `Video ${rj.video} of ${rj.total} sent.${pack.left ? ` You have ${pack.left} more to send with your receipt number. Your private code stays the same.` : ''}` : '';
         box.classList.add('is-done');
       } catch (err) {
-        $('.note').textContent = 'Something went wrong. Please check your internet and tap Send again.';
+        $('.note').textContent = 'Something went wrong. Please check your internet connection and tap Send again.';
         $('.send').disabled = false;
       }
     });
@@ -215,7 +215,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           board.querySelectorAll('.tile').forEach(x => x.classList.toggle('picked', x === t));
           $('#gNum').textContent = '#' + picked; form.hidden = false; out.textContent = ''; $('#gCode').focus();
         }));
-      } catch (err) { board.innerHTML = '<p class="bnote">Something went wrong. Please check your internet and refresh.</p>'; }
+      } catch (err) { board.innerHTML = '<p class="bnote">Something went wrong. Please check your internet connection and refresh.</p>'; }
     }
 
     $('#gCode').addEventListener('input', () => { $('.gbtn').disabled = norm($('#gCode').value).length < 9; });
@@ -245,7 +245,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         } else {
           out.textContent = "That code does not match this order number. Please check it and try again.";
         }
-      } catch (err) { out.textContent = 'Something went wrong. Please check your internet and try again.'; }
+      } catch (err) { out.textContent = 'Something went wrong. Please check your internet connection and try again.'; }
     });
 
     loadBoard();
@@ -282,7 +282,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         else { $id('payWait').textContent = 'Your receipt number is in the receipt email from Stripe.'; $id('payWait').hidden = false; }
       } catch (err) {
         if (++tries < 4) return setTimeout(ask, 3000);
-        $id('payHead').innerHTML = 'We could not confirm your payment yet. <a href="#" id="packTry">Try again</a>';
+        $id('payHead').innerHTML = 'We could not confirm your payment yet. <a href="#" id="packTry">Try Again</a>';
         $id('payWait').innerHTML = 'Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.';
         $id('payWait').hidden = false;
         $id('packTry').onclick = e => { e.preventDefault(); tries = 0; $id('payHead').textContent = 'Checking your payment…'; ask(); };

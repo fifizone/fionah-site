@@ -238,6 +238,8 @@
   #faq .faq details:last-child{border-bottom:none}
   #faq .faq summary::after{color:inherit}
   #faq .faq p{color:inherit}
+  #faq .faq details ul{margin:0 0 16px;padding-left:22px;color:inherit}
+  #faq .faq details li{margin:4px 0;line-height:1.5}
   .flinks{display:flex;gap:6px 18px;flex-wrap:wrap}
   .flinks a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
   /* currency: chosen = solid with a tick, other = outline */
@@ -326,7 +328,7 @@
   <div class="wrap">
     <div class="center"><h2>Prices in AUD and NZD</h2>
       <div class="cur" role="group" aria-label="Choose currency"><button data-c="AUD" class="on">AUD</button><button data-c="NZD">NZD</button></div>
-      <div class="finalp" id="finalP">Final price on checkout</div>
+      <div class="finalp" id="finalP">Final price is shown at checkout</div>
     </div>
     <div class="prices" id="prices"></div>
     <div class="secure">Payments are handled securely by Stripe. We never see your card details.</div>
@@ -339,9 +341,9 @@
       <summary><h2>Questions</h2></summary>
       <div class="faq">
         <details><summary>Do the photos actually move?</summary><p>The camera gently zooms and glides across each photo, with soft fades between them. The photos themselves stay still. It is a smooth moving slideshow, saved as an MP4 video.</p></details>
-        <details><summary>How long is each video?</summary><p>Every pack offers 30 sec, 60 sec or 1 min 30 sec, you choose. If you use the free trial app, you can choose your length.</p></details>
+        <details><summary>How long is each video?</summary><ul><li>Every pack offers a choice of 30 seconds, 60 seconds or 1 minute 30 seconds.</li><li>In the free trial app, you can choose your own length.</li></ul></details>
         <details><summary>What will I get?</summary><p>An MP4 video in 1080p, in the shape you choose: wide, tall for Reels, post size or square.</p></details>
-        <details><summary>How do I send my photos?</summary><p>Choose your package and pay, and a short form will open with your Stripe receipt number. Upload photos or take live ones, choose your video length, place your photos in order, write a short message, add sound, then tap Send when you are finished. Keep your receipt number, you will use it each time you send photos.</p></details>
+        <details><summary>How do I send my photos?</summary><ul><li>Choose your package and pay. A short form will open with your Stripe receipt number.</li><li>Upload photos or take new ones.</li><li>Choose your video length and place your photos in order.</li><li>Write a short message and choose whether you would like music.</li><li>Tap Send when you are finished.</li><li>Keep your receipt number, as you will use it each time you send photos.</li></ul></details>
         <details><summary>Is the music OK to use?</summary><p>Yes. We only use royalty-free music, so you can post your video anywhere.</p></details>
       </div>
     </details>
