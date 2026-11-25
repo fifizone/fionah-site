@@ -194,6 +194,8 @@
   .warntile summary{list-style:none;cursor:pointer;text-align:center;background:var(--btn);color:var(--btn-ink);border-radius:var(--r);padding:11px;box-shadow:4px 4px 0 #A9B0BC}
   .warntile summary::-webkit-details-marker{display:none}
   [data-look="pastel"] .warntile summary{box-shadow:inset 0 0 0 1.5px #4B33C4,4px 4px 0 #A9B0BC}
+  .finetune{margin-top:16px}
+  .finetune .tip{margin:12px 0 0}
   .warntile[open] summary{background:var(--chrome);color:#111014;box-shadow:4px 4px 0 #A9B0BC}
   .warntile p{margin:10px 2px 2px;line-height:1.45;color:var(--text)}
   .trialtile{margin:14px 4px 4px 0;text-align:center;background:var(--btn);color:var(--btn-ink);border:none;border-radius:var(--r);padding:11px;box-shadow:4px 4px 0 #A9B0BC}
@@ -281,14 +283,17 @@
       <button data-v="best">Best<br><small>1080 · biggest</small></button>
     </div>
 
+    <details class="warntile finetune"><summary>Fine Tune (Optional)</summary>
+    <p class="tip">The Real Estate Listing button sets the timing for you. Open this only if you would like to change it.</p>
     <label class="f">Edit: Photo Timer</label>
     <div class="slider"><input type="range" id="imgSec" min="3" max="15" step="0.5" value="5"><output id="imgOut">5s</output></div>
 
     <label class="f">Edit: Fade in/out</label>
-    <div class="slider"><input type="range" id="trSec" min="0.5" max="6" step="0.5" value="5"><output id="trOut">5s</output></div>
+    <div class="slider"><input type="range" id="trSec" min="0.5" max="6" step="0.5" value="2"><output id="trOut">2s</output></div>
 
     <label class="f">Edit: Speed <small>(0 = still · 8 = fastest)</small>:</label>
     <div class="slider"><input type="range" id="speed" min="0" max="8" step="1" value="4"><output id="speedOut">4</output></div>
+    </details>
   </section>
 
   <!-- 3. Words & music -->
@@ -363,7 +368,7 @@
   // ---------- state ----------
   const S = {
     slides: [],            // {src: canvas, thumb, motion:'auto'|...}
-    shape: '16:9', quality: 1080, size: 'balanced', imgSec: 5, trSec: 5, strength: 0.26,
+    shape: '16:9', quality: 1080, size: 'balanced', imgSec: 5, trSec: 2, strength: 0.26,
     playing: false, t: 0, recording: false
   };
   const AUTO = ['in', 'right', 'out', 'left'];
@@ -884,7 +889,7 @@
     ctx.font = `700 ${Math.round(sz * 0.36)}px Arial, Arimo, Helvetica, sans-serif`;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = Math.round(sz * 0.12);
-    ctx.fillStyle = '#fff'; ctx.fillText('Made with', x - sz * 0.18, y + sz / 2);
+    ctx.fillStyle = '#fff'; ctx.fillText('Made with', x - sz * 0.06, y + sz / 2);
     ctx.shadowBlur = 0;
     if (lensImg.complete && lensImg.naturalWidth) ctx.drawImage(lensImg, x, y, sz, sz);
     ctx.restore();
