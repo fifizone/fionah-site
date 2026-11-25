@@ -208,6 +208,9 @@
   body, body *{font-weight:700 !important}
   a.mail{color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
   .mailnote{text-align:center;margin:18px 0 8px;font-size:16px}
+  .iconpick{display:flex;gap:8px;margin:8px 0}
+  .iconpick button{flex:1;font:inherit;font-weight:700;padding:9px 6px;border-radius:var(--r);border:1.5px solid #4B33C4;background:#fff;color:#111014;cursor:pointer}
+  .iconpick button.on{background:var(--chrome);color:#111014}
   .trialnote a.rm{color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
   .box.credbox{max-height:calc(100vh - 36px);overflow:auto}
   .credbal{font-size:28px;color:var(--text);margin:6px 0 2px}
@@ -251,7 +254,7 @@
       <input type="file" id="files" accept="image/*" multiple>
       <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
     </div>
-    <div class="trialtile" id="trialTile">2 free trial videos</div>
+    <div class="trialtile" id="trialTile">Free videos with the small <img src="../logo.svg" alt="fionah lens" width="18" height="18" style="vertical-align:-4px"> icon, as many as you like.</div>
     <details class="warntile"><summary>Warning</summary><p>As a friendly reminder, our safety check automatically flags profanity, insults, or terms like &#39;sex&#39;, &#39;kill&#39; (and similar words). Images that are sexual, violent, or show cruel acts will be flagged. We appreciate your help keeping everything appropriate!</p></details>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
@@ -430,7 +433,7 @@
   async function addFiles(list) {
     const files = [...list].filter(f => f.type.startsWith('image/') || /\.(heic|heif|jpe?g|png|webp|gif|bmp|tiff?|avif)$/i.test(f.name));
     if (!files.length) return;
-    // photo limit: free trial videos up to 6 photos, credit videos up to 18
+    // photo limit: free videos up to 6 photos, credit (no icon) videos up to 18
     const max = photoMax();
     if (S.slides.length >= max) return toast(photoLimitMsg());
     const tooMany = S.slides.length + files.length > max;
@@ -875,17 +878,19 @@
     if (showMark()) drawMark(W, H);
   }
 
-  // ---------- free trial: lens mark only (no words), small in the bottom-right corner ----------
-  const TRIAL_FREE = 2;
+  // ---------- free videos: lens mark + 'fionah.com', small in the bottom-right corner (unlimited free videos) ----------
   const lensImg = new Image(); lensImg.src = '../logo.svg';
-  const trialMade = () => { try { return Number(localStorage.getItem('fionah-trial-made') || 0); } catch (e) { return 0; } };
   setTimeout(updTrial, 0);
-  const trialAdd = () => { try { localStorage.setItem('fionah-trial-made', String(trialMade() + 1)); } catch (e) {} updTrial(); };
   function drawMark(W, H) {
     const u = Math.min(W, H), sz = Math.round(u * 0.075), pad = Math.round(u * 0.035);
     const x = W - pad - sz, y = H - pad - sz;
     ctx.save();
     ctx.globalAlpha = 0.92;
+    ctx.font = `700 ${Math.round(sz * 0.34)}px Arial, Arimo, Helvetica, sans-serif`;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = Math.round(sz * 0.12);
+    ctx.fillStyle = '#fff'; ctx.fillText('fionah.com', x - sz * 0.08, y + sz / 2);   // so viewers know where to find fionah
+    ctx.shadowBlur = 0;
     if (lensImg.complete && lensImg.naturalWidth) ctx.drawImage(lensImg, x, y, sz, sz);
     ctx.restore();
   }
@@ -900,27 +905,27 @@
   const HELPER_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgoXJjKUPFwYhAC4bE25h_-nZVOwmg0u1jZrh6nSTxhlCKYNyg/exec";
   const credits = () => { try { return Math.max(0, Number(localStorage.getItem('fionah-credits') || 0)); } catch (e) { return 0; } };
   const useCredit = () => { try { localStorage.setItem('fionah-credits', String(Math.max(0, credits() - 1))); } catch (e) {} updTrial(); };
-  const showMark = () => credits() < 1;
-  // photo limit for one video: 6 in a free trial video, 18 with credits
+  // each video: free with the icon, or 1 credit without it (the person chooses; a credit is never used by surprise)
+  const noIcon = () => S.noIcon && credits() > 0;
+  const showMark = () => !noIcon();
+  // photo limit for one video: 6 in a free video, 18 in a credit video
   const PHOTOS_FREE = 6, PHOTOS_PAID = 18;
-  const photoMax = () => credits() > 0 ? PHOTOS_PAID : PHOTOS_FREE;
-  const photoLimitMsg = () => credits() > 0
+  const photoMax = () => noIcon() ? PHOTOS_PAID : PHOTOS_FREE;
+  const photoLimitMsg = () => noIcon()
     ? `You can add up to ${PHOTOS_PAID} photos in one video.`
-    : `You can add up to ${PHOTOS_FREE} photos in a free trial video. Buy credits to add up to ${PHOTOS_PAID}.`;
+    : (credits() > 0 ? `You can add up to ${PHOTOS_FREE} photos in a free video. Choose No Icon (1 credit) to add up to ${PHOTOS_PAID}.` : `You can add up to ${PHOTOS_FREE} photos in a free video. Buy credits to add up to ${PHOTOS_PAID}.`);
+  function setIcon(v) { if (S.recording) return; S.noIcon = v; updTrial(); draw(S.t); }
   function updTrial() {
     const n = credits();
-    // trial tile counts down, and hides when there are credits
-    const tile = $('trialTile');
-    if (tile) {
-      const left = Math.max(0, TRIAL_FREE - trialMade());
-      tile.style.display = n > 0 ? 'none' : '';
-      tile.textContent = left > 0 ? `${left} free trial video${left === 1 ? '' : 's'} left` : `Your ${TRIAL_FREE} free trial videos are used`;
-    }
+    if (n < 1) S.noIcon = false;
+    // tile: free videos with the icon; hidden while the person has credits (the choice buttons show instead)
+    const tile = $('trialTile'); if (tile) tile.style.display = n > 0 ? 'none' : '';
     if (typeof renderStats === 'function' && S.slides.length) renderStats();
     $('trialNote').innerHTML = n > 0
-      ? `No watermark · ${n} credit${n === 1 ? '' : 's'} left · <a class="rm" id="rmMark">Credits</a>`
-      : `The <img src="../logo.svg" alt="fionah lens" width="18" height="18" style="vertical-align:-4px"> is watermarked at the bottom of the video. <a class="rm" id="rmMark" role="button" tabindex="0">Click here to remove.</a>`;
+      ? `<div>You have ${n} credit${n === 1 ? '' : 's'}. This video:</div><div class="iconpick"><button id="icFree" class="${S.noIcon ? '' : 'on'}">Free (With Icon)</button><button id="icNo" class="${S.noIcon ? 'on' : ''}">No Icon (1 Credit)</button></div><a class="rm" id="rmMark" role="button" tabindex="0">Credits</a>`
+      : `The <img src="../logo.svg" alt="fionah lens" width="18" height="18" style="vertical-align:-4px"> is watermarked at the bottom of free videos. <a class="rm" id="rmMark" role="button" tabindex="0">Click here for videos without it.</a>`;
     const a = $('rmMark'); if (a) a.onclick = openCredits;
+    const f1 = $('icFree'), f2 = $('icNo'); if (f1) f1.onclick = () => setIcon(false); if (f2) f2.onclick = () => setIcon(true);
   }
   function openCredits() {
     const n = credits();
@@ -934,8 +939,9 @@
     openModal(`
       <h3>Credits</h3>
       <div class="credbal">You have ${n} credit${n === 1 ? '' : 's'}</div>
-      <p>1 credit = 1 video without the watermark</p>
-      ${n > 0 ? '<p>Your next video will be made without the watermark.</p>' : (trialMade() >= TRIAL_FREE ? '<p>Your 2 free trial videos are used. Buy credits to keep making your own videos.</p>' : '<p>Buy credits to make your videos without the watermark.</p>')}
+      <p>Free videos always have the small icon. 1 credit = 1 new video without the icon.</p>
+      ${n > 0 ? '<p>To use a credit, choose No Icon (1 Credit) before you make your video.</p>' : '<p>Buy credits to make new videos without the icon.</p>'}
+      <p>Videos already made keep the icon.</p>
       ${packs}
       <p class="tip">Credits are saved on this phone. Clearing your browser or changing phones can remove them. NZ customers see the NZD price at checkout.</p>
       <p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a></p>
@@ -945,7 +951,7 @@
   }
   // ---------- coming back from Stripe: check the payment, then add the credits ----------
   // Stripe sends the buyer to fionah.com/app/?paid=<checkout id>. The helper asks Stripe if it was really paid.
-  const addCredits = k => { try { localStorage.setItem('fionah-credits', String(credits() + k)); } catch (e) {} updTrial(); };
+  const addCredits = k => { try { localStorage.setItem('fionah-credits', String(credits() + k)); } catch (e) {} S.noIcon = true; updTrial(); };
   async function checkPaid(id) {
     openModal('<h3>Checking your payment…</h3><p>This only takes a moment.</p>');
     try {
@@ -954,7 +960,7 @@
         addCredits(d.credits);
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         const rc = String(d.receipt || '').replace(/[^0-9-]/g, '');
-        openModal(`<h3>Thank you:</h3><div class="credbal">${d.credits} credits added ✓</div><p>You now have ${credits()} credit${credits() === 1 ? '' : 's'}. Your next video will be made without the watermark.</p>${rc ? `<p>Your Stripe receipt number: <b style="color:var(--text)">${rc}</b></p>` : ''}<p>Please keep your Stripe email receipt in case you need help.</p><p class="tip">You do not need an order number or private code. Your credits are already saved in Motion Studio on this phone.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+        openModal(`<h3>Thank you:</h3><div class="credbal">${d.credits} credits added ✓</div><p>You now have ${credits()} credit${credits() === 1 ? '' : 's'}. Your next video will be made without the icon. You can switch to Free (With Icon) at any time.</p><p>Videos already made keep the icon.</p>${rc ? `<p>Your Stripe receipt number: <b style="color:var(--text)">${rc}</b></p>` : ''}<p>Please keep your Stripe email receipt in case you need help.</p><p class="tip">You do not need an order number or private code. Your credits are already saved in Motion Studio on this phone.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
       } else if (d.used) {
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
@@ -1031,7 +1037,6 @@
   $('makeBtn').onclick = () => {
     if (!S.slides.length) return toast('Add your photos first 📷');
     if (!allWordsOk()) return toast(WORDS_MSG);
-    if (credits() < 1 && trialMade() >= TRIAL_FREE) return openCredits();
     if (S.slides.length > photoMax()) return toast(photoLimitMsg() + ' Please remove ' + (S.slides.length - photoMax()) + ' photo' + (S.slides.length - photoMax() === 1 ? '' : 's') + ' first.');
     if (!cv.captureStream || pickMime() === null) return toast('Sorry — this phone\'s browser cannot record video. Try Chrome on Android or Safari on a recent iPhone.');
     pause();
@@ -1039,6 +1044,7 @@
     openModal(`
       <h3>Ready to make your video?</h3>
       <p><b style="color:var(--text)">${S.slides.length} photos · ${fmt(T)} long</b></p>
+      <p>${noIcon() ? 'This video uses 1 credit and has no icon.' : 'This video is free and has the small icon.'}</p>
       <p>Your video is recorded live, so it takes the same time as the video — about <b style="color:var(--text)">${fmt(T)}</b>.</p>
       <p>📱 Keep this screen open and switched on until it finishes.</p>
       <div class="acts"><button class="b1" id="nox">Not Yet</button><button class="b2" id="go">Start 🎬</button></div>`);
@@ -1048,7 +1054,7 @@
 
   async function record() {
     S.recording = true;
-    S.usingCredit = credits() > 0;
+    S.usingCredit = noIcon();
     if (music && M.on) ensureAudio();
     try { await document.fonts.ready; } catch (e) {}
     const T = total(), mime = pickMime();
@@ -1116,7 +1122,7 @@
     const type = (rec.mimeType || mime || 'video/webm').split(';')[0];
     const blob = new Blob(chunks, { type });
     const ext = type.includes('mp4') ? 'mp4' : 'webm';
-    if (S.usingCredit) useCredit(); else trialAdd();
+    if (S.usingCredit) useCredit();
     showResult(blob, ext);
   }
 

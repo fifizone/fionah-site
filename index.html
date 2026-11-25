@@ -236,6 +236,10 @@
   .flow .vid::before{content:"";position:absolute;left:17px;top:9px;border-left:12px solid #fff;border-top:7px solid transparent;border-bottom:7px solid transparent}
   .flow .vid.ic::after{content:"";position:absolute;right:2px;bottom:2px;width:13px;height:13px;background:url(logo.svg) center/contain no-repeat}
   .flow .coin{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F7E2A0,#D9A93E 55%,#9C6B1F);color:#3A2600;font-weight:700;font-size:15px;line-height:32px;text-align:center;box-shadow:2px 2px 0 #A9B0BC}
+  .flow .inf{font-size:30px !important;font-weight:700;color:#4B33C4;line-height:32px}
+  .flow .op.sm{font-size:24px !important;margin-top:0;line-height:32px}
+  .flow .op.sep{color:#B9BFC9}
+  @media (max-width:560px){.flow .op.sep{display:none}}
   .flow .keep{display:flex;align-items:center;justify-content:center;gap:10px;margin:22px 0 0;font-size:14px;font-weight:700;color:#111014}
   @media (max-width:560px){.flow .eq{flex-direction:column;gap:10px}}
   details.drawer{border:none;padding:0}
@@ -363,14 +367,12 @@
           <li>Enter your order number and private code, then tap Find My Order.</li>
           <li>When your video is ready, tap Download.</li></ul></li>
       </ol>
-      <div class="flow" id="trialFlow" role="img" aria-label="Free trial app: 2 free trial videos with the lens icon, plus 3 credits, makes 5 videos: 2 with the icon and 3 without. The icon stays on videos already made.">
-        <h3>Free Trial App: How Credits Work</h3>
+      <div class="flow" id="trialFlow" role="img" aria-label="Free Trial App: free videos with the lens icon, as many as you like. 1 credit makes 1 video without the icon. The icon stays on videos already made.">
+        <h3>Free Trial App</h3>
         <div class="eq">
-          <div class="grp"><div class="row"><span class="vid ic"></span><span class="vid ic"></span></div><div class="lab">2 Free Trial Videos</div></div>
-          <div class="op">+</div>
-          <div class="grp"><div class="row"><span class="coin">1</span><span class="coin">1</span><span class="coin">1</span></div><div class="lab">3 Credits</div></div>
-          <div class="op">=</div>
-          <div class="grp"><div class="row"><span class="vid ic"></span><span class="vid ic"></span><span class="vid"></span><span class="vid"></span><span class="vid"></span></div><div class="lab">5 Videos</div></div>
+          <div class="grp"><div class="row"><span class="vid ic"></span><span class="vid ic"></span><span class="vid ic"></span><span class="inf">∞</span></div><div class="lab">Free With Icon: Unlimited</div></div>
+          <div class="op sep">|</div>
+          <div class="grp"><div class="row"><span class="coin">1</span><span class="op sm">=</span><span class="vid"></span></div><div class="lab">1 Credit = 1 Video Without Icon</div></div>
         </div>
         <div class="keep"><span class="vid ic"></span> Icon stays on videos already made</div>
       </div>
@@ -409,7 +411,7 @@
     <div class="band">
       <div>
         <h2 style="margin:0;font-size:clamp(24px,3.4vw,32px)">Prefer to do it yourself?</h2>
-        <p>Try the Motion Studio app on your phone. Your free trial includes 2 videos.</p>
+        <p>Try the Motion Studio app on your phone. Make free videos with the small fionah icon, as many as you like. Buy credits for videos without it.</p>
       </div>
       <a class="btn btn-main" href="app/">Open Free Trial App</a>
     </div>
