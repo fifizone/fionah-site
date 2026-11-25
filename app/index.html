@@ -947,16 +947,13 @@
     const packs = CREDIT_PACKS.map(p => `
       <div class="pack">
         <div class="pk">${p.credits} credits · $${p.aud.toFixed(2)} AUD</div>
-        <div>about $${(p.aud / p.credits).toFixed(2)} a video</div>
         ${p.best ? '<div class="best">Best value</div>' : ''}
         <div class="acts">${p.stripe ? `<a class="b2 lnk" style="flex:1" href="${p.stripe}" target="_blank" rel="noopener">Buy</a>` : '<button class="b2" disabled>Buy (Coming Soon)</button>'}</div>
       </div>`).join('');
     openModal(`
       <h3>Credits</h3>
       <div class="credbal">You have ${n} credit${n === 1 ? '' : 's'}</div>
-      <p>Free videos always have the small icon. 1 credit = 1 new video without the icon.</p>
       ${n > 0 ? '<p>To use a credit, choose No Icon (1 Credit) before you make your video.</p>' : '<p>Buy credits to make new videos without the icon.</p>'}
-      <p>Videos already made keep the icon.</p>
       ${packs}
       <p class="tip">Credits are saved on this phone. Clearing your browser or changing phones can remove them. NZ customers see the NZD price at checkout.</p>
       <p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a></p>
