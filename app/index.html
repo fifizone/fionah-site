@@ -875,7 +875,7 @@
     if (showMark()) drawMark(W, H);
   }
 
-  // ---------- free trial: 'Made with [lens]' mark, small in the bottom-right corner ----------
+  // ---------- free trial: lens mark only (no words), small in the bottom-right corner ----------
   const TRIAL_FREE = 2;
   const lensImg = new Image(); lensImg.src = '../logo.svg';
   const trialMade = () => { try { return Number(localStorage.getItem('fionah-trial-made') || 0); } catch (e) { return 0; } };
@@ -886,11 +886,6 @@
     const x = W - pad - sz, y = H - pad - sz;
     ctx.save();
     ctx.globalAlpha = 0.92;
-    ctx.font = `700 ${Math.round(sz * 0.36)}px Arial, Arimo, Helvetica, sans-serif`;
-    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = Math.round(sz * 0.12);
-    ctx.fillStyle = '#fff'; ctx.fillText('Made with', x - sz * 0.06, y + sz / 2);
-    ctx.shadowBlur = 0;
     if (lensImg.complete && lensImg.naturalWidth) ctx.drawImage(lensImg, x, y, sz, sz);
     ctx.restore();
   }
