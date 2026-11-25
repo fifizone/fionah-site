@@ -221,27 +221,23 @@
   /* promise line, drawers, steps, footer links */
   .promise{font-size:18px !important;margin-top:16px;max-width:520px;min-height:1.6em;transition:opacity .6s ease}
   .promise.fade{opacity:0}
-  /* free trial + credits diagram (How it works) */
-  .flow{margin:34px auto 0;max-width:980px;background:#fff;color:#111014;border-radius:var(--r-lg);padding:26px 22px}
-  .flow h3,.flow p,.flow b{color:#111014}
+  /* free trial + credits picture (How it works) */
+  .flow{margin:34px auto 0;max-width:760px;background:#fff;border-radius:var(--r-lg);padding:24px 18px}
+  .flow h3{margin:0 0 18px;text-align:center;font-size:clamp(20px,2.6vw,24px);color:#111014}
   [data-look="night"] .flow{background:var(--card)}
-  [data-look="night"] .flow h3,[data-look="night"] .flow li p,[data-look="night"] .flow li b,[data-look="night"] .flow .sub{color:#F4F2EE}
-  .flow h3{margin:0 0 4px;text-align:center;font-size:clamp(20px,2.6vw,24px)}
-  .flow .sub{text-align:center;margin:0 0 20px;font-size:14px}
-  .flow ol{list-style:none;margin:0;padding:0;display:flex;gap:30px;align-items:stretch}
-  .flow li{flex:1;position:relative;border:1.5px solid #4B33C4;border-radius:var(--r);padding:16px 14px;text-align:center;box-shadow:4px 4px 0 #A9B0BC}
-  .flow li .n{display:inline-block;width:28px;height:28px;line-height:28px;border-radius:50%;background:#4B33C4;color:#fff;font-weight:700;font-size:14px;margin-bottom:8px}
-  .flow li b{display:block;margin-bottom:6px;font-size:16px}
-  .flow li p{margin:0;font-size:14px;line-height:1.5}
-  .flow li img{width:22px;height:22px;vertical-align:-5px}
-  .flow li+li::before{content:"\2192";position:absolute;left:-25px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:700;color:#4B33C4}
-  [data-look="night"] .flow li+li::before{color:#B9A8FF}
-  .flow .eg{margin:22px 0 0;border-radius:var(--r);padding:14px 16px;background:#F1EEFC;color:#111014;font-size:14px;line-height:1.55}
-  .flow .eg p{margin:0}.flow .eg p+p{margin-top:6px}
-  @media (max-width:760px){
-    .flow ol{flex-direction:column;gap:30px}
-    .flow li+li::before{content:"\2193";left:50%;top:-27px;transform:translateX(-50%)}
-  }
+  [data-look="night"] .flow h3,[data-look="night"] .flow .lab,[data-look="night"] .flow .op,[data-look="night"] .flow .keep{color:#F4F2EE}
+  .flow .eq{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+  .flow .grp{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .flow .row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  .flow .lab{font-size:14px;font-weight:700;color:#111014;text-align:center}
+  .flow .op{font-size:32px !important;font-weight:700;color:#4B33C4;line-height:1;margin-top:-26px}
+  @media (max-width:560px){.flow .op{margin-top:0}}
+  .flow .vid{position:relative;width:44px;height:32px;border-radius:4px;background:linear-gradient(135deg,#6A4FE0,#2E1F80);box-shadow:2px 2px 0 #A9B0BC}
+  .flow .vid::before{content:"";position:absolute;left:17px;top:9px;border-left:12px solid #fff;border-top:7px solid transparent;border-bottom:7px solid transparent}
+  .flow .vid.ic::after{content:"";position:absolute;right:2px;bottom:2px;width:13px;height:13px;background:url(logo.svg) center/contain no-repeat}
+  .flow .coin{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F7E2A0,#D9A93E 55%,#9C6B1F);color:#3A2600;font-weight:700;font-size:15px;line-height:32px;text-align:center;box-shadow:2px 2px 0 #A9B0BC}
+  .flow .keep{display:flex;align-items:center;justify-content:center;gap:10px;margin:22px 0 0;font-size:14px;font-weight:700;color:#111014}
+  @media (max-width:560px){.flow .eq{flex-direction:column;gap:10px}}
   details.drawer{border:none;padding:0}
   details.drawer>summary{display:flex;align-items:center;justify-content:center;gap:12px;padding-right:0}
   details.drawer>summary h2{margin:0}
@@ -367,19 +363,16 @@
           <li>Enter your order number and private code, then tap Find My Order.</li>
           <li>When your video is ready, tap Download.</li></ul></li>
       </ol>
-      <div class="flow" id="trialFlow">
+      <div class="flow" id="trialFlow" role="img" aria-label="Free trial app: 2 free trial videos with the lens icon, plus 3 credits, makes 5 videos: 2 with the icon and 3 without. The icon stays on videos already made.">
         <h3>Free Trial App: How Credits Work</h3>
-        <p class="sub">For people who make their own videos in the Motion Studio app.</p>
-        <ol>
-          <li><span class="n">1</span><b>Start Free</b><p>You get 2 free trial videos. Each one shows the small <img src="logo.svg" alt="fionah lens"> icon in the corner.</p></li>
-          <li><span class="n">2</span><b>Want No Icon?</b><p>Buy credits. 1 credit = 1 video without the icon.</p></li>
-          <li><span class="n">3</span><b>Credits Go First</b><p>While you have credits, each new video uses 1 credit automatically. Your free trial videos wait for later.</p></li>
-          <li><span class="n">4</span><b>Credits Run Out?</b><p>Any free trial videos you have left are used next (with the icon). After that, buy more credits at any time.</p></li>
-        </ol>
-        <div class="eg">
-          <p><b>Example:</b> Sam has 2 free trial videos and buys 3 credits. Sam can make 5 videos: 2 with the icon and 3 without.</p>
-          <p><b>Please note:</b> Videos you have already made keep the icon. To remove it, make the video again, which uses 1 credit.</p>
+        <div class="eq">
+          <div class="grp"><div class="row"><span class="vid ic"></span><span class="vid ic"></span></div><div class="lab">2 Free Trial Videos</div></div>
+          <div class="op">+</div>
+          <div class="grp"><div class="row"><span class="coin">1</span><span class="coin">1</span><span class="coin">1</span></div><div class="lab">3 Credits</div></div>
+          <div class="op">=</div>
+          <div class="grp"><div class="row"><span class="vid ic"></span><span class="vid ic"></span><span class="vid"></span><span class="vid"></span><span class="vid"></span></div><div class="lab">5 Videos</div></div>
         </div>
+        <div class="keep"><span class="vid ic"></span> Icon stays on videos already made</div>
       </div>
     </details>
   </div>
