@@ -98,3 +98,6 @@
 .sendbox .packnote.ok::before{content:"✓ "}
 .getbox .findbtn{display:block;width:calc(100% - 5px);margin-top:18px}
 .getbox .result p{margin:14px 0 10px}
+/* Get Your Video: friendly note when a Stripe receipt number is typed in the order box */
+.sendbox .rcptnote{margin:8px 0 6px;padding:12px 14px;border-radius:4px;font-size:15px;line-height:1.45;border:1.5px solid #4B33C4;background:rgba(75,51,196,.06)}
+.sendbox .rcptnote[hidden]{display:none}

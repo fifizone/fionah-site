@@ -198,7 +198,13 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     const out = $('.result'), form = g.querySelector('form');
     const norm = v => { v = v.toUpperCase().replace(/[^A-Z0-9]/g, ''); if (v.startsWith('FN')) v = v.slice(2); return v ? 'FN-' + v : ''; };
     const num = () => $('#gOrder').value.replace(/\D/g, '');
-    const check = () => { $('.findbtn').disabled = !(num().length >= 4 && norm($('#gCode').value).length >= 9); };
+    // a Stripe receipt number (like 1104-3271) typed in the order box gets a friendly explanation
+    const isReceipt = () => /\d{3,}\s*-\s*\d/.test($('#gOrder').value);
+    const check = () => {
+      const r = isReceipt(), note = $('.rcptnote');
+      if (note) note.hidden = !r;
+      $('.findbtn').disabled = r || !(num().length >= 4 && num().length <= 8 && norm($('#gCode').value).length >= 9);
+    };
     // the Sent screen links here with ?n=1001, so the order number fills itself in
     const pre = new URLSearchParams(location.search).get('n');
     if (pre && /^\d{4,8}$/.test(pre)) $('#gOrder').value = pre;
@@ -208,7 +214,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const n = num(), code = norm($('#gCode').value);
-      if (!SEND_URL || n.length < 4 || code.length < 9) return;
+      if (!SEND_URL || isReceipt() || n.length < 4 || n.length > 8 || code.length < 9) return;
       out.textContent = 'Finding your order…';
       try {
         const d = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code))).json();

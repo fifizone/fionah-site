@@ -249,7 +249,7 @@
       <input type="file" id="files" accept="image/*" multiple>
       <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
     </div>
-    <div class="trialtile">2 free trial videos</div>
+    <div class="trialtile" id="trialTile">2 free trial videos</div>
     <details class="warntile"><summary>Warning</summary><p>As a friendly reminder, our safety check automatically flags profanity, insults, or terms like &#39;sex&#39;, &#39;kill&#39; (and similar words). Images that are sexual, violent, or show cruel acts will be flagged. We appreciate your help keeping everything appropriate!</p></details>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
@@ -425,15 +425,21 @@
   async function addFiles(list) {
     const files = [...list].filter(f => f.type.startsWith('image/') || /\.(heic|heif|jpe?g|png|webp|gif|bmp|tiff?|avif)$/i.test(f.name));
     if (!files.length) return;
+    // photo limit: free trial videos up to 6 photos, credit videos up to 18
+    const max = photoMax();
+    if (S.slides.length >= max) return toast(photoLimitMsg());
+    const tooMany = S.slides.length + files.length > max;
     let bad = 0, blocked = 0;
     $('stats').innerHTML = `<span class="pill">Loading and checking ${files.length} photos…</span>`;
     for (const f of files) {
+      if (S.slides.length >= max) break;
       const s = await loadFile(f);
       if (s === BLOCKED) blocked++; else if (s) S.slides.push(s); else bad++;
       renderStats(bad);
     }
     renderList(); renderStats(bad); if (S.preset) applyPreset(S.preset); draw(S.t);
     if (blocked) toast(BLOCK_MSG);
+    else if (tooMany) toast(photoLimitMsg());
   }
   ['files', 'files2'].forEach(id => $(id).addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; }));
 
@@ -469,7 +475,7 @@
     $('tools').style.display = n ? 'flex' : 'none';
     $('empty').style.display = n ? 'none' : 'grid';
     $('stats').innerHTML = n ? `
-      <span class="pill"><b>${n}</b> photos</span>
+      <span class="pill"><b>${n}</b> of ${photoMax()} photos</span>
       <span class="pill">Video length <b>${fmt(total())}</b></span>
       <span class="pill">File about <b>${Math.max(1, Math.round(bitrate() * total() / 8 / 1048576))} MB</b></span>
       ${bad ? `<span class="pill" style="color:var(--bad)">${bad} could not open</span>` : ''}` : '';
@@ -895,8 +901,22 @@
   const credits = () => { try { return Math.max(0, Number(localStorage.getItem('fionah-credits') || 0)); } catch (e) { return 0; } };
   const useCredit = () => { try { localStorage.setItem('fionah-credits', String(Math.max(0, credits() - 1))); } catch (e) {} updTrial(); };
   const showMark = () => credits() < 1;
+  // photo limit for one video: 6 in a free trial video, 18 with credits
+  const PHOTOS_FREE = 6, PHOTOS_PAID = 18;
+  const photoMax = () => credits() > 0 ? PHOTOS_PAID : PHOTOS_FREE;
+  const photoLimitMsg = () => credits() > 0
+    ? `You can add up to ${PHOTOS_PAID} photos in one video.`
+    : `You can add up to ${PHOTOS_FREE} photos in a free trial video. Buy credits to add up to ${PHOTOS_PAID}.`;
   function updTrial() {
     const n = credits();
+    // trial tile counts down, and hides when there are credits
+    const tile = $('trialTile');
+    if (tile) {
+      const left = Math.max(0, TRIAL_FREE - trialMade());
+      tile.style.display = n > 0 ? 'none' : '';
+      tile.textContent = left > 0 ? `${left} free trial video${left === 1 ? '' : 's'} left` : `Your ${TRIAL_FREE} free trial videos are used`;
+    }
+    if (typeof renderStats === 'function' && S.slides.length) renderStats();
     $('trialNote').innerHTML = n > 0
       ? `No watermark · ${n} credit${n === 1 ? '' : 's'} left · <a class="rm" id="rmMark">Credits</a>`
       : `The <img src="../logo.svg" alt="fionah lens" width="18" height="18" style="vertical-align:-4px"> is watermarked at the bottom of the video. <a class="rm" id="rmMark" role="button" tabindex="0">Click here to remove.</a>`;
@@ -933,7 +953,8 @@
       if (d.ok && d.credits > 0) {
         addCredits(d.credits);
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
-        openModal(`<h3>Thank you:</h3><div class="credbal">${d.credits} credits added ✓</div><p>You now have ${credits()} credit${credits() === 1 ? '' : 's'}. Your next video will be made without the watermark.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+        const rc = String(d.receipt || '').replace(/[^0-9-]/g, '');
+        openModal(`<h3>Thank you:</h3><div class="credbal">${d.credits} credits added ✓</div><p>You now have ${credits()} credit${credits() === 1 ? '' : 's'}. Your next video will be made without the watermark.</p>${rc ? `<p>Your Stripe receipt number: <b style="color:var(--text)">${rc}</b></p>` : ''}<p>Please keep your Stripe email receipt in case you need help.</p><p class="tip">You do not need an order number or private code. Your credits are already saved in Motion Studio on this phone.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
       } else if (d.used) {
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
@@ -1011,6 +1032,7 @@
     if (!S.slides.length) return toast('Add your photos first 📷');
     if (!allWordsOk()) return toast(WORDS_MSG);
     if (credits() < 1 && trialMade() >= TRIAL_FREE) return openCredits();
+    if (S.slides.length > photoMax()) return toast(photoLimitMsg() + ' Please remove ' + (S.slides.length - photoMax()) + ' photo' + (S.slides.length - photoMax() === 1 ? '' : 's') + ' first.');
     if (!cv.captureStream || pickMime() === null) return toast('Sorry — this phone\'s browser cannot record video. Try Chrome on Android or Safari on a recent iPhone.');
     pause();
     const T = total();
