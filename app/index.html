@@ -198,6 +198,17 @@
   .finetune .tip{margin:12px 0 0}
   .warntile[open] summary{background:var(--chrome);color:#111014;box-shadow:4px 4px 0 #A9B0BC}
   .warntile p{margin:10px 2px 2px;line-height:1.45;color:var(--text)}
+  .pictile{display:flex;align-items:stretch;gap:10px;width:calc(100% - 4px);font:inherit;cursor:pointer}
+  .pictile .pt-half{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
+  .pictile .pt-row{display:flex;align-items:center;gap:5px}
+  .pictile .pt-lab{font-size:13px;font-weight:700;line-height:1.35}
+  .pictile .pt-line{width:1.5px;background:currentColor;opacity:.3}
+  .pictile .pv{position:relative;width:34px;height:25px;border-radius:3px;background:linear-gradient(135deg,#6A4FE0,#2E1F80);box-shadow:inset 0 0 0 1px rgba(255,255,255,.55)}
+  .pictile .pv::before{content:"";position:absolute;left:13px;top:7px;border-left:9px solid #fff;border-top:5.5px solid transparent;border-bottom:5.5px solid transparent}
+  .pictile .pv.ic::after{content:"";position:absolute;right:1px;bottom:1px;width:10px;height:10px;background:url(../logo.svg) center/contain no-repeat}
+  .pictile .pinf{font-size:24px;font-weight:700;line-height:25px}
+  .pictile .peq{font-size:20px;font-weight:700}
+  .pictile .pcoin{width:25px;height:25px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F7E2A0,#D9A93E 55%,#9C6B1F);color:#3A2600;font-weight:700;font-size:13px;line-height:25px;text-align:center}
   .trialtile{margin:14px 4px 4px 0;text-align:center;background:var(--btn);color:var(--btn-ink);border:none;border-radius:var(--r);padding:11px;box-shadow:4px 4px 0 #A9B0BC}
   /* no blue tap flash or blue focus ring; keyboard users still see a ring, in purple */
   *{-webkit-tap-highlight-color:transparent}
@@ -254,7 +265,11 @@
       <input type="file" id="files" accept="image/*" multiple>
       <input type="file" id="files2" accept=".jpg,.jpeg,.png,.heic,.heif,.webp,.gif,.bmp,.tif,.tiff,.avif" multiple>
     </div>
-    <div class="trialtile" id="trialTile">Free videos with the small <img src="../logo.svg" alt="fionah lens" width="18" height="18" style="vertical-align:-4px"> icon, as many as you like.</div>
+    <button type="button" class="trialtile pictile" id="trialTile" aria-label="Unlimited videos with the icon. Buy credits: 1 credit equals 1 video without the icon. Tap to see credits.">
+      <span class="pt-half"><span class="pt-row"><span class="pv ic"></span><span class="pv ic"></span><span class="pinf">∞</span></span><span class="pt-lab">Unlimited Videos = With Icon</span></span>
+      <span class="pt-line"></span>
+      <span class="pt-half"><span class="pt-row"><span class="pcoin">1</span><span class="peq">=</span><span class="pv"></span></span><span class="pt-lab">Buy Credits<br>1 Credit = 1 Video Without Icon</span></span>
+    </button>
     <details class="warntile"><summary>Warning</summary><p>As a friendly reminder, our safety check automatically flags profanity, insults, or terms like &#39;sex&#39;, &#39;kill&#39; (and similar words). Images that are sexual, violent, or show cruel acts will be flagged. We appreciate your help keeping everything appropriate!</p></details>
     <div class="stats" id="stats"></div>
     <div class="rowtools" id="tools" style="display:none">
@@ -919,7 +934,7 @@
     const n = credits();
     if (n < 1) S.noIcon = false;
     // tile: free videos with the icon; hidden while the person has credits (the choice buttons show instead)
-    const tile = $('trialTile'); if (tile) tile.style.display = n > 0 ? 'none' : '';
+    const tile = $('trialTile'); if (tile) tile.onclick = openCredits;   // picture tile: always shown, tap = credits page
     if (typeof renderStats === 'function' && S.slides.length) renderStats();
     $('trialNote').innerHTML = n > 0
       ? `<div>You have ${n} credit${n === 1 ? '' : 's'}. This video:</div><div class="iconpick"><button id="icFree" class="${S.noIcon ? '' : 'on'}">Free (With Icon)</button><button id="icNo" class="${S.noIcon ? 'on' : ''}">No Icon (1 Credit)</button></div><a class="rm" id="rmMark" role="button" tabindex="0">Credits</a>`
