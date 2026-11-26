@@ -14,7 +14,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Motion Studio">
-<meta name="description" content="Turn your images into a smooth, gliding video on your phone.">
+<meta name="description" content="Turn your images into a smooth, gliding video on your device.">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
 <link rel="shortcut icon" href="../favicon.ico">
@@ -229,6 +229,7 @@
   .credbal{font-size:28px;color:var(--text);margin:6px 0 2px}
   .box .restore{width:100%;margin:2px 0 8px;padding:14px 10px}
   .nw{white-space:nowrap}
+  .box .nzline{margin:-4px 0 12px}
   #rcIn{margin-top:4px;font-size:18px;letter-spacing:1px;text-align:center}
   .pack{border:1.5px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0;text-align:center;color:var(--text)}
   .pack .pk{font-size:20px}
@@ -1005,11 +1006,11 @@
       <div class="credbal">You have ${n} credit${n === 1 ? '' : 's'}</div>
       ${n > 0 ? '<p>To use a credit, choose No Icon (1 Credit) before you make your video.</p>' : '<p>Buy credits to make new videos without the icon.</p>'}
       ${packs}
+      <p class="tip nzline">NZ customers see the NZD price at checkout.</p>
       <button class="b1 restore" id="restoreBtn">Restore My Credits</button>
-      <p class="tip">Credits are saved with your Stripe receipt number, so you can use them on any device.</p>
-      <p class="tip">NZ customers see the NZD price at checkout.</p>
+      <p class="tip">Credits are saved with your Emailed Stripe Receipt Number, so you can use them on any device.</p>
       <p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a></p>
-      <div class="acts stack"><a class="b2 lnk" href="../#pricing">See Done-For-You Packs</a><button class="b1" id="nox">Back</button></div>`);
+      <div class="acts stack"><button class="b1" id="nox">Back</button></div>`);
     box.classList.add('credbox');
     $('nox').onclick = closeModal;
     $('restoreBtn').onclick = openRestore;
@@ -1018,8 +1019,8 @@
   function openRestore(msg) {
     openModal(`
       <h3>Restore My Credits</h3>
-      <p>Enter the receipt number from your Stripe Email Receipt, for example <span class="nw">1234-5678</span>.</p>
-      <input type="text" id="rcIn" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Receipt number" aria-label="Receipt number">
+      <p>Enter your Emailed Stripe Receipt Number, for example <span class="nw">#1234-5678</span>.</p>
+      <input type="text" id="rcIn" inputmode="numeric" autocomplete="off" maxlength="20" placeholder="#1234-5678" aria-label="Emailed Stripe Receipt Number">
       <div class="msg" id="rcMsg">${typeof msg === 'string' ? msg : ''}</div>
       <div class="acts"><button class="b1" id="nox">Back</button><button class="b2" id="rcGo">Check My Credits</button></div>`);
     box.classList.add('credbox');
@@ -1029,7 +1030,7 @@
   }
   async function checkRestore(v) {
     const dg = String(v || '').replace(/\D/g, '');
-    if (dg.length !== 8) { $('rcMsg').textContent = 'A receipt number has 8 numbers, for example 1234\u20115678.'; return; }
+    if (dg.length !== 8) { $('rcMsg').textContent = 'A receipt number has 8 numbers, for example #1234\u20115678.'; return; }
     $('rcMsg').textContent = 'Checking…'; $('rcGo').disabled = true;
     let d = null;
     try { d = await (await fetch(HELPER_URL + '?restore=' + encodeURIComponent(dg))).json(); } catch (e) {}
@@ -1039,8 +1040,8 @@
       try { if (phoneCredits() > 0) localStorage.setItem('fionah-credits', '0'); } catch (e) {}
       keepCard(d.card, d.left, d.receipt); if (d.left > 0) S.noIcon = true; updTrial();
       openModal(d.left > 0
-        ? `<h3>Your Credits Are Back:</h3><div class="credbal">You have ${d.left} credit${d.left === 1 ? '' : 's'} ✓</div><p>Receipt number: <b style="color:var(--text)">${d.receipt}</b></p><p>Your credits are now ready to use on this phone.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`
-        : `<h3>No Credits Left</h3><p>All the credits on receipt number <b class="nw" style="color:var(--text)">${d.receipt}</b> have been used.</p><p>You can still make free videos with the small icon, or buy more credits.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="buyx">Buy Credits</button></div>`);
+        ? `<h3>Your Credits Are Back:</h3><div class="credbal">You have ${d.left} credit${d.left === 1 ? '' : 's'} ✓</div><p>Receipt Number: <b class="nw" style="color:var(--text)">#${d.receipt}</b></p><p>Your credits are now ready to use on this device.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`
+        : `<h3>No Credits Left</h3><p>All the credits on Receipt Number <b class="nw" style="color:var(--text)">#${d.receipt}</b> have been used.</p><p>You can still make free videos with the small icon, or buy more credits.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="buyx">Buy Credits</button></div>`);
       const b = $('buyx'); if (b) b.onclick = openCredits;
       $('okx').onclick = closeModal;
     } else if (d && d.pack) {
@@ -1048,7 +1049,7 @@
     } else if (d && d.busy) {
       openRestore('There have been too many tries. Please try again in an hour.');
     } else if (d) {
-      openModal(`<h3>Restore My Credits</h3><p>We could not find credits for that receipt number. Please check the number on your Stripe Email Receipt and try again.</p>${help}<div class="acts"><button class="b1" id="nox">Close</button><button class="b2" id="tryx">Try Again</button></div>`);
+      openModal(`<h3>Restore My Credits</h3><p>We could not find credits for that receipt number. Please check your Emailed Stripe Receipt Number and try again.</p>${help}<div class="acts"><button class="b1" id="nox">Close</button><button class="b2" id="tryx">Try Again</button></div>`);
       $('nox').onclick = closeModal; $('tryx').onclick = openRestore;
     } else {
       openRestore('We could not connect. Please check your internet connection and try again.');
@@ -1065,11 +1066,11 @@
         addCard(d);
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         const rc = String(d.receipt || '').replace(/[^0-9-]/g, '');
-        openModal(`<h3>Thank You</h3><div class="credbal">${d.credits} Credits Added ✓</div><p>Your next video will have no icon.</p>${rc ? `<p>Receipt number: <b class="nw" style="color:var(--text)">${rc}</b></p>` : ''}<p>Please keep your Stripe Email Receipt. It lets you use your credits on any device.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+        openModal(`<h3>Thank You</h3><div class="credbal">${d.credits} Credits Added ✓</div><p>Your next video will have no icon.</p>${rc ? `<p>Receipt Number: <b class="nw" style="color:var(--text)">#${rc}</b></p>` : ''}<p>Please keep your Emailed Stripe Receipt. It lets you use your credits on any device.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
       } else if (d.used && d.card) {                // already added: this phone simply joins the card (nothing is doubled)
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         addCard(d);
-        openModal(`<h3>Your Credits Are Ready</h3><div class="credbal">You have ${credits()} credit${credits() === 1 ? '' : 's'}</div><p>The credits for this payment are saved with your Stripe receipt number.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+        openModal(`<h3>Your Credits Are Ready</h3><div class="credbal">You have ${credits()} credit${credits() === 1 ? '' : 's'}</div><p>The credits for this payment are saved with your Emailed Stripe Receipt Number.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
       } else if (d.used) {
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
@@ -1148,7 +1149,7 @@
     if (!S.slides.length) return toast('Add your photos first 📷');
     if (!allWordsOk()) return toast(WORDS_MSG);
     if (S.slides.length > photoMax()) return toast(photoLimitMsg() + ' Please remove ' + (S.slides.length - photoMax()) + ' photo' + (S.slides.length - photoMax() === 1 ? '' : 's') + ' first.');
-    if (!cv.captureStream || pickMime() === null) return toast('Sorry — this phone\'s browser cannot record video. Try Chrome on Android or Safari on a recent iPhone.');
+    if (!cv.captureStream || pickMime() === null) return toast('Sorry — this device\'s browser cannot record video. Try Chrome on Android or Safari on a recent iPhone.');
     pause();
     const T = total();
     openModal(`
@@ -1193,7 +1194,7 @@
     const bps = bitrate();
     let rec;
     try { rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: bps } : { videoBitsPerSecond: bps }); }
-    catch (e) { S.recording = false; return toast('Sorry — recording could not start on this phone.'); }
+    catch (e) { S.recording = false; return toast('Sorry — recording could not start on this device.'); }
     const chunks = [];
     rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
 

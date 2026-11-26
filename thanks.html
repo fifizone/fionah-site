@@ -72,8 +72,8 @@
     <div class="packcard" id="packCard" hidden>
       <div class="pklabel" id="payHead">Checking your payment…</div>
       <div id="payRow" hidden>
-        <div class="paypair"><div><span>Stripe receipt number:</span><div class="pkcode" id="payReceipt"></div></div><div><span>Order number:</span><div class="pkcode" id="payNum"></div></div></div>
-        <p>Your Stripe receipt number will be sent with each photo batch.</p>
+        <div class="paypair"><div><span>Emailed Stripe Receipt Number:</span><div class="pkcode" id="payReceipt"></div></div><div><span>Order number:</span><div class="pkcode" id="payNum"></div></div></div>
+        <p>Your Emailed Stripe Receipt Number will be sent with each photo batch.</p>
         <p id="payWait" hidden></p>
       </div>
     </div>
@@ -81,8 +81,8 @@
   <form novalidate>
     <h2>To Send Your Photos</h2>
     <div hidden>
-      <label for="sbPack">Enter your Stripe receipt number:</label>
-      <input type="text" id="sbPack" autocomplete="off" inputmode="numeric" maxlength="12" placeholder="e.g. 1234-5678">
+      <label for="sbPack">Enter your Emailed Stripe Receipt Number:</label>
+      <input type="text" id="sbPack" autocomplete="off" inputmode="numeric" maxlength="20" placeholder="e.g. #1234-5678">
       <div class="packnote"></div>
     </div>
     <label for="sbAddr">Property address (25 characters):</label>

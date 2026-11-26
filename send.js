@@ -89,7 +89,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       const typed = $('#sbPack').value.trim();
       const v = normRef(typed) || (!typed ? hiddenRef : '');
       pack = { ref: '', left: 0, number: '' };
-      if (!v) { packNote(typed ? 'Receipt numbers look like 1234-5678.' : ''); check(); return; }
+      if (!v) { packNote(typed ? 'Receipt numbers look like #1234-5678.' : ''); check(); return; }
       if (!SEND_URL) { check(); return; }
       packNote('Checking your receipt number…');
       try {
@@ -121,7 +121,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       const ready = paid && filled && words && agreed;
       $('.send').disabled = !SEND_URL || !ready;
       $('.note').textContent = !SEND_URL ? 'Sending opens soon.'
-        : !paid ? 'Enter your Stripe receipt number to send your photos.'
+        : !paid ? 'Enter your Emailed Stripe Receipt Number to send your photos.'
         : !words ? WORDS_MSG
         : photos.length > MAX ? `This pack allows up to ${MAX} photos. Please remove ${photos.length - MAX}.` : !filled ? 'Choose a video length and add at least one photo.'
         : !agreed ? 'Please tick to agree to the Terms.' : 'Ready to send.';
@@ -261,7 +261,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         $id('payNum').textContent = '#' + d.number;
         $id('payRow').hidden = false;
         if (d.receipt) {
-          $id('payReceipt').textContent = d.receipt; $id('payWait').hidden = true;
+          $id('payReceipt').textContent = '#' + d.receipt; $id('payWait').hidden = true;
           if (sb && sb.fillPack) sb.fillPack(d.receipt, sid);
           try { localStorage.setItem('fionah-receipt', d.receipt); } catch (e) {}
           return;
