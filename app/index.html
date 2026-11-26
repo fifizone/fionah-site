@@ -452,7 +452,7 @@
   async function addFiles(list) {
     const files = [...list].filter(f => f.type.startsWith('image/') || /\.(heic|heif|jpe?g|png|webp|gif|bmp|tiff?|avif)$/i.test(f.name));
     if (!files.length) return;
-    // photo limit: free videos up to 6 photos, credit (no icon) videos up to 18
+    // photo limit: free videos up to 10 photos, credit (no icon) videos up to 15
     const max = photoMax();
     if (S.slides.length >= max) return toast(photoLimitMsg());
     const tooMany = S.slides.length + files.length > max;
@@ -908,7 +908,14 @@
     ctx.font = `700 ${Math.round(sz * 0.34)}px Arial, Arimo, Helvetica, sans-serif`;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = Math.round(sz * 0.12);
-    ctx.fillStyle = '#fff'; ctx.fillText('fionah.com', x - sz * 0.08, y + sz / 2);   // so viewers know where to find fionah
+    // fionah gold text with a thin dark edge, so it reads on light and dark photos
+    ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(1.5, sz * 0.05); ctx.strokeStyle = 'rgba(20,14,4,.85)';
+    ctx.strokeText('fionah.com', x - sz * 0.08, y + sz / 2);
+    // the same gold shine as the F in the logo: #9C6B1F → #D9A93E → #F7E2A0 → #C99A3B → #EBCB78
+    const tw = ctx.measureText('fionah.com').width, tx = x - sz * 0.08, ty = y + sz / 2, th = sz * 0.34;
+    const gg = ctx.createLinearGradient(tx - tw, ty - th, tx, ty + th);
+    [[0, '#9C6B1F'], [.28, '#D9A93E'], [.5, '#F7E2A0'], [.72, '#C99A3B'], [1, '#EBCB78']].forEach(([o, c]) => gg.addColorStop(o, c));
+    ctx.fillStyle = gg; ctx.fillText('fionah.com', tx, ty);   // so viewers know where to find fionah
     ctx.shadowBlur = 0;
     if (lensImg.complete && lensImg.naturalWidth) ctx.drawImage(lensImg, x, y, sz, sz);
     ctx.restore();
@@ -971,7 +978,7 @@
   const noIcon = () => S.noIcon && credits() > 0;
   const showMark = () => !noIcon();
   // photo limit for one video: 6 in a free video, 18 in a credit video
-  const PHOTOS_FREE = 6, PHOTOS_PAID = 18;
+  const PHOTOS_FREE = 10, PHOTOS_PAID = 15;
   const photoMax = () => noIcon() ? PHOTOS_PAID : PHOTOS_FREE;
   const photoLimitMsg = () => noIcon()
     ? `You can add up to ${PHOTOS_PAID} photos in one video.`
