@@ -151,7 +151,7 @@
   button:disabled{opacity:.45}
   .modal{position:fixed;inset:0;background:rgba(10,10,14,.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
   .modal.show{display:flex}
-  .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;width:100%;max-width:520px;text-align:center}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;width:100%;max-width:520px;text-align:center;transform:translateZ(0)}
   .box h3{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0 0 8px}
   .box p{color:var(--muted);font-size:14px;line-height:1.55;margin:6px 0}
   .prog{height:8px;background:var(--field);border-radius:var(--r);overflow:hidden;margin:16px 0 8px;border:1px solid var(--line)}
@@ -1121,7 +1121,8 @@
 
   // ---------- modal helpers ----------
   const modal = $('modal'), box = $('box');
-  function openModal(html) { box.classList.remove('credbox'); box.innerHTML = html; modal.classList.add('show'); }
+  // the clicked button is let go first and the box is drawn fresh, so no ghost outline of the old button is left behind
+  function openModal(html) { try { document.activeElement && document.activeElement.blur(); } catch (e) {} box.classList.remove('credbox'); box.innerHTML = html; modal.classList.add('show'); void box.offsetHeight; }
   function closeModal() { modal.classList.remove('show'); box.classList.remove('credbox'); }
   function toast(text) {
     openModal(`<p style="color:var(--text);font-size:15px">${text}</p><div class="acts"><button class="b1" id="okx">OK</button></div>`);
