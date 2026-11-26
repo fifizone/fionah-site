@@ -156,7 +156,7 @@
   .box p{color:var(--muted);font-size:14px;line-height:1.55;margin:6px 0}
   .prog{height:8px;background:var(--field);border-radius:var(--r);overflow:hidden;margin:16px 0 8px;border:1px solid var(--line)}
   .prog i{display:block;height:100%;width:0;background:var(--gold)}
-  .box video{width:100%;border-radius:var(--r);margin:12px 0;background:#000}
+  .box video{width:100%;max-height:52vh;object-fit:contain;border-radius:var(--r);margin:12px 0;background:#000}
   .box .acts{display:flex;gap:10px;margin-top:12px}
   .box .acts button{flex:1;padding:13px}
   .presets{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
@@ -1237,21 +1237,26 @@
     const type = (rec.mimeType || mime || 'video/webm').split(';')[0];
     const blob = new Blob(chunks, { type });
     const ext = type.includes('mp4') ? 'mp4' : 'webm';
+    // a still picture for the finished-video player (the video itself starts and ends on black, from the soft fades)
+    let poster = '';
+    try { draw(Math.min(2, T / 2)); poster = cv.toDataURL('image/jpeg', 0.8); draw(S.t); } catch (e) {}
     if (S.usingCredit) useCredit();
-    showResult(blob, ext);
+    showResult(blob, ext, poster);
   }
 
-  async function showResult(blob, ext) {
+  async function showResult(blob, ext, poster) {
     const url = URL.createObjectURL(blob);
     const name = ($('headline').value.trim() || 'listing-video').replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '-').slice(0, 60) + '.' + ext;
     const mb = (blob.size / 1048576).toFixed(1);
     openModal(`
       <h3>Your video is ready ✨</h3>
-      <video src="${url}" controls playsinline></video>
+      <video src="${url}" controls playsinline${poster ? ` poster="${poster}"` : ''}></video>
       <p>${name} · ${mb} MB</p>
       <div class="acts"><button class="b1" id="closeR">Close</button><button class="b2" id="saveR">⬇ Save Video</button></div>
       <div class="msg" id="saveMsg"></div>
       ${ext === 'webm' ? '<p class="tip">This phone made a .webm file. It plays on YouTube, Facebook and Android. For Instagram on iPhone you may need a free converter app to .mp4.</p>' : ''}`);
+    box.classList.add('credbox');          // the box scrolls on small screens, so Save Video is always reachable
+    const rv = box.querySelector('video'); if (rv && poster) rv.addEventListener('ended', () => { try { rv.load(); } catch (e) {} });   // back to the picture when it finishes
     $('closeR').onclick = () => { closeModal(); };
     let dl = null;
     try { dl = await window.claude?.use?.('downloads'); } catch (e) {}
