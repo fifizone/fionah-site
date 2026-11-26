@@ -241,6 +241,8 @@
   .flow .op.sep{color:#B9BFC9}
   @media (max-width:560px){.flow .op.sep{display:none}}
   .flow .keep{display:flex;align-items:center;justify-content:center;gap:10px;margin:22px 0 0;font-size:14px;font-weight:700;color:#111014}
+  .flow .keep + .keep{margin-top:12px;max-width:440px;margin-left:auto;margin-right:auto;text-align:left}
+  .flow .rcpt{width:26px;height:34px;flex:none;margin:0 9px;filter:drop-shadow(2px 2px 0 #A9B0BC)}
   @media (max-width:560px){.flow .eq{flex-direction:column;gap:10px}}
   details.drawer{border:none;padding:0}
   details.drawer>summary{display:flex;align-items:center;justify-content:center;gap:12px;padding-right:0}
@@ -367,7 +369,7 @@
           <li>Enter your order number and private code, then tap Find My Order.</li>
           <li>When your video is ready, tap Download.</li></ul></li>
       </ol>
-      <div class="flow" id="trialFlow" role="img" aria-label="Free Trial App: free videos with the lens icon, as many as you like. 1 credit makes 1 video without the icon. The icon stays on videos already made.">
+      <div class="flow" id="trialFlow" role="img" aria-label="Free Trial App: free videos with the lens icon, as many as you like. 1 credit makes 1 video without the icon. The icon stays on videos already made. Credits are saved with your Stripe receipt number, so you can use them on any device.">
         <h3>Free Trial App</h3>
         <div class="eq">
           <div class="grp"><div class="row"><span class="vid ic"></span><span class="vid ic"></span><span class="vid ic"></span><span class="inf">∞</span></div><div class="lab">Free With Icon: Unlimited</div></div>
@@ -375,6 +377,7 @@
           <div class="grp"><div class="row"><span class="coin">1</span><span class="op sm">=</span><span class="vid"></span></div><div class="lab">1 Credit = 1 Video Without Icon</div></div>
         </div>
         <div class="keep"><span class="vid ic"></span> Icon stays on videos already made</div>
+        <div class="keep"><svg class="rcpt" viewBox="0 0 32 40" aria-hidden="true"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A4FE0"/><stop offset="1" stop-color="#2E1F80"/></linearGradient></defs><path d="M4 2h24v36l-4-3-4 3-4-3-4 3-4-3-4 3z" fill="url(#rg)"/><g stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M10 11h12M10 17h12M10 23h7"/></g></svg> Credits are saved with your Stripe receipt number, so you can use them on any device</div>
       </div>
     </details>
   </div>

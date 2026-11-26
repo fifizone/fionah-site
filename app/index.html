@@ -227,6 +227,9 @@
   .trialnote a.rm{color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
   .box.credbox{max-height:calc(100vh - 36px);overflow:auto}
   .credbal{font-size:28px;color:var(--text);margin:6px 0 2px}
+  .box .restore{width:100%;margin:2px 0 8px;padding:14px 10px}
+  .nw{white-space:nowrap}
+  #rcIn{margin-top:4px;font-size:18px;letter-spacing:1px;text-align:center}
   .pack{border:1.5px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0;text-align:center;color:var(--text)}
   .pack .pk{font-size:20px}
   .pack .best{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:var(--r);background:var(--chrome);color:#111014;font-size:13px}
@@ -921,8 +924,51 @@
   // The fionah helper (Google script) checks each payment with Stripe before credits are added,
   // so copying the thank-you web address cannot give free credits.
   const HELPER_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgoXJjKUPFwYhAC4bE25h_-nZVOwmg0u1jZrh6nSTxhlCKYNyg/exec";
-  const credits = () => { try { return Math.max(0, Number(localStorage.getItem('fionah-credits') || 0)); } catch (e) { return 0; } };
-  const useCredit = () => { try { localStorage.setItem('fionah-credits', String(Math.max(0, credits() - 1))); } catch (e) {} updTrial(); };
+  // Credits live in two places:
+  //  - 'fionah-credits' = credits bought before Restore My Credits existed (kept on this phone only)
+  //  - 'fionah-cards'   = cards kept by The Waitress, filed under the Stripe receipt number: [{id, left, receipt}]
+  //    The phone only remembers which cards are its own; The Waitress keeps the real count.
+  const phoneCredits = () => { try { return Math.max(0, Number(localStorage.getItem('fionah-credits') || 0)); } catch (e) { return 0; } };
+  const getCards = () => { try { return JSON.parse(localStorage.getItem('fionah-cards') || '[]').filter(c => c && c.id); } catch (e) { return []; } };
+  const setCards = list => { try { localStorage.setItem('fionah-cards', JSON.stringify(list)); } catch (e) {} };
+  const credits = () => phoneCredits() + getCards().reduce((a, c) => a + Math.max(0, Number(c.left) || 0), 0);
+  function keepCard(id, left, receipt) {                       // add or update one card on this phone
+    const list = getCards(), c = list.find(x => x.id === id);
+    if (c) { c.left = left; if (receipt) c.receipt = receipt; } else list.push({ id: id, left: left, receipt: receipt || '' });
+    setCards(list);
+  }
+  // ask The Waitress how many credits are left on each card (on opening the app and coming back to it)
+  async function refreshCards() {
+    const list = getCards(); if (!list.length) return;
+    await retryPending();
+    for (const c of list) {
+      try { const d = await (await fetch(HELPER_URL + '?card=' + encodeURIComponent(c.id))).json(); if (d.ok) keepCard(c.id, d.left, d.receipt); } catch (e) {}
+    }
+    updTrial();
+  }
+  // a credit that could not be told to The Waitress (no internet) is kept here and sent next time
+  const getPending = () => { try { return JSON.parse(localStorage.getItem('fionah-pending') || '[]'); } catch (e) { return []; } };
+  const setPending = l => { try { localStorage.setItem('fionah-pending', JSON.stringify(l)); } catch (e) {} };
+  async function retryPending() {
+    const l = getPending(), keep = [];
+    for (const id of l) { try { await (await fetch(HELPER_URL + '?use=' + encodeURIComponent(id))).json(); } catch (e) { keep.push(id); } }
+    setPending(keep);
+  }
+  // before a No Icon video: make sure a credit is really there (The Waitress keeps the count)
+  async function creditReady() {
+    if (phoneCredits() > 0) return true;
+    await refreshCards();
+    return getCards().some(c => c.left > 0);
+  }
+  // after a No Icon video: use one credit
+  async function useCredit() {
+    if (phoneCredits() > 0) { try { localStorage.setItem('fionah-credits', String(phoneCredits() - 1)); } catch (e) {} updTrial(); return; }
+    const c = getCards().find(x => x.left > 0); if (!c) return;
+    keepCard(c.id, c.left - 1);
+    updTrial();
+    try { const d = await (await fetch(HELPER_URL + '?use=' + encodeURIComponent(c.id))).json(); if (typeof d.left === 'number') keepCard(c.id, d.left); updTrial(); }
+    catch (e) { setPending(getPending().concat(c.id)); }
+  }
   // each video: free with the icon, or 1 credit without it (the person chooses; a credit is never used by surprise)
   const noIcon = () => S.noIcon && credits() > 0;
   const showMark = () => !noIcon();
@@ -959,24 +1005,69 @@
       <div class="credbal">You have ${n} credit${n === 1 ? '' : 's'}</div>
       ${n > 0 ? '<p>To use a credit, choose No Icon (1 Credit) before you make your video.</p>' : '<p>Buy credits to make new videos without the icon.</p>'}
       ${packs}
-      <p class="tip">Credits are saved on this phone. Clearing your browser or changing phones can remove them. NZ customers see the NZD price at checkout.</p>
+      <button class="b1 restore" id="restoreBtn">Restore My Credits</button>
+      <p class="tip">Credits are saved with your Stripe receipt number, so you can use them on any device.</p>
+      <p class="tip">NZ customers see the NZD price at checkout.</p>
       <p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a></p>
       <div class="acts stack"><a class="b2 lnk" href="../#pricing">See Done-For-You Packs</a><button class="b1" id="nox">Back</button></div>`);
     box.classList.add('credbox');
     $('nox').onclick = closeModal;
+    $('restoreBtn').onclick = openRestore;
+  }
+  // ---------- Restore My Credits: the Stripe receipt number finds the credits kept by The Waitress ----------
+  function openRestore(msg) {
+    openModal(`
+      <h3>Restore My Credits</h3>
+      <p>Enter the receipt number from your Stripe Email Receipt, for example <span class="nw">1234-5678</span>.</p>
+      <input type="text" id="rcIn" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Receipt number" aria-label="Receipt number">
+      <div class="msg" id="rcMsg">${typeof msg === 'string' ? msg : ''}</div>
+      <div class="acts"><button class="b1" id="nox">Back</button><button class="b2" id="rcGo">Check My Credits</button></div>`);
+    box.classList.add('credbox');
+    $('nox').onclick = openCredits;
+    $('rcGo').onclick = () => checkRestore($('rcIn').value);
+    $('rcIn').addEventListener('keydown', e => { if (e.key === 'Enter') checkRestore($('rcIn').value); });
+  }
+  async function checkRestore(v) {
+    const dg = String(v || '').replace(/\D/g, '');
+    if (dg.length !== 8) { $('rcMsg').textContent = 'A receipt number has 8 numbers, for example 1234\u20115678.'; return; }
+    $('rcMsg').textContent = 'Checking…'; $('rcGo').disabled = true;
+    let d = null;
+    try { d = await (await fetch(HELPER_URL + '?restore=' + encodeURIComponent(dg))).json(); } catch (e) {}
+    const help = '<p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p>';
+    if (d && d.ok) {
+      keepCard(d.card, d.left, d.receipt); if (d.left > 0) S.noIcon = true; updTrial();
+      openModal(d.left > 0
+        ? `<h3>Your Credits Are Back:</h3><div class="credbal">You have ${d.left} credit${d.left === 1 ? '' : 's'} ✓</div><p>Receipt number: <b style="color:var(--text)">${d.receipt}</b></p><p>Your credits are now ready to use on this phone.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`
+        : `<h3>No Credits Left</h3><p>All the credits on receipt number <b class="nw" style="color:var(--text)">${d.receipt}</b> have been used.</p><p>You can still make free videos with the small icon, or buy more credits.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="buyx">Buy Credits</button></div>`);
+      const b = $('buyx'); if (b) b.onclick = openCredits;
+      $('okx').onclick = closeModal;
+    } else if (d && d.pack) {
+      openRestore('This receipt is for a done-for-you pack, not credits. Please use the Get Your Video page on fionah.com.');
+    } else if (d && d.busy) {
+      openRestore('There have been too many tries. Please try again in an hour.');
+    } else if (d) {
+      openModal(`<h3>Restore My Credits</h3><p>We could not find credits for that receipt number. Please check the number on your Stripe Email Receipt and try again.</p>${help}<div class="acts"><button class="b1" id="nox">Close</button><button class="b2" id="tryx">Try Again</button></div>`);
+      $('nox').onclick = closeModal; $('tryx').onclick = openRestore;
+    } else {
+      openRestore('We could not connect. Please check your internet connection and try again.');
+    }
   }
   // ---------- coming back from Stripe: check the payment, then add the credits ----------
   // Stripe sends the buyer to fionah.com/app/?paid=<checkout id>. The helper asks Stripe if it was really paid.
-  const addCredits = k => { try { localStorage.setItem('fionah-credits', String(credits() + k)); } catch (e) {} S.noIcon = true; updTrial(); };
+  const addCard = d => { keepCard(d.card, d.left, d.receipt); S.noIcon = true; updTrial(); };
   async function checkPaid(id) {
     openModal('<h3>Checking your payment…</h3><p>This only takes a moment.</p>');
     try {
       const d = await (await fetch(HELPER_URL + '?paid=' + encodeURIComponent(id))).json();
       if (d.ok && d.credits > 0) {
-        addCredits(d.credits);
+        addCard(d);
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         const rc = String(d.receipt || '').replace(/[^0-9-]/g, '');
-        openModal(`<h3>Thank you:</h3><div class="credbal">${d.credits} credits added ✓</div><p>You now have ${credits()} credit${credits() === 1 ? '' : 's'}. Your next video will be made without the icon. You can switch to Free (With Icon) at any time.</p><p>Videos already made keep the icon.</p>${rc ? `<p>Your Stripe receipt number: <b style="color:var(--text)">${rc}</b></p>` : ''}<p>Please keep your Stripe email receipt in case you need help.</p><p class="tip">You do not need an order number or private code. Your credits are already saved in Motion Studio on this phone.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+        openModal(`<h3>Thank You</h3><div class="credbal">${d.credits} Credits Added ✓</div><p>Your next video will have no icon.</p>${rc ? `<p>Receipt number: <b class="nw" style="color:var(--text)">${rc}</b></p>` : ''}<p>Please keep your Stripe Email Receipt. It lets you use your credits on any device.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+      } else if (d.used && d.card) {                // already added: this phone simply joins the card (nothing is doubled)
+        try { history.replaceState(null, '', location.pathname); } catch (e) {}
+        addCard(d);
+        openModal(`<h3>Your Credits Are Ready</h3><div class="credbal">You have ${credits()} credit${credits() === 1 ? '' : 's'}</div><p>The credits for this payment are saved with your Stripe receipt number.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
       } else if (d.used) {
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
@@ -990,8 +1081,9 @@
   const paidId = new URLSearchParams(location.search).get('paid');
   if (paidId && /^cs_(test|live)_[A-Za-z0-9]{10,200}$/.test(paidId)) setTimeout(() => checkPaid(paidId), 0);
   // credits bought in another tab: refresh the count when the buyer comes back to this tab
-  window.addEventListener('storage', e => { if (e.key === 'fionah-credits') updTrial(); });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) updTrial(); });
+  window.addEventListener('storage', e => { if (e.key === 'fionah-credits' || e.key === 'fionah-cards') updTrial(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { updTrial(); refreshCards(); } });
+  setTimeout(refreshCards, 0);
 
   // ---------- preview ----------
   let raf = 0, t0 = 0;
@@ -1065,7 +1157,13 @@
       <p>📱 Keep this screen open and switched on until it finishes.</p>
       <div class="acts"><button class="b1" id="nox">Not Yet</button><button class="b2" id="go">Start 🎬</button></div>`);
     $('nox').onclick = closeModal;
-    $('go').onclick = record;
+    $('go').onclick = async () => {
+      if (noIcon()) {
+        $('go').disabled = true; $('go').textContent = 'Checking…';
+        if (!(await creditReady())) { S.noIcon = credits() > 0; updTrial(); return toast('We could not confirm your credit. Please check your internet connection, or choose Free (With Icon).'); }
+      }
+      record();
+    };
   };
 
   async function record() {
