@@ -1035,6 +1035,8 @@
     try { d = await (await fetch(HELPER_URL + '?restore=' + encodeURIComponent(dg))).json(); } catch (e) {}
     const help = '<p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p>';
     if (d && d.ok) {
+      // credits bought before Restore My Credits existed are now kept by The Waitress, so the old phone-only count is cleared (never counted twice)
+      try { if (phoneCredits() > 0) localStorage.setItem('fionah-credits', '0'); } catch (e) {}
       keepCard(d.card, d.left, d.receipt); if (d.left > 0) S.noIcon = true; updTrial();
       openModal(d.left > 0
         ? `<h3>Your Credits Are Back:</h3><div class="credbal">You have ${d.left} credit${d.left === 1 ? '' : 's'} ✓</div><p>Receipt number: <b style="color:var(--text)">${d.receipt}</b></p><p>Your credits are now ready to use on this phone.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`
