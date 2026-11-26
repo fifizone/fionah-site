@@ -287,10 +287,8 @@
 
   <!-- 2. Style -->
   <section class="card">
-    <h2>2 · Video style</h2>
-    <div class="presets one" id="presets" style="margin-top:10px">
-      <button data-p="rea">Real Estate Listing</button>
-    </div>
+    <h2>2 · Video Style: Listing</h2>
+    <div class="presets one" id="presets" hidden></div>
     <p class="tip" id="presetNote" style="display:none"></p>
     <label class="f">Screen Size:</label>
     <div class="seg" id="shape">
@@ -308,7 +306,7 @@
     </div>
 
     <details class="warntile finetune"><summary>Fine Tune (Optional)</summary>
-    <p class="tip">The Real Estate Listing button sets the timing for you. Open this only if you would like to change it.</p>
+    <p class="tip">The listing timing is set for you. Open this only if you would like to change it.</p>
     <label class="f">Edit: Photo Timer</label>
     <div class="slider"><input type="range" id="imgSec" min="3" max="15" step="0.5" value="5"><output id="imgOut">5s</output></div>
 
@@ -560,6 +558,8 @@
   slider('imgSec', 'imgOut', 'imgSec'); slider('trSec', 'trOut', 'trSec');
 
   // ---------- "Made for" presets ----------
+  // The Real Estate Listing button was removed (Fi, 26 Nov): its timing (5 s per photo, 2 s soft fade) is now the
+  // starting timing for every video. The recipe is kept here as the listing reference for The Cook (the Kitchen).
   const PRESETS = {
     rea:     { shape: '9:16', size: 'balanced', img: 5, tr: 2, note: '' }
   };
@@ -905,17 +905,20 @@
     const x = W - pad - sz, y = H - pad - sz;
     ctx.save();
     ctx.globalAlpha = 0.92;
-    ctx.font = `${Math.round(sz * 0.8)}px Italianno, 'Brush Script MT', cursive`;   // the script the logo's F is drawn from
+    ctx.font = `700 ${Math.round(sz * 0.34)}px Arial, Arimo, Helvetica, sans-serif`;   // "ionah.com" in Arial; the F in the logo's script (Fi chose Option B)
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = Math.round(sz * 0.12);
     // fionah gold text with a thin dark edge, so it reads on light and dark photos
     ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(1.5, sz * 0.05); ctx.strokeStyle = 'rgba(20,14,4,.85)';
-    ctx.strokeText('fionah.com', x - sz * 0.1, y + sz / 2);
+    const restW = ctx.measureText('ionah.com').width, fFont = `${Math.round(sz * 0.8)}px Italianno, 'Brush Script MT', cursive`;
+    ctx.strokeText('ionah.com', x - sz * 0.1, y + sz / 2);
+    ctx.save(); ctx.font = fFont; ctx.strokeText('F', x - sz * 0.12 - restW, y + sz / 2); ctx.restore();
     // the same gold shine as the F in the logo: #9C6B1F → #D9A93E → #F7E2A0 → #C99A3B → #EBCB78
-    const tw = ctx.measureText('fionah.com').width, tx = x - sz * 0.1, ty = y + sz / 2, th = sz * 0.34;
+    const tw = restW + sz * 0.3, tx = x - sz * 0.1, ty = y + sz / 2, th = sz * 0.34;
     const gg = ctx.createLinearGradient(tx - tw, ty - th, tx, ty + th);
     [[0, '#9C6B1F'], [.28, '#D9A93E'], [.5, '#F7E2A0'], [.72, '#C99A3B'], [1, '#EBCB78']].forEach(([o, c]) => gg.addColorStop(o, c));
-    ctx.fillStyle = gg; ctx.fillText('fionah.com', tx, ty);   // so viewers know where to find fionah
+    ctx.fillStyle = gg; ctx.fillText('ionah.com', tx, ty);   // so viewers know where to find fionah
+    ctx.save(); ctx.font = fFont; ctx.fillStyle = gg; ctx.fillText('F', tx - sz * 0.02 - restW, ty); ctx.restore();
     ctx.shadowBlur = 0;
     if (lensImg.complete && lensImg.naturalWidth) ctx.drawImage(lensImg, x, y, sz, sz);
     ctx.restore();
