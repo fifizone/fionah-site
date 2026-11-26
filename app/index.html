@@ -55,7 +55,7 @@
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Arimo,Helvetica,sans-serif;font-size:15px;transition:background .3s,color .3s;-webkit-font-smoothing:antialiased}
-  body{padding-bottom:160px}
+  body{padding-bottom:30px}
   header{padding:22px 18px 10px;max-width:760px;margin:0 auto}
   header .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
   header h1{font-weight:700;font-size:22px;margin:0;letter-spacing:-.02em}
@@ -137,10 +137,9 @@
   .scrub span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:84px;text-align:right}
 
   /* bottom bar + buttons: sharp, deep purple, chrome-silver shadow */
-  .bar{position:fixed;left:0;right:0;bottom:0;padding:14px 14px calc(10px + env(safe-area-inset-bottom));
-       background:linear-gradient(180deg,transparent,var(--bg) 22%);display:flex;flex-direction:column;align-items:center;gap:8px}
+  .bar{position:static;padding:6px 14px 10px;display:flex;flex-direction:column;align-items:center;gap:10px}
   .barrow{display:flex;gap:12px;justify-content:center;width:100%;max-width:732px}
-  .bar button{flex:1;max-width:360px;padding:16px 10px;font-size:16px}
+  .bar button{flex:0 0 auto;min-width:170px;padding:13px 26px;font-size:16px}
   .closeapp{display:block;width:100%;max-width:727px;margin-right:5px;text-align:center;padding:11px;font-size:14px;font-weight:700;color:var(--btn-ink);text-decoration:none;border-radius:var(--r);background:var(--btn);border:none;box-shadow:4px 4px 0 #A9B0BC}
   .closeapp:active{color:var(--text);background:var(--soft)}
   .b1,.b2{position:relative;z-index:0;border:none;border-radius:var(--r);font:inherit;font-weight:700;cursor:pointer}
@@ -183,7 +182,6 @@
   a.b2.lnk{display:flex;align-items:center;justify-content:center;text-decoration:none;padding:15px}
   .b2:disabled::after{background:#A79BE6}
   [data-look="night"] .b2:disabled::after{background:#3B3170}
-  body{padding-bottom:210px}
   .themer{align-items:center}
   .themer .tl{color:#111014;font-size:12px !important;padding:0 3px 0 2px;line-height:1}
   /* tap = chrome flash, so people can see what they pressed */
@@ -370,17 +368,16 @@
     </div>
   </section>
 
-  <p class="mailnote">Need help? Email <a class="mail" href="mailto:orders@fionah.com">orders@fionah.com</a></p>
-
 </main>
 
 <div class="bar">
+  <div class="trialnote" id="trialNote"></div>
   <div class="barrow">
     <button class="b1" id="previewBtn">▶ Preview</button>
     <button class="b2" id="makeBtn">Make Video</button>
   </div>
-  <div class="trialnote" id="trialNote"></div>
   <a class="closeapp" href="../">Close App</a>
+  <p class="mailnote">Need help? Email <a class="mail" href="mailto:orders@fionah.com">orders@fionah.com</a></p>
 </div>
 
 <div class="modal" id="modal">
@@ -987,7 +984,7 @@
     const bt = $('buyTile'); if (bt) bt.onclick = openCredits;   // first tile: only the Buy Credits half is tappable
     if (typeof renderStats === 'function' && S.slides.length) renderStats();
     $('trialNote').innerHTML = n > 0
-      ? `<div>You have ${n} credit${n === 1 ? '' : 's'}. This video:</div><div class="iconpick"><button id="icFree" class="${S.noIcon ? '' : 'on'}">Free (With Icon)</button><button id="icNo" class="${S.noIcon ? 'on' : ''}">No Icon (1 Credit)</button></div><a class="rm" id="rmMark" role="button" tabindex="0">Credits</a>`
+      ? `<div>You have ${n} credit${n === 1 ? '' : 's'}.</div><div class="iconpick"><button id="icFree" class="${S.noIcon ? '' : 'on'}">With Icon (Free)</button><button id="icNo" class="${S.noIcon ? 'on' : ''}">No Icon (1 Credit)</button></div><a class="rm" id="rmMark" role="button" tabindex="0">Credits</a>`
       : '';
     $('trialNote').style.display = n > 0 ? '' : 'none';
     const a = $('rmMark'); if (a) a.onclick = openCredits;
@@ -1163,7 +1160,7 @@
     $('go').onclick = async () => {
       if (noIcon()) {
         $('go').disabled = true; $('go').textContent = 'Checking…';
-        if (!(await creditReady())) { S.noIcon = credits() > 0; updTrial(); return toast('We could not confirm your credit. Please check your internet connection, or choose Free (With Icon).'); }
+        if (!(await creditReady())) { S.noIcon = credits() > 0; updTrial(); return toast('We could not confirm your credit. Please check your internet connection, or choose With Icon (Free).'); }
       }
       record();
     };
