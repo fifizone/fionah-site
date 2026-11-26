@@ -20,6 +20,7 @@
 <link rel="shortcut icon" href="../favicon.ico">
 <script>try{document.documentElement.dataset.look=localStorage.getItem("fionah-theme")||"pastel"}catch(e){}</script>
 <style>
+  @font-face{font-family:'Italianno';src:url('../fonts/Italianno-Regular.ttf') format('truetype');font-display:block}
   /* =========================================================
      fionah Motion Studio — minimal design system
      Font: Arial everywhere, logo included
@@ -860,8 +861,6 @@
       ctx.fillStyle = '#ffffff';
       let top = yb;
       for (let i = f.lines.length - 1; i >= 0; i--) { ctx.fillText(f.lines[i], pad, yb, maxW); top = yb; yb -= f.size * 1.18; }
-      ctx.fillStyle = '#d4b483';
-      ctx.fillRect(pad, top - f.size - u * 0.035, u * 0.08, Math.max(2, u * 0.005));
     }
     ctx.shadowBlur = 0; ctx.globalAlpha = 1;
   }
@@ -899,20 +898,21 @@
 
   // ---------- free videos: lens mark + 'fionah.com', small in the bottom-right corner (unlimited free videos) ----------
   const lensImg = new Image(); lensImg.src = '../logo.svg';
+  try { document.fonts.load('48px Italianno').then(() => { try { draw(S.t); } catch (e) {} }); } catch (e) {}   // script font for the fionah.com mark
   setTimeout(updTrial, 0);
   function drawMark(W, H) {
     const u = Math.min(W, H), sz = Math.round(u * 0.075), pad = Math.round(u * 0.035);
     const x = W - pad - sz, y = H - pad - sz;
     ctx.save();
     ctx.globalAlpha = 0.92;
-    ctx.font = `700 ${Math.round(sz * 0.34)}px Arial, Arimo, Helvetica, sans-serif`;
+    ctx.font = `${Math.round(sz * 0.8)}px Italianno, 'Brush Script MT', cursive`;   // the script the logo's F is drawn from
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = Math.round(sz * 0.12);
     // fionah gold text with a thin dark edge, so it reads on light and dark photos
     ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(1.5, sz * 0.05); ctx.strokeStyle = 'rgba(20,14,4,.85)';
-    ctx.strokeText('fionah.com', x - sz * 0.08, y + sz / 2);
+    ctx.strokeText('fionah.com', x - sz * 0.1, y + sz / 2);
     // the same gold shine as the F in the logo: #9C6B1F → #D9A93E → #F7E2A0 → #C99A3B → #EBCB78
-    const tw = ctx.measureText('fionah.com').width, tx = x - sz * 0.08, ty = y + sz / 2, th = sz * 0.34;
+    const tw = ctx.measureText('fionah.com').width, tx = x - sz * 0.1, ty = y + sz / 2, th = sz * 0.34;
     const gg = ctx.createLinearGradient(tx - tw, ty - th, tx, ty + th);
     [[0, '#9C6B1F'], [.28, '#D9A93E'], [.5, '#F7E2A0'], [.72, '#C99A3B'], [1, '#EBCB78']].forEach(([o, c]) => gg.addColorStop(o, c));
     ctx.fillStyle = gg; ctx.fillText('fionah.com', tx, ty);   // so viewers know where to find fionah
