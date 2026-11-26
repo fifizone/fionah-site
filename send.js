@@ -7,7 +7,7 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
 
 /* Safety guard wording (Fi to approve the exact words) */
 const STOP_MSG = "One or more of your images has been red flagged, so this order has been stopped. If you think this is a mistake, email orders@fionah.com.";
-const REPLACE_MSG = "This photo cannot be accepted. Please choose another photo in its place.";
+const REPLACE_MSG = "This image cannot be accepted. Please choose another image in its place.";
 const MAX_REFUSED = 3;   // a refused photo can be replaced; the 3rd refused photo stops the order (same rule as The Waitress)
 const BUSY_MSG = "We are very busy right now. Please try again in about an hour.";
 const WORDS_MSG = "Please change the words in the address or message. fionah does not accept rude, sexual or violent words.";
@@ -54,7 +54,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       const files = [...list].filter(f => f.type.startsWith('image/'));
       for (let i = 0; i < files.length; i++) {
         if (photos.length >= MAX) break;
-        $('.note').textContent = `Checking photo ${i + 1} of ${files.length}…`;
+        $('.note').textContent = `Checking image ${i + 1} of ${files.length}…`;
         const r = guard ? await guard.checkFile(files[i]) : { ok: true };
         if (!r.ok) {
           refusedN += 1;
@@ -72,14 +72,14 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     function showReplace(text, withButton) {
       let m = box.querySelector('.repmsg');
       if (!m) { m = document.createElement('div'); m.className = 'repmsg'; m.setAttribute('role', 'alert'); $('.note').after(m); }
-      m.innerHTML = '<p></p>' + (withButton ? '<button type="button" class="sbtn repbtn">Choose Another Photo</button>' : '');
+      m.innerHTML = '<p></p>' + (withButton ? '<button type="button" class="sbtn repbtn">Choose Another Image</button>' : '');
       m.querySelector('p').textContent = text; m.hidden = false;
       return m.querySelector('.repbtn');
     }
     const hideReplace = () => { const m = box.querySelector('.repmsg'); if (m) m.hidden = true; };
     // while sending: The Waitress refused photo number i, so ask for another one (checked on this device first)
     const askReplacement = i => new Promise(res => {
-      const btn = showReplace(`Photo ${i + 1}: ${REPLACE_MSG}`, true);
+      const btn = showReplace(`Image ${i + 1}: ${REPLACE_MSG}`, true);
       btn.onclick = () => repIn.click();
       repIn.onchange = async () => {
         const f = repIn.files && repIn.files[0]; repIn.value = '';
@@ -88,7 +88,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         if (!r.ok) {
           refusedN += 1;
           if (refusedN >= MAX_REFUSED) { hideReplace(); stopOrder(); return res(null); }
-          showReplace(`Photo ${i + 1}: ${REPLACE_MSG}`, true).onclick = () => repIn.click();
+          showReplace(`Image ${i + 1}: ${REPLACE_MSG}`, true).onclick = () => repIn.click();
           return;
         }
         hideReplace(); res(f);
@@ -99,8 +99,8 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
 
     function draw() {
       $('.thumbs').innerHTML = photos.map((p, i) =>
-        `<div class="thumb"><img src="${p.url}" alt="Photo ${i + 1}"><span class="n">${i + 1}</span><button type="button" class="rm" data-i="${i}" aria-label="Remove photo ${i + 1}">×</button>
-          <div class="mv"><button type="button" data-i="${i}" data-d="-1" aria-label="Move photo ${i + 1} earlier" ${i ? '' : 'style="visibility:hidden"'}>‹</button><button type="button" data-i="${i}" data-d="1" aria-label="Move photo ${i + 1} later" ${i < photos.length - 1 ? '' : 'style="visibility:hidden"'}>›</button></div></div>`).join('');
+        `<div class="thumb"><img src="${p.url}" alt="Image ${i + 1}"><span class="n">${i + 1}</span><button type="button" class="rm" data-i="${i}" aria-label="Remove image ${i + 1}">×</button>
+          <div class="mv"><button type="button" data-i="${i}" data-d="-1" aria-label="Move image ${i + 1} earlier" ${i ? '' : 'style="visibility:hidden"'}>‹</button><button type="button" data-i="${i}" data-d="1" aria-label="Move image ${i + 1} later" ${i < photos.length - 1 ? '' : 'style="visibility:hidden"'}>›</button></div></div>`).join('');
       $('.thumbs').querySelectorAll('.rm').forEach(b => b.addEventListener('click', () => {
         const i = Number(b.dataset.i); URL.revokeObjectURL(photos[i].url); photos.splice(i, 1); draw();
       }));
@@ -108,7 +108,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         const i = Number(b.dataset.i), k = i + Number(b.dataset.d); [photos[i], photos[k]] = [photos[k], photos[i]]; draw();
       }));
       $('.ordnote').style.display = photos.length > 1 ? 'block' : 'none';
-      $('.count').textContent = photos.length ? `${photos.length} of ${MAX} photos added` : `Add up to ${MAX} photos`;
+      $('.count').textContent = photos.length ? `${photos.length} of ${MAX} images added` : `Add up to ${MAX} images`;
       check();
     }
 
@@ -157,7 +157,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       $('.note').textContent = !SEND_URL ? 'Sending opens soon.'
         : !paid ? 'Enter your Emailed Stripe Receipt Number to send your photos.'
         : !words ? WORDS_MSG
-        : photos.length > MAX ? `This pack allows up to ${MAX} photos. Please remove ${photos.length - MAX}.` : !filled ? 'Choose a video length and add at least one photo.'
+        : photos.length > MAX ? `This pack allows up to ${MAX} photos. Please remove ${photos.length - MAX}.` : !filled ? 'Choose a video length and add at least one image.'
         : !agreed ? 'Please tick to agree to the Terms.' : 'Ready to send.';
       $('.note').classList.toggle('warnnote', !!SEND_URL && !words);
     }
@@ -271,8 +271,8 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
             let r = {};
             try { r = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code) + '&done=1')).json(); } catch (err) {}
             out.innerHTML = r.left > 0
-              ? `<p>Your downloaded videos and their photos have been deleted. You still have ${r.left} video${r.left === 1 ? '' : 's'} to send with your receipt number.</p>`
-              : '<p>All done. Your photos and video have been deleted. Thank you!</p>';
+              ? `<p>Your downloaded videos and their images have been deleted. You still have ${r.left} video${r.left === 1 ? '' : 's'} to send with your receipt number.</p>`
+              : '<p>All done. Your images and video have been deleted. Thank you!</p>';
           });
         } else if (d.status === 'waiting') {
           out.textContent = 'Order #' + n + ' is not ready yet. Your video is on its way, so please check back soon.';

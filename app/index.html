@@ -266,7 +266,7 @@
   </div>
   <!-- 1. Photos -->
   <section class="card">
-    <h2>1 · Add your photos</h2>
+    <h2>1 · Add your images</h2>
     <div class="drop" id="drop">
       <b>Tap to choose images</b>
       <div class="pick">
@@ -307,7 +307,7 @@
 
     <details class="warntile finetune"><summary>Fine Tune (Optional)</summary>
     <p class="tip">The listing timing is set for you. Open this only if you would like to change it.</p>
-    <label class="f">Edit: Photo Timer</label>
+    <label class="f">Edit: Image Timer</label>
     <div class="slider"><input type="range" id="imgSec" min="3" max="15" step="0.5" value="5"><output id="imgOut">5s</output></div>
 
     <label class="f">Edit: Fade in/out</label>
@@ -358,7 +358,7 @@
   <section class="card">
     <div class="stage">
       <canvas id="cv"></canvas>
-      <div class="empty" id="empty">Add photos to see your video</div>
+      <div class="empty" id="empty">Add images to see your video</div>
     </div>
     <div class="scrub">
       <button class="ib" id="playBtn">▶</button>
@@ -456,7 +456,7 @@
     if (S.slides.length >= max) return toast(photoLimitMsg());
     const tooMany = S.slides.length + files.length > max;
     let bad = 0, blocked = 0;
-    $('stats').innerHTML = `<span class="pill">Loading and checking ${files.length} photos…</span>`;
+    $('stats').innerHTML = `<span class="pill">Loading and checking ${files.length} images…</span>`;
     for (const f of files) {
       if (S.slides.length >= max) break;
       const s = await loadFile(f);
@@ -536,7 +536,7 @@
   }
   function jumpTo(i) { pause(); S.t = i * step() + S.trSec * 0.6; syncSeek(); draw(S.t); }
   $('autoAll').onclick = () => { S.slides.forEach(s => s.motion = 'auto'); renderList(); draw(S.t); };
-  $('clearAll').onclick = () => { showConfirm('Remove all photos?', () => { S.slides = []; S.t = 0; renderList(); renderStats(); draw(0); }); };
+  $('clearAll').onclick = () => { showConfirm('Remove all images?', () => { S.slides = []; S.t = 0; renderList(); renderStats(); draw(0); }); };
 
   // ---------- settings ----------
   function seg(id, key, num) {
@@ -578,14 +578,14 @@
       if (img < 3) {
         img = 3; tr = 1;
         const fit = Math.floor((P.max - tr) / (img + tr));
-        extra = ` <span style="color:var(--bad)">⚠ ${n} photos is too many for 1 minute — use about ${fit} or fewer.</span>`;
+        extra = ` <span style="color:var(--bad)">⚠ ${n} images is too many for 1 minute — use about ${fit} or fewer.</span>`;
       }
     }
     S.imgSec = img; S.trSec = tr;
     setSeg('shape', S.shape); setSeg('size', S.size);
     setSlider('imgSec', 'imgOut', img); setSlider('trSec', 'trOut', tr);
     $('presets').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.p === key));
-    $('presetNote').innerHTML = P.note + (P.max && !n ? ' <i>Add your photos and the timing will adjust to fit.</i>' : '') + extra;
+    $('presetNote').innerHTML = P.note + (P.max && !n ? ' <i>Add your images and the timing will adjust to fit.</i>' : '') + extra;
     sizeCanvas(); renderStats(); draw(Math.min(S.t, total()));
   }
   $('presets').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { if (!S.recording) applyPreset(b.dataset.p); }));
@@ -984,8 +984,8 @@
   const PHOTOS_FREE = 10, PHOTOS_PAID = 15;
   const photoMax = () => noIcon() ? PHOTOS_PAID : PHOTOS_FREE;
   const photoLimitMsg = () => noIcon()
-    ? `You can add up to ${PHOTOS_PAID} photos in one video.`
-    : (credits() > 0 ? `You can add up to ${PHOTOS_FREE} photos in a free video. Choose No Icon (1 credit) to add up to ${PHOTOS_PAID}.` : `You can add up to ${PHOTOS_FREE} photos in a free video. Buy credits to add up to ${PHOTOS_PAID}.`);
+    ? `You can add up to ${PHOTOS_PAID} images in one video.`
+    : (credits() > 0 ? `You can add up to ${PHOTOS_FREE} images in a free video. Choose No Icon (1 credit) to add up to ${PHOTOS_PAID}.` : `You can add up to ${PHOTOS_FREE} images in a free video. Buy credits to add up to ${PHOTOS_PAID}.`);
   function setIcon(v) { if (S.recording) return; S.noIcon = v; updTrial(); draw(S.t); }
   function updTrial() {
     const n = credits();
@@ -1103,7 +1103,7 @@
     $('timeLbl').textContent = `${fmt(S.t)} / ${fmt(T)}`;
   }
   function play() {
-    if (!S.slides.length) { toast('Add some photos first'); return; }
+    if (!S.slides.length) { toast('Add some images first'); return; }
     if (S.t >= total() - 0.05) S.t = 0;
     S.playing = true; $('playBtn').textContent = '❚❚'; $('previewBtn').textContent = '❚❚ Pause';
     t0 = performance.now() - S.t * 1000;
@@ -1154,15 +1154,15 @@
   }
 
   $('makeBtn').onclick = () => {
-    if (!S.slides.length) return toast('Add your photos first 📷');
+    if (!S.slides.length) return toast('Add your images first 📷');
     if (!allWordsOk()) return toast(WORDS_MSG);
-    if (S.slides.length > photoMax()) return toast(photoLimitMsg() + ' Please remove ' + (S.slides.length - photoMax()) + ' photo' + (S.slides.length - photoMax() === 1 ? '' : 's') + ' first.');
+    if (S.slides.length > photoMax()) return toast(photoLimitMsg() + ' Please remove ' + (S.slides.length - photoMax()) + ' image' + (S.slides.length - photoMax() === 1 ? '' : 's') + ' first.');
     if (!cv.captureStream || pickMime() === null) return toast('Sorry — this device\'s browser cannot record video. Try Chrome on Android or Safari on a recent iPhone.');
     pause();
     const T = total();
     openModal(`
       <h3>Ready to make your video?</h3>
-      <p><b style="color:var(--text)">${S.slides.length} photos · ${fmt(T)} long</b></p>
+      <p><b style="color:var(--text)">${S.slides.length} images · ${fmt(T)} long</b></p>
       <p>${noIcon() ? 'This video uses 1 credit and has no icon.' : 'This video is free and has the small icon.'}</p>
       <p>Your video is recorded live, so it takes the same time as the video — about <b style="color:var(--text)">${fmt(T)}</b>.</p>
       <p>📱 Keep this screen open and switched on until it finishes.</p>
@@ -1212,7 +1212,7 @@
     let cancelled = false;
     openModal(`
       <h3>Making your video…</h3>
-      <p>Photo <b id="pn" style="color:var(--text)">1</b> of ${S.slides.length}</p>
+      <p>Image <b id="pn" style="color:var(--text)">1</b> of ${S.slides.length}</p>
       <div class="prog"><i id="pb"></i></div>
       <p id="pt">0:00 of ${fmt(T)}</p>
       <p class="tip">Keep this screen on 🙂 The preview behind is what is being recorded.</p>

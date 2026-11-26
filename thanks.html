@@ -73,13 +73,13 @@
       <div class="pklabel" id="payHead">Checking your payment…</div>
       <div id="payRow" hidden>
         <div class="paypair"><div><span>Emailed Stripe Receipt Number:</span><div class="pkcode" id="payReceipt"></div></div><div><span>Order number:</span><div class="pkcode" id="payNum"></div></div></div>
-        <p>Your Emailed Stripe Receipt Number will be sent with each photo batch.</p>
+        <p>Your Emailed Stripe Receipt Number will be sent with each image batch.</p>
         <p id="payWait" hidden></p>
       </div>
     </div>
 <div class="sendbox" style="padding:4px 0 10px">
   <form novalidate>
-    <h2>To Send Your Photos</h2>
+    <h2>To Send Your Images</h2>
     <div hidden>
       <label for="sbPack">Enter your Emailed Stripe Receipt Number:</label>
       <input type="text" id="sbPack" autocomplete="off" inputmode="numeric" maxlength="20" placeholder="e.g. #1234-5678">
@@ -102,12 +102,12 @@
     <details class="warntile"><summary>Warning</summary><p>As a friendly reminder, our safety check automatically flags profanity, insults, or terms like &#39;sex&#39;, &#39;kill&#39; (and similar words). Images that are sexual, violent, or show cruel acts will be flagged. We appreciate your help keeping everything appropriate!</p></details>
     <div class="row2">
       <button type="button" class="sbtn" id="sbTake">Take Photos</button>
-      <button type="button" class="sbtn" id="sbPick">Choose Photos</button>
+      <button type="button" class="sbtn" id="sbPick">Choose Images</button>
     </div>
     <input type="file" id="sbCam" accept="image/*" capture="environment">
     <input type="file" id="sbFiles" accept="image/*" multiple>
     <div class="thumbs"></div>
-    <div class="ordnote">Your photos show in this order. Use the arrows to move them.</div>
+    <div class="ordnote">Your images show in this order. Use the arrows to move them.</div>
     <div class="count"></div>
     <div class="prog"><i></i></div>
     <label class="agree"><input type="checkbox" id="sbAgree"> I agree to the <a href="policies.html#terms" target="_blank">Terms</a></label>
