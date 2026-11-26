@@ -7,6 +7,8 @@ const SEND_URL = "https://script.google.com/macros/s/AKfycbw2oT-nZbNCAQf3ee0gAgo
 
 /* Safety guard wording (Fi to approve the exact words) */
 const STOP_MSG = "One or more of your images has been red flagged, so this order has been stopped. If you think this is a mistake, email orders@fionah.com.";
+const REPLACE_MSG = "This photo cannot be accepted. Please choose another photo in its place.";
+const MAX_REFUSED = 3;   // a refused photo can be replaced; the 3rd refused photo stops the order (same rule as The Waitress)
 const BUSY_MSG = "We are very busy right now. Please try again in about an hour.";
 const WORDS_MSG = "Please change the words in the address or message. fionah does not accept rude, sexual or violent words.";
 const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard 3 words)
@@ -33,8 +35,9 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     // photo buttons
     $('#sbTake').addEventListener('click', () => $('#sbCam').click());
     $('#sbPick').addEventListener('click', () => $('#sbFiles').click());
-    let stopped = false, checking = false;
-    // Safety guard: an unacceptable photo stops the whole order (Fi's choice: stop + refund)
+    let stopped = false, checking = false, refusedN = 0;
+    // Safety guard (Fi, 26 Nov): a refused photo is not used and the customer chooses another in its place;
+    // the 3rd refused photo stops the whole order
     function stopOrder() {
       stopped = true;
       photos.forEach(p => URL.revokeObjectURL(p.url)); photos = [];
@@ -53,13 +56,44 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         if (photos.length >= MAX) break;
         $('.note').textContent = `Checking photo ${i + 1} of ${files.length}…`;
         const r = guard ? await guard.checkFile(files[i]) : { ok: true };
-        if (!r.ok) { checking = false; return stopOrder(); }
+        if (!r.ok) {
+          refusedN += 1;
+          if (refusedN >= MAX_REFUSED) { checking = false; return stopOrder(); }
+          showReplace(REPLACE_MSG, false); continue;          // this photo is not added; the others carry on
+        }
         photos.push({ file: files[i], url: URL.createObjectURL(files[i]) });
         draw();
       }
       checking = false;
       draw();
     };
+    // the "choose another photo" message (with a button while sending)
+    const repIn = document.createElement('input'); repIn.type = 'file'; repIn.accept = 'image/*'; repIn.hidden = true; box.appendChild(repIn);
+    function showReplace(text, withButton) {
+      let m = box.querySelector('.repmsg');
+      if (!m) { m = document.createElement('div'); m.className = 'repmsg'; m.setAttribute('role', 'alert'); $('.note').after(m); }
+      m.innerHTML = '<p></p>' + (withButton ? '<button type="button" class="sbtn repbtn">Choose Another Photo</button>' : '');
+      m.querySelector('p').textContent = text; m.hidden = false;
+      return m.querySelector('.repbtn');
+    }
+    const hideReplace = () => { const m = box.querySelector('.repmsg'); if (m) m.hidden = true; };
+    // while sending: The Waitress refused photo number i, so ask for another one (checked on this device first)
+    const askReplacement = i => new Promise(res => {
+      const btn = showReplace(`Photo ${i + 1}: ${REPLACE_MSG}`, true);
+      btn.onclick = () => repIn.click();
+      repIn.onchange = async () => {
+        const f = repIn.files && repIn.files[0]; repIn.value = '';
+        if (!f) return;
+        const r = guard ? await guard.checkFile(f) : { ok: true };
+        if (!r.ok) {
+          refusedN += 1;
+          if (refusedN >= MAX_REFUSED) { hideReplace(); stopOrder(); return res(null); }
+          showReplace(`Photo ${i + 1}: ${REPLACE_MSG}`, true).onclick = () => repIn.click();
+          return;
+        }
+        hideReplace(); res(f);
+      };
+    });
     $('#sbCam').addEventListener('change', e => { add(e.target.files); e.target.value = ''; });
     $('#sbFiles').addEventListener('change', e => { add(e.target.files); e.target.value = ''; });
 
@@ -168,6 +202,14 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           try {
             const st = await (await fetch(SEND_URL + '?status=1&code=' + encodeURIComponent(code))).json();
             if (st && st.blocked) { $('.prog').style.display = 'none'; return stopOrder(); }
+            if (st && st.refused === i + 1 && (!st.video || st.video === order.video)) {
+              refusedN += 1;
+              $('.note').textContent = '';
+              const f = await askReplacement(i);
+              if (!f) { $('.prog').style.display = 'none'; return; }   // order stopped (3rd refused photo)
+              URL.revokeObjectURL(photos[i].url); photos[i] = { file: f, url: URL.createObjectURL(f) };
+              i -= 1; continue;                                        // send the new photo in the same place
+            }
           } catch (err) { /* cannot ask — the helper still holds back anything it blocked */ }
         }
         $('.done .onum').textContent = '#' + order.number;

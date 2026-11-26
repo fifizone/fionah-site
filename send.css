@@ -101,3 +101,8 @@
 /* Get Your Video: friendly note when a Stripe receipt number is typed in the order box */
 .sendbox .rcptnote{margin:8px 0 6px;padding:12px 14px;border-radius:4px;font-size:15px;line-height:1.45;border:1.5px solid #4B33C4;background:rgba(75,51,196,.06)}
 .sendbox .rcptnote[hidden]{display:none}
+/* a refused photo: friendly message + Choose Another Photo (Fi, 26 Nov) */
+.sendbox .repmsg{margin:14px 0 0;padding:12px 14px;border:2px solid #4B33C4;border-radius:4px;background:#fff;color:#1a1a1a;text-align:center;line-height:1.45}
+.sendbox .repmsg p{margin:0 0 10px}
+.sendbox .repmsg p:last-child{margin:0}
+.sendbox .repmsg .repbtn{display:inline-block;width:auto;padding:12px 22px}
