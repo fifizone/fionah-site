@@ -228,6 +228,8 @@
   .credbal{font-size:28px;color:var(--text);margin:6px 0 2px}
   .box .restore{width:100%;margin:2px 0 8px;padding:14px 10px}
   .nw{white-space:nowrap}
+  .restline{text-align:center;margin:-8px 0 18px;font-size:14px}
+  .restline .restlink{font:inherit;color:inherit;background:none;border:none;padding:4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   .box .nzline{margin:-4px 0 12px}
   #rcIn{margin-top:4px;font-size:18px;letter-spacing:1px;text-align:center}
   .pack{border:1.5px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0;text-align:center;color:var(--text)}
@@ -264,6 +266,7 @@
     <span class="pt-line"></span>
     <button type="button" class="pt-half pt-buy" id="buyTile" aria-label="Buy credits: 1 credit equals 1 video without the icon"><span class="pt-row"><span class="pcoin">1</span><span class="peq">=</span><span class="pv"></span></span><span class="pt-lab">Buy Credits<br>1 Credit = 1 Video Without Icon</span></button>
   </div>
+  <p class="restline">Already bought credits? <button type="button" class="restlink" id="restoreTop">Restore My Credits</button></p>
   <!-- 1. Photos -->
   <section class="card">
     <h2>1 · Add your images</h2>
@@ -991,7 +994,8 @@
     const n = credits();
     if (n < 1) S.noIcon = false;
     // tile: free videos with the icon; hidden while the person has credits (the choice buttons show instead)
-    const bt = $('buyTile'); if (bt) bt.onclick = openCredits;   // first tile: only the Buy Credits half is tappable
+    const bt = $('buyTile'); if (bt) bt.onclick = openCredits;
+    const rt = $('restoreTop'); if (rt) rt.onclick = () => openRestore();   // first tile: only the Buy Credits half is tappable
     if (typeof renderStats === 'function' && S.slides.length) renderStats();
     $('trialNote').innerHTML = n > 0
       ? `<div>You have ${n} credit${n === 1 ? '' : 's'}.</div><div class="iconpick"><button id="icFree" class="${S.noIcon ? '' : 'on'}">With Icon (Free)</button><button id="icNo" class="${S.noIcon ? 'on' : ''}">No Icon (1 Credit)</button></div><a class="rm" id="rmMark" role="button" tabindex="0">Credits</a>`
@@ -1052,7 +1056,7 @@
       const b = $('buyx'); if (b) b.onclick = openCredits;
       $('okx').onclick = closeModal;
     } else if (d && d.pack) {
-      openRestore('This receipt is for a done-for-you pack, not credits. Please use the Get Your Video page on fionah.com.');
+      openRestore('This receipt is for a done-for-you pack, not credits. Please use the Collect My Video page on fionah.com.');
     } else if (d && d.busy) {
       openRestore('There have been too many tries. Please try again in an hour.');
     } else if (d) {
