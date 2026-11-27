@@ -106,3 +106,12 @@
 .sendbox .repmsg p{margin:0 0 10px}
 .sendbox .repmsg p:last-child{margin:0}
 .sendbox .repmsg .repbtn{display:inline-block;width:auto;padding:12px 22px}
+/* The Kitchen choices (27 Nov) */
+.sendbox .lennote,.sendbox .stylenote{font-size:14px;margin:8px 0 0}
+.sendbox .stylenote:empty{display:none}
+.sendbox #sbStyle button,.sendbox #sbShape button{font-size:15px;line-height:1.25}
+.sendbox .tips{margin:16px 0 4px;padding-left:20px;font-size:15px}
+.sendbox .tips li{margin:4px 0}
+.sendbox .thumb .sm{position:absolute;top:34px;left:4px;background:#C99A3B;color:#111014;border-radius:4px;padding:0 6px;font-size:12px}
+.sendbox .smallmsg{margin:12px 0 0;padding:12px 14px;border:2px solid #C99A3B;border-radius:4px;background:#fff;color:#1a1a1a;text-align:center;line-height:1.45}
+.sendbox .smallmsg[hidden]{display:none}

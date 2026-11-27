@@ -16,14 +16,42 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
   const box = document.querySelector('.sendbox:not(.getbox)');
   if (box) {
     const $ = s => box.querySelector(s);
-    let MAX = 15;                      // photos per send: Starter 10, Standard + Agent Pack 15 (set from the pack code)
-    let photos = [];                   // { file, url }
-    const pick = { len: '', music: 'Yes' };
-    const segs = [['#sbLen', 'len'], ['#sbMusic', 'music']];
+    let PACK_MAX = 15;                 // photos per send: Starter 10, Standard + Agent Pack 15 (set from the receipt number)
+    // The Kitchen (27 Nov): images allowed by video length (Fi: 10 images in 30 seconds flicks by too fast)
+    const LEN_MAX = { '30 sec': 6, '60 sec': 12, '1 min 30 sec': 18 };
+    const STYLE_NOTES = {
+      'Bright and Lively': 'Quicker, livelier movement with soft fades.',
+      'Classic Glide': 'Slow, smooth curved glides with soft fades.',
+      'Soft Drift': 'Gentle drifts up and down and slow turns, with soft fades.'
+    };
+    const SHAPE_NOTES = {
+      'Widescreen': 'Best for listing websites, YouTube and computers.',
+      'Phone (Upright)': 'Best for Reels, Stories and TikTok.',
+      'Both': 'You will receive two videos: one Widescreen and one Phone (Upright).'
+    };
+    const SMALL_MSG = n => `Image ${n} is small and may not appear clearly on all screens. For the best result, please send the original image.`;
+    const SMALL_PX = 1600;             // longest side under this = small (Full HD video is 1920 wide)
+    let photos = [];                   // { file, url, small }
+    const pick = { len: '', music: 'Yes', style: 'Bright and Lively', shape: 'Widescreen' };
+    let MAX = PACK_MAX;
+    const setMax = () => { MAX = pick.len ? Math.min(PACK_MAX, LEN_MAX[pick.len] || PACK_MAX) : PACK_MAX; };
+    const notes = () => { const a = box.querySelector('#sbStyleNote'), b = box.querySelector('#sbShapeNote'); if (a) a.textContent = STYLE_NOTES[pick.style] || ''; if (b) b.textContent = SHAPE_NOTES[pick.shape] || ''; };
+    const segs = [['#sbLen', 'len'], ['#sbMusic', 'music'], ['#sbStyle', 'style'], ['#sbShape', 'shape']];
     segs.forEach(([sel, key]) => box.querySelectorAll(sel + ' button').forEach(b => {
       b.classList.toggle('on', b.dataset.v === pick[key]);
-      b.addEventListener('click', () => { pick[key] = b.dataset.v; box.querySelectorAll(sel + ' button').forEach(x => x.classList.toggle('on', x === b)); check(); });
+      b.addEventListener('click', () => { pick[key] = b.dataset.v; box.querySelectorAll(sel + ' button').forEach(x => x.classList.toggle('on', x === b)); setMax(); notes(); draw(); });
     }));
+    notes();
+    // is an image small? (the longest side, in pixels)
+    const sizeOf = f => new Promise(res => { const im = new Image(), u = URL.createObjectURL(f); im.onload = () => { res(Math.max(im.naturalWidth, im.naturalHeight)); URL.revokeObjectURL(u); }; im.onerror = () => { res(0); URL.revokeObjectURL(u); }; im.src = u; });
+    function showSmall() {
+      let m = box.querySelector('.smallmsg');
+      const list = photos.map((p, i) => p.small ? i + 1 : 0).filter(Boolean);
+      if (!list.length) { if (m) m.hidden = true; return; }
+      if (!m) { m = document.createElement('div'); m.className = 'smallmsg'; m.setAttribute('role', 'status'); box.querySelector('.thumbs').after(m); }
+      m.hidden = false;
+      m.textContent = list.length === 1 ? SMALL_MSG(list[0]) : `Images ${list.join(', ')} are small and may not appear clearly on all screens. For the best result, please send the original images.`;
+    }
 
     // letter counters (same limits as the app: address 25, notes 40)
     box.querySelectorAll('input[data-lim]').forEach(inp => {
@@ -61,7 +89,8 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           if (refusedN >= MAX_REFUSED) { checking = false; return stopOrder(); }
           showReplace(REPLACE_MSG, false); continue;          // this photo is not added; the others carry on
         }
-        photos.push({ file: files[i], url: URL.createObjectURL(files[i]) });
+        const px = await sizeOf(files[i]);
+        photos.push({ file: files[i], url: URL.createObjectURL(files[i]), small: px > 0 && px < SMALL_PX });
         draw();
       }
       checking = false;
@@ -99,7 +128,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
 
     function draw() {
       $('.thumbs').innerHTML = photos.map((p, i) =>
-        `<div class="thumb"><img src="${p.url}" alt="Image ${i + 1}"><span class="n">${i + 1}</span><button type="button" class="rm" data-i="${i}" aria-label="Remove image ${i + 1}">×</button>
+        `<div class="thumb${p.small ? ' small' : ''}"><img src="${p.url}" alt="Image ${i + 1}"><span class="n">${i + 1}</span>${p.small ? '<span class="sm">Small</span>' : ''}<button type="button" class="rm" data-i="${i}" aria-label="Remove image ${i + 1}">×</button>
           <div class="mv"><button type="button" data-i="${i}" data-d="-1" aria-label="Move image ${i + 1} earlier" ${i ? '' : 'style="visibility:hidden"'}>‹</button><button type="button" data-i="${i}" data-d="1" aria-label="Move image ${i + 1} later" ${i < photos.length - 1 ? '' : 'style="visibility:hidden"'}>›</button></div></div>`).join('');
       $('.thumbs').querySelectorAll('.rm').forEach(b => b.addEventListener('click', () => {
         const i = Number(b.dataset.i); URL.revokeObjectURL(photos[i].url); photos.splice(i, 1); draw();
@@ -109,6 +138,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       }));
       $('.ordnote').style.display = photos.length > 1 ? 'block' : 'none';
       $('.count').textContent = photos.length ? `${photos.length} of ${MAX} images added` : `Add up to ${MAX} images`;
+      showSmall();
       check();
     }
 
@@ -131,7 +161,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         if (!d.ok) packNote("That receipt number was not found. Please check it and try again.");
         else if (d.left < 1) packNote(`Order #${d.number} has no videos left to send. You can buy another pack on the home page.`);
         else {
-          pack = { ref: v, left: d.left, number: d.number }; MAX = d.images || 15; draw();
+          pack = { ref: v, left: d.left, number: d.number }; PACK_MAX = d.images || 15; setMax(); draw();
           packNote(`Order #${d.number} · ${d.left} of ${d.total} video${d.total === 1 ? '' : 's'} left to send`, true);
           if (d.receipt && !typed) $('#sbPack').value = d.receipt;
           try { localStorage.setItem('fionah-receipt', d.receipt || v); } catch (e) {}
@@ -155,9 +185,9 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       const ready = paid && filled && words && agreed;
       $('.send').disabled = !SEND_URL || !ready;
       $('.note').textContent = !SEND_URL ? 'Sending opens soon.'
-        : !paid ? 'Enter your Emailed Stripe Receipt Number to send your photos.'
+        : !paid ? 'Enter your Emailed Stripe Receipt Number to send your images.'
         : !words ? WORDS_MSG
-        : photos.length > MAX ? `This pack allows up to ${MAX} photos. Please remove ${photos.length - MAX}.` : !filled ? 'Choose a video length and add at least one image.'
+        : photos.length > MAX ? `This video allows up to ${MAX} images. Please remove ${photos.length - MAX}, or choose a longer video.` : !filled ? 'Choose a video length and add at least one image.'
         : !agreed ? 'Please tick to agree to the Terms.' : 'Ready to send.';
       $('.note').classList.toggle('warnnote', !!SEND_URL && !words);
     }
@@ -180,7 +210,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       e.preventDefault();
       if ($('.send').disabled || stopped || !wordsOk() || !$('#sbAgree').checked) return;
       let code = '';                     // the order's private code comes from the helper (one code for all videos in the order)
-      const order = { address: $('#sbAddr').value.trim(), notes: $('#sbNotes').value.trim(), length: pick.len, music: pick.music };
+      const order = { address: $('#sbAddr').value.trim(), notes: $('#sbNotes').value.trim(), length: pick.len, music: pick.music, style: pick.style, shape: pick.shape, small: photos.map((p, i) => p.small ? i + 1 : 0).filter(Boolean).join(',') };
       $('.send').disabled = true; $('.prog').style.display = 'block';
       try {
         // get the next order number from the Google script (e.g. 1042)
@@ -193,7 +223,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         order.number = String(rj.number || '');
         if (!order.number) throw new Error('no number');
         for (let i = 0; i < photos.length; i++) {
-          $('.note').textContent = `Sending photo ${i + 1} of ${photos.length}…`;
+          $('.note').textContent = `Sending image ${i + 1} of ${photos.length}…`;
           const data = await shrink(photos[i].file);
           await fetch(SEND_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({ ...order, index: i + 1, total: photos.length, data }) });
@@ -207,7 +237,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
               $('.note').textContent = '';
               const f = await askReplacement(i);
               if (!f) { $('.prog').style.display = 'none'; return; }   // order stopped (3rd refused photo)
-              URL.revokeObjectURL(photos[i].url); photos[i] = { file: f, url: URL.createObjectURL(f) };
+              URL.revokeObjectURL(photos[i].url); const px = await sizeOf(f); photos[i] = { file: f, url: URL.createObjectURL(f), small: px > 0 && px < SMALL_PX };
               i -= 1; continue;                                        // send the new photo in the same place
             }
           } catch (err) { /* cannot ask — the helper still holds back anything it blocked */ }
