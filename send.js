@@ -32,11 +32,11 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     const SMALL_MSG = n => `Image ${n} is small and may not appear clearly on all screens. For the best result, please send the original image.`;
     const SMALL_PX = 1600;             // longest side under this = small (Full HD video is 1920 wide)
     let photos = [];                   // { file, url, small }
-    const pick = { len: '', music: 'Yes', style: 'Bright and Lively', shape: 'Widescreen' };
+    const pick = { len: '', music: 'Yes', style: 'Bright and Lively', shape: 'Both' };   // every package video comes in both shapes
     let MAX = PACK_MAX;
     const setMax = () => { MAX = pick.len ? Math.min(PACK_MAX, LEN_MAX[pick.len] || PACK_MAX) : PACK_MAX; };
-    const notes = () => { const a = box.querySelector('#sbStyleNote'), b = box.querySelector('#sbShapeNote'); if (a) a.textContent = STYLE_NOTES[pick.style] || ''; if (b) b.textContent = SHAPE_NOTES[pick.shape] || ''; };
-    const segs = [['#sbLen', 'len'], ['#sbMusic', 'music'], ['#sbStyle', 'style'], ['#sbShape', 'shape']];
+    const notes = () => { const a = box.querySelector('#sbStyleNote'), b = box.querySelector('#sbShapeNote'); if (a) a.textContent = STYLE_NOTES[pick.style] || ''; };
+    const segs = [['#sbLen', 'len'], ['#sbMusic', 'music'], ['#sbStyle', 'style']];
     segs.forEach(([sel, key]) => box.querySelectorAll(sel + ' button').forEach(b => {
       b.classList.toggle('on', b.dataset.v === pick[key]);
       b.addEventListener('click', () => { pick[key] = b.dataset.v; box.querySelectorAll(sel + ' button').forEach(x => x.classList.toggle('on', x === b)); setMax(); notes(); draw(); });
@@ -292,9 +292,17 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         const d = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code))).json();
         if (d.status === 'ready') {
           const vids = d.videos && d.videos.length ? d.videos : [{ name: 'Video', url: d.url }];
-          const many = vids.length > 1 || d.waiting > 0 || d.left > 0;
+          // each video comes in two shapes: the one that suits this device is shown first
+          const tall = window.matchMedia && window.matchMedia('(orientation: portrait)').matches;
+          const first = tall ? 'Phone' : 'Wide';
+          vids.sort((a, b) => String(a.name).localeCompare(String(b.name), 'en', { numeric: true }) || (a.shape === first ? -1 : b.shape === first ? 1 : 0));
+          const names = new Set(vids.map(v => v.name));
+          const many = names.size > 1 || d.waiting > 0 || d.left > 0;
+          const SHAPE_WORDS = { Wide: 'Wide Video (Computers And Listing Websites)', Phone: 'Phone Video (Reels, Stories And TikTok)' };
+          const label = v => 'Download ' + (many ? v.name + ', ' : 'Your ') + (SHAPE_WORDS[v.shape] || (many ? '' : 'Video'));
           out.innerHTML = '<p>Order #' + n + ' is ready.</p>' +
-            vids.map(v => '<a class="sbtn hl" href="' + v.url + '">Download ' + (many ? 'Your ' + v.name : 'Your Video') + '</a>').join('') +
+            (vids.some(v => v.shape) ? '<p>Each video comes in two shapes. The one that suits this device is shown first.</p>' : '') +
+            vids.map(v => '<a class="sbtn hl" href="' + v.url + '">' + label(v).replace(/, $/, '') + '</a>').join('') +
             (d.waiting > 0 ? `<p>${d.waiting} more video${d.waiting === 1 ? ' is' : 's are'} on the way.</p>` : '') +
             '<button type="button" class="sbtn hl" id="gDone">Delete My Files</button>';
           $('#gDone').addEventListener('click', async () => {

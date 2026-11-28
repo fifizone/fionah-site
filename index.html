@@ -425,9 +425,9 @@
       <div class="finalp" id="finalP">Final price is shown at checkout</div>
     </div>
     <div class="prices" id="prices">
-      <div class="price"><h3>Starter</h3><div class="amt">$29.95<small>AUD</small></div><ul><li>1 video</li><li>Up to 10 images</li><li>Optional music</li><li>Ready within 24 hours, Monday to Friday</li></ul><a class="btn btn-main" href="https://buy.stripe.com/9B6eVe8MCdV67hy5uB4AU00">Buy Starter</a></div>
-      <div class="price"><h3>Standard</h3><div class="amt">$79<small>AUD</small></div><ul><li>3 videos</li><li>Up to 15 images per video</li><li>Optional music</li><li>Ready within 24 hours, Monday to Friday</li></ul><a class="btn btn-main" href="https://buy.stripe.com/14A8wQ5Aq7wIbxO3mt4AU01">Buy Standard</a></div>
-      <div class="price"><h3>Agent Pack</h3><div class="amt">$199<small>AUD</small></div><ul><li>8 videos</li><li>Up to 15 images per video</li><li>Optional music</li><li>Ready within 24 hours, Monday to Friday</li></ul><a class="btn btn-main" href="https://buy.stripe.com/6oUbJ20g62co31i1el4AU02">Buy Agent Pack</a></div>
+      <div class="price"><h3>Starter</h3><div class="amt">$29.95<small>AUD</small></div><ul><li>1 video</li><li>Up to 10 images</li><li>Optional music</li><li>Wide and Phone versions</li><li>Ready within 24 hours, Monday to Friday</li></ul><a class="btn btn-main" href="https://buy.stripe.com/9B6eVe8MCdV67hy5uB4AU00">Buy Starter</a></div>
+      <div class="price"><h3>Standard</h3><div class="amt">$79<small>AUD</small></div><ul><li>3 videos</li><li>Up to 15 images per video</li><li>Optional music</li><li>Wide and Phone versions</li><li>Ready within 24 hours, Monday to Friday</li></ul><a class="btn btn-main" href="https://buy.stripe.com/14A8wQ5Aq7wIbxO3mt4AU01">Buy Standard</a></div>
+      <div class="price"><h3>Agent Pack</h3><div class="amt">$199<small>AUD</small></div><ul><li>8 videos</li><li>Up to 15 images per video</li><li>Optional music</li><li>Wide and Phone versions</li><li>Ready within 24 hours, Monday to Friday</li></ul><a class="btn btn-main" href="https://buy.stripe.com/6oUbJ20g62co31i1el4AU02">Buy Agent Pack</a></div>
     </div>
     <div class="pnote">
       <p>All packages: We make each video for you, quality check it, and it is ready to collect within 24 hours of sending its images, Monday to Friday (Perth time, AWST), not including public holidays. Images sent on a weekend or public holiday are made on the next working day. Need a video sooner? Make your own any day with Motion Studio.</p>
@@ -489,8 +489,8 @@
       <div class="faq">
         <details><summary>Do the images actually move?</summary><p>The camera gently zooms and glides across each image, with soft fades between them. The images themselves stay still. It is a smooth moving slideshow, saved as an MP4 video.</p></details>
         <details><summary>How long is each video?</summary><ul><li>Every pack offers a choice of 30 seconds, 60 seconds or 1 minute 30 seconds.</li><li>In Motion Studio, you can choose your own length.</li></ul></details>
-        <details><summary>What will I get?</summary><p>An MP4 video in 1080p, in the shape you choose: Wide (16:9), Reels (9:16), Post (4:5) or Square (1:1).</p></details>
-        <details><summary>How do I send my images?</summary><ul><li>Choose your package and pay. A short form will open with your Emailed Stripe Receipt Number.</li><li>Upload images or take new photos.</li><li>Choose your video length and place your images in order.</li><li>Write a short message and choose whether you would like music.</li><li>Tap Send when you are finished.</li><li>Keep your receipt number, as you will use it each time you send images.</li></ul></details>
+        <details><summary>What will I get?</summary><ul><li>Packages: Each video comes as two MP4 files in Full HD (1080p), so it fits any screen: Wide (16:9) for computers and listing websites, and Phone (Upright, 9:16) for Reels, Stories and TikTok.</li><li>Motion Studio: An MP4 video in the shape you choose: Wide (16:9), Reels (9:16), Post (4:5) or Square (1:1).</li></ul></details>
+        <details><summary>How do I send my images?</summary><ul><li>Choose your package and pay. A short form will open with your Emailed Stripe Receipt Number.</li><li>Upload images or take new photos.</li><li>Choose your video length and style, and place your images in order.</li><li>Write a short message and choose whether you would like music.</li><li>Tap Send when you are finished.</li><li>Keep your receipt number, as you will use it each time you send images.</li></ul></details>
         <details><summary>Which numbers do I need, and where do I find them?</summary>
           <p>We use these numbers instead of your name and address, so we do not ask for your personal details.</p>
           <ul>
@@ -537,11 +537,11 @@ const CONFIG = {
   // (Stripe "Adaptive Pricing"), so each package needs just ONE Stripe link.
   packages: [
     { name: "Starter", aud: 29.95, stripe: "https://buy.stripe.com/9B6eVe8MCdV67hy5uB4AU00",
-      points: ["1 video", "Up to 10 images", "Optional music", "Ready within 24 hours, Monday to Friday"] },
+      points: ["1 video", "Up to 10 images", "Optional music", "Wide and Phone versions", "Ready within 24 hours, Monday to Friday"] },
     { name: "Standard", aud: 79, stripe: "https://buy.stripe.com/14A8wQ5Aq7wIbxO3mt4AU01",
-      points: ["3 videos", "Up to 15 images per video", "Optional music", "Ready within 24 hours, Monday to Friday"] },
+      points: ["3 videos", "Up to 15 images per video", "Optional music", "Wide and Phone versions", "Ready within 24 hours, Monday to Friday"] },
     { name: "Agent Pack", aud: 199, stripe: "https://buy.stripe.com/6oUbJ20g62co31i1el4AU02",
-      points: ["8 videos", "Up to 15 images per video", "Optional music", "Ready within 24 hours, Monday to Friday"] }
+      points: ["8 videos", "Up to 15 images per video", "Optional music", "Wide and Phone versions", "Ready within 24 hours, Monday to Friday"] }
   ]
 };
 /* ========================================================= */
