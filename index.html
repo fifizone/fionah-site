@@ -263,7 +263,6 @@
   #who .whobox{max-width:760px;margin:22px auto 0;background:var(--card);color:#111014;border-radius:var(--r-lg);padding:14px 22px;border-top:none;text-align:left}
   [data-look="night"] #who .whobox{color:#F4F2EE}
   #who .whobox ul{margin:8px 0 0;padding-left:22px}#who .whobox li{margin:8px 0}#who .whobox p{color:inherit;margin:8px 0}
-  @media (max-width:500px){#who details.drawer>summary h2{font-size:26px}}
   #faq .faq details{border-bottom:1px solid #E4E2EC}
   [data-look="night"] #faq .faq details{border-color:#2A2A33}
   #faq .faq details:last-child{border-bottom:none}
@@ -339,7 +338,15 @@
   /* fionah brand word: script gold F (logo font) + ionah, headings and footer only */
   @font-face{font-family:'Italianno';src:url('fonts/Italianno-Regular.ttf') format('truetype');font-display:swap}
   .fi{white-space:nowrap}
-  .fi b{font-family:'Italianno','Brush Script MT',cursive;font-weight:400;font-size:1.6em;line-height:0;color:#F2C75C;margin-right:.07em;vertical-align:-.08em}
+  .fi b{font-family:'Italianno','Brush Script MT',cursive;font-weight:400;font-size:1.6em;line-height:0;color:inherit;margin-right:.14em;vertical-align:-.08em}
+  /* Who/Why tabs: same size as the Make Your Own Free Video button */
+  #who details.drawer>summary{display:flex;justify-content:center;padding:0}
+  #who details.drawer>summary::before,#who details.drawer>summary::after{content:none;display:none}
+  #who .whobtn{min-width:260px}
+  #who .whobtn .pm::before{content:"+";font-weight:700}
+  #who details[open] .whobtn .pm::before{content:"\2013"}
+  #who .fi b{font-size:28px !important;vertical-align:-.12em}
+  #who .whobtn .wt{display:inline;line-height:1.2}
   #fiFoot b{font-size:32px !important;vertical-align:-.12em}
 </style>
 <style id="tapfix">
@@ -495,7 +502,7 @@
 <section id="who">
   <div class="wrap">
     <details class="drawer">
-      <summary><h2>Who Is <span class="fi"><b>F</b>ionah</span> For?</h2></summary>
+      <summary><span class="btn btn-main whobtn" role="heading" aria-level="2"><span class="wt">Who Is <span class="fi"><b>F</b>ionah</span> For?</span> <span class="pm" aria-hidden="true"></span></span></summary>
       <div class="faq whobox">
         <p>For busy people who want a beautiful property video, with no video skills needed and no software to learn.</p>
         <ul>
@@ -508,7 +515,7 @@
       </div>
     </details>
     <details class="drawer">
-      <summary><h2>Why We Created <span class="fi"><b>F</b>ionah</span></h2></summary>
+      <summary><span class="btn btn-main whobtn" role="heading" aria-level="2"><span class="wt">Why We Created <span class="fi"><b>F</b>ionah</span></span> <span class="pm" aria-hidden="true"></span></span></summary>
       <div class="faq whobox">
         <p>We wanted an honest, simple way to turn property images into smooth, ready-to-share videos, without needing video skills or expensive software.</p>
         <ul>
