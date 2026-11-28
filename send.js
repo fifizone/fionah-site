@@ -300,7 +300,10 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           const many = names.size > 1 || d.waiting > 0 || d.left > 0;
           const SHAPE_WORDS = { Wide: 'Wide Video (Computers And Listing Websites)', Phone: 'Phone Video (Reels, Stories And TikTok)' };
           const label = v => 'Download ' + (many ? v.name + ', ' : 'Your ') + (SHAPE_WORDS[v.shape] || (many ? '' : 'Video'));
+          const untils = vids.map(v => Number(v.until)).filter(Boolean);
+          const by = untils.length ? new Date(Math.min.apply(null, untils)).toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Australia/Perth' }) : '';
           out.innerHTML = '<p>Order #' + n + ' is ready.</p>' +
+            (by ? '<p>Please download by ' + by + '. After that, your images and videos are deleted for your privacy.</p>' : '') +
             (vids.some(v => v.shape) ? '<p>Each video comes in two shapes. The one that suits this device is shown first.</p>' : '') +
             vids.map((v, i) => {
               const id = (String(v.url).match(/[?&]id=([\w-]+)/) || [])[1];
