@@ -379,7 +379,7 @@
     <button class="b2" id="makeBtn">Make Video</button>
   </div>
   <a class="closeapp" href="../">Close App</a>
-  <p class="mailnote">Need help? Email <a class="mail" href="mailto:orders@fionah.com">orders@fionah.com</a></p>
+  <p class="mailnote">Need help? Message us at <a class="mail" href="mailto:orders@fionah.com">orders@fionah.com</a></p>
 </div>
 
 <div class="modal" id="modal">
@@ -1020,7 +1020,7 @@
       <p class="tip nzline">NZ customers see the NZD price at checkout.</p>
       <button class="b1 restore" id="restoreBtn">Restore My Credits</button>
       <p class="tip">Credits are saved with your Emailed Stripe Receipt Number, so you can use them on any device.</p>
-      <p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a></p>
+      <p class="tip">Payment questions? Message us at <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a></p>
       <div class="acts stack"><button class="b1" id="nox">Back</button></div>`);
     box.classList.add('credbox');
     $('nox').onclick = closeModal;
@@ -1045,7 +1045,7 @@
     $('rcMsg').textContent = 'Checking…'; $('rcGo').disabled = true;
     let d = null;
     try { d = await (await fetch(HELPER_URL + '?restore=' + encodeURIComponent(dg))).json(); } catch (e) {}
-    const help = '<p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p>';
+    const help = '<p class="tip">Still not working? Message us at <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p>';
     if (d && d.ok) {
       // credits bought before Restore My Credits existed are now kept by The Waitress, so the old phone-only count is cleared (never counted twice)
       try { if (phoneCredits() > 0) localStorage.setItem('fionah-credits', '0'); } catch (e) {}
@@ -1084,10 +1084,10 @@
         openModal(`<h3>Your Credits Are Ready</h3><div class="credbal">You have ${credits()} credit${credits() === 1 ? '' : 's'}</div><p>The credits for this payment are saved with your Emailed Stripe Receipt Number.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
       } else if (d.used) {
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
-        openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
+        openModal('<h3>Already added</h3><p>The credits for this payment have already been added.</p><p class="tip">Payment questions? Message us at <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b2" id="okx">OK</button></div>');
       } else throw new Error('not paid');
     } catch (err) {
-      openModal('<h3>We could not confirm your payment yet</h3><p>Please try again in a minute.</p><p class="tip">Still not working? Email <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="tryx">Try Again</button></div>');
+      openModal('<h3>We could not confirm your payment yet</h3><p>Please try again in a minute.</p><p class="tip">Still not working? Message us at <a class="mail" href="mailto:accounts@fionah.com">accounts@fionah.com</a> with your receipt.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="tryx">Try Again</button></div>');
       const t = $('tryx'); if (t) t.onclick = () => checkPaid(id);
     }
     const ok = $('okx'); if (ok) ok.onclick = closeModal;

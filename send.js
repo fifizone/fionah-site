@@ -331,6 +331,16 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         } else {
           out.textContent = 'We could not find that order. Please check your order number and private code, and try again.';
         }
+        if (d.status === 'ready' || d.status === 'waiting') {   // messages sent with the Contact Us form, and our replies
+          fetch(SEND_URL + '?replies=1&n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code)).then(r => r.json()).then(m => {
+            if (!m.ok || !m.items.length) return;
+            const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+            const box = document.createElement('div'); box.className = 'gmsgs';
+            box.innerHTML = '<p><b>Your messages</b></p>' + m.items.map(x => '<div class="gmsg"><b>' + esc(x.id) + ' · ' + esc(x.when) + '</b><p>' + esc(x.text) + '</p><p class="greply">' +
+              (x.reply ? '<b>Our reply:</b> ' + esc(x.reply) : 'We have your message. Our reply will show here soon.') + '</p></div>').join('');
+            out.appendChild(box);
+          }).catch(() => {});
+        }
       } catch (err) { out.textContent = 'Something went wrong. Please check your internet connection and try again.'; }
     });
   }

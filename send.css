@@ -122,3 +122,6 @@
 .gview iframe{display:block;margin:8px auto 0;border:0;border-radius:6px;background:#000;width:100%}
 .gview iframe.wide{aspect-ratio:16/9}
 .gview iframe.tall{aspect-ratio:9/16;max-width:360px}
+
+/* Collect My Video: messages and replies (28 Nov) */
+.gmsgs{text-align:left;margin-top:16px}.gmsg{border:1.5px solid #E2E0EA;border-radius:6px;padding:10px 12px;margin:8px 0}.gmsg p{margin:6px 0}.greply{background:#F3F0FF;border-radius:4px;padding:8px 10px;color:#111014}
