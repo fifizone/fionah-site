@@ -143,7 +143,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     }
 
     // ---------- Stripe receipt number: proves the order was paid for, and how many videos are left to send ----------
-    // One payment = one receipt number + one order number + one private code for all the videos in the order.
+    // One payment = one receipt number + one Order Number + one Private Code for all the videos in the order.
     // The thank-you page fills it in. If Stripe has not sent the receipt yet, the payment's checkout id is used behind the scenes.
     const normRef = v => { v = String(v || '').trim(); if (/^cs_(test|live)_/.test(v)) return v; const dg = v.replace(/\D/g, ''); return dg.length === 8 ? dg.slice(0, 4) + '-' + dg.slice(4) : ''; };
     let pack = { ref: '', left: 0, number: '' };
@@ -153,12 +153,12 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       const typed = $('#sbPack').value.trim();
       const v = normRef(typed) || (!typed ? hiddenRef : '');
       pack = { ref: '', left: 0, number: '' };
-      if (!v) { packNote(typed ? 'Receipt numbers look like #1234-5678.' : ''); check(); return; }
+      if (!v) { packNote(typed ? 'Emailed Stripe Receipt Numbers look like #1234-5678.' : ''); check(); return; }
       if (!SEND_URL) { check(); return; }
-      packNote('Checking your receipt number…');
+      packNote('Checking your Emailed Stripe Receipt Number…');
       try {
         const d = await (await fetch(SEND_URL + '?packinfo=1&ref=' + encodeURIComponent(v))).json();
-        if (!d.ok) packNote("That receipt number was not found. Please check it and try again.");
+        if (!d.ok) packNote("That Emailed Stripe Receipt Number was not found. Please check it and try again.");
         else if (d.left < 1) packNote(`Order #${d.number} has no videos left to send. You can buy another pack on the home page.`);
         else {
           pack = { ref: v, left: d.left, number: d.number }; PACK_MAX = d.images || 15; setMax(); draw();
@@ -209,11 +209,11 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
     box.querySelector('form').addEventListener('submit', async e => {
       e.preventDefault();
       if ($('.send').disabled || stopped || !wordsOk() || !$('#sbAgree').checked) return;
-      let code = '';                     // the order's private code comes from the helper (one code for all videos in the order)
+      let code = '';                     // the order's Private Code comes from the helper (one code for all videos in the order)
       const order = { address: $('#sbAddr').value.trim(), notes: $('#sbNotes').value.trim(), length: pick.len, music: pick.music, style: pick.style, shape: pick.shape, small: photos.map((p, i) => p.small ? i + 1 : 0).filter(Boolean).join(',') };
       $('.send').disabled = true; $('.prog').style.display = 'block';
       try {
-        // get the next order number from the Google script (e.g. 1042)
+        // get the next Order Number from the Google script (e.g. 1042)
         $('.note').textContent = 'Getting your order ready…';
         const rr = await fetch(SEND_URL + '?reserve=1&ref=' + encodeURIComponent(pack.ref));
         const rj = await rr.json();
@@ -248,7 +248,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         box.querySelectorAll('.done a[href="get.html"]').forEach(a => { a.href = 'get.html?n=' + order.number; });
         pack.left -= 1;
         const vn = box.querySelector('.vidnote');
-        if (vn) vn.textContent = rj.total > 1 ? `Video ${rj.video} of ${rj.total} sent.${pack.left ? ` You have ${pack.left} more to send with your receipt number. Your private code stays the same.` : ''}` : '';
+        if (vn) vn.textContent = rj.total > 1 ? `Video ${rj.video} of ${rj.total} sent.${pack.left ? ` You have ${pack.left} more to send with your Emailed Stripe Receipt Number. Your Private Code stays the same.` : ''}` : '';
         box.classList.add('is-done');
       } catch (err) {
         $('.note').textContent = 'Something went wrong. Please check your internet connection and tap Send again.';
@@ -261,8 +261,8 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
 }
 
 /* "Get Your Video" page: Find My Order.
-   The customer types their order number and private code, then taps Find My Order.
-   No list of order numbers is shown, so nobody sees other people's orders. */
+   The customer types their Order Number and Private Code, then taps Find My Order.
+   No list of Order Numbers is shown, so nobody sees other people's orders. */
 {
   const g = document.querySelector('.getbox');
   if (g) {
@@ -277,7 +277,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
       if (note) note.hidden = !r;
       $('.findbtn').disabled = r || !(num().length >= 4 && num().length <= 8 && norm($('#gCode').value).length >= 9);
     };
-    // the Sent screen links here with ?n=1001, so the order number fills itself in
+    // the Sent screen links here with ?n=1001, so the Order Number fills itself in
     const pre = new URLSearchParams(location.search).get('n');
     if (pre && /^\d{4,8}$/.test(pre)) $('#gOrder').value = pre;
     $('#gOrder').addEventListener('input', check);
@@ -323,13 +323,13 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
             let r = {};
             try { r = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code) + '&done=1')).json(); } catch (err) {}
             out.innerHTML = r.left > 0
-              ? `<p>Your downloaded videos and their images have been deleted. You still have ${r.left} video${r.left === 1 ? '' : 's'} to send with your receipt number.</p>`
+              ? `<p>Your downloaded videos and their images have been deleted. You still have ${r.left} video${r.left === 1 ? '' : 's'} to send with your Emailed Stripe Receipt Number.</p>`
               : '<p>All done. Your images and video have been deleted. Thank you!</p>';
           });
         } else if (d.status === 'waiting') {
           out.textContent = 'Order #' + n + ' is not ready yet. Your video is on its way, so please check back soon.';
         } else {
-          out.textContent = 'We could not find that order. Please check your order number and private code, and try again.';
+          out.textContent = 'We could not find that order. Please check your Order Number and Private Code, and try again.';
         }
         if (d.status === 'ready' || d.status === 'waiting') {   // messages sent with the Contact Us form, and our replies
           fetch(SEND_URL + '?replies=1&n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code)).then(r => r.json()).then(m => {
@@ -347,7 +347,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
 }
 
 /* Thank-you page: Stripe sends the buyer here with ?session_id=cs_…
-   The helper checks the payment with Stripe and shows: Payment accepted, the Stripe receipt number and the order number.
+   The helper checks the payment with Stripe and shows: Payment accepted, the Stripe receipt number and the Order Number.
    Stripe gives the receipt number once it has emailed the receipt, so the page checks again for up to a minute. */
 {
   const card = document.getElementById('packCard');
@@ -373,7 +373,7 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
         $id('payReceipt').textContent = '…';
         if (!filled && sb && sb.fillPack) { sb.fillPack('', sid); filled = true; }   // they can send photos already
         if (++tries < 15) setTimeout(ask, 4000);
-        else { $id('payWait').textContent = 'Your receipt number is in the receipt email from Stripe.'; $id('payWait').hidden = false; }
+        else { $id('payWait').textContent = 'Your Emailed Stripe Receipt Number is in the receipt email from Stripe.'; $id('payWait').hidden = false; }
       } catch (err) {
         if (++tries < 4) return setTimeout(ask, 3000);
         $id('payHead').innerHTML = 'We could not confirm your payment yet. <a href="#" id="packTry">Try Again</a>';

@@ -1,5 +1,5 @@
 // Contact Us (Fi, 28 Nov 2026): tapping an email address opens a message form instead of an email app.
-// Orders or Payments: the customer uses their order number + private code, or their Emailed Stripe Receipt Number.
+// Orders or Payments: the customer uses their Order Number + Private Code, or their Emailed Stripe Receipt Number.
 // No email address is asked for or kept. Fi's reply shows here (Check For A Reply) and on Collect My Video.
 // General questions go to the public Questions and Answers page.
 (function () {
@@ -35,12 +35,12 @@
       '<a class="cuLink" href="' + BASE + 'qa.html">Go To Questions And Answers</a></div>' +
       '<div id="cuForm"><label>How shall we find your order?</label>' +
       '<div class="cuRow" id="cuBy"><button type="button" data-v="order">Order Number And Private Code</button><button type="button" data-v="receipt">Emailed Stripe Receipt Number</button></div>' +
-      '<div id="cuOrder"><label for="cuN">Order number:</label><input id="cuN" inputmode="numeric" maxlength="8" placeholder="e.g. 1001" autocomplete="off">' +
-      '<label for="cuC">Private code:</label><input id="cuC" maxlength="12" placeholder="FN-XXXXXX" autocomplete="off" autocapitalize="characters"></div>' +
+      '<div id="cuOrder"><label for="cuN">Order Number:</label><input id="cuN" inputmode="numeric" maxlength="8" placeholder="e.g. 1001" autocomplete="off">' +
+      '<label for="cuC">Private Code:</label><input id="cuC" maxlength="12" placeholder="FN-XXXXXX" autocomplete="off" autocapitalize="characters"></div>' +
       '<div id="cuRcpt" hidden><label for="cuR">Emailed Stripe Receipt Number:</label><input id="cuR" maxlength="20" placeholder="e.g. #1234-5678" autocomplete="off"></div>' +
       '<label for="cuT">Your message (500 characters):</label><textarea id="cuT" maxlength="500" placeholder="Please tell us what happened."></textarea>' +
       '<div class="cuCount"><span id="cuLen">0</span> / 500</div>' +
-      '<p class="cuNote">Please do not write card numbers or passwords. We do not need your name or email address.</p>' +
+      '<p class="cuNote">Please do not send your credit card number or password. We do not need your personal information.</p>' +
       '<div class="cuRow"><button type="button" class="cuMain" id="cuSend" disabled>Send Message</button><button type="button" id="cuCheck" disabled>Check For A Reply</button></div>' +
       '<div class="cuMsg" id="cuOut" role="status"></div><div id="cuList"></div></div>' +
       '</div></div>');

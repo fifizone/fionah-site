@@ -211,6 +211,16 @@
   .pictile .peq{font-size:20px;font-weight:700}
   .pictile .pcoin{width:25px;height:25px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F7E2A0,#D9A93E 55%,#9C6B1F);color:#3A2600;font-weight:700;font-size:13px;line-height:25px;text-align:center}
   .trialtile{margin:14px 4px 4px 0;text-align:center;background:var(--btn);color:var(--btn-ink);border:none;border-radius:var(--r);padding:11px;box-shadow:4px 4px 0 #A9B0BC}
+  /* 29 Nov (Fi): only clickable things look like buttons. "Continue to create unlimited videos" = plain white card; Buy Credits + Tap To Add Music = clickable tiles */
+  #trialTile{background:none !important;box-shadow:none !important;padding:0 !important;gap:10px}
+  #trialTile .pt-line{display:none}
+  #trialTile .pt-free{background:#FFFFFF;color:#111014;border-radius:var(--r);padding:14px 8px;box-shadow:inset 0 0 0 1px #E2E0EA}
+  #trialTile .pt-buy{background:var(--btn);color:var(--btn-ink);border-radius:var(--r);padding:12px 8px;box-shadow:4px 4px 0 #A9B0BC}
+  [data-look="pastel"] #trialTile .pt-buy{box-shadow:inset 0 0 0 1.5px #4B33C4,4px 4px 0 #A9B0BC}
+  #trialTile .pt-buy .pt-lab{text-decoration:none}
+  #musicDrop{border:none;background:var(--btn);color:var(--btn-ink);border-radius:var(--r);box-shadow:4px 4px 0 #A9B0BC}
+  [data-look="pastel"] #musicDrop{box-shadow:inset 0 0 0 1.5px #4B33C4,4px 4px 0 #A9B0BC}
+  #musicDrop.hot{background:var(--soft)}
   /* no blue tap flash or blue focus ring; keyboard users still see a ring, in purple */
   *{-webkit-tap-highlight-color:transparent}
   a:focus,button:focus,summary:focus,input:focus,select:focus,[tabindex]:focus{outline:none}
@@ -1041,7 +1051,7 @@
   }
   async function checkRestore(v) {
     const dg = String(v || '').replace(/\D/g, '');
-    if (dg.length !== 8) { $('rcMsg').textContent = 'A receipt number has 8 numbers, for example #1234\u20115678.'; return; }
+    if (dg.length !== 8) { $('rcMsg').textContent = 'An Emailed Stripe Receipt Number has 8 numbers, for example #1234\u20115678.'; return; }
     $('rcMsg').textContent = 'Checking…'; $('rcGo').disabled = true;
     let d = null;
     try { d = await (await fetch(HELPER_URL + '?restore=' + encodeURIComponent(dg))).json(); } catch (e) {}
@@ -1051,8 +1061,8 @@
       try { if (phoneCredits() > 0) localStorage.setItem('fionah-credits', '0'); } catch (e) {}
       keepCard(d.card, d.left, d.receipt); if (d.left > 0) S.noIcon = true; updTrial();
       openModal(d.left > 0
-        ? `<h3>Your Credits Are Back:</h3><div class="credbal">You have ${d.left} credit${d.left === 1 ? '' : 's'} ✓</div><p>Receipt Number: <b class="nw" style="color:var(--text)">#${d.receipt}</b></p><p>Your credits are now ready to use on this device.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`
-        : `<h3>No Credits Left</h3><p>All the credits on Receipt Number <b class="nw" style="color:var(--text)">#${d.receipt}</b> have been used.</p><p>You can still make free videos with the small icon, or buy more credits.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="buyx">Buy Credits</button></div>`);
+        ? `<h3>Your Credits Are Back:</h3><div class="credbal">You have ${d.left} credit${d.left === 1 ? '' : 's'} ✓</div><p>Emailed Stripe Receipt Number: <b class="nw" style="color:var(--text)">#${d.receipt}</b></p><p>Your credits are now ready to use on this device.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`
+        : `<h3>No Credits Left</h3><p>All the credits on Emailed Stripe Receipt Number <b class="nw" style="color:var(--text)">#${d.receipt}</b> have been used.</p><p>You can still make free videos with the small icon, or buy more credits.</p><div class="acts"><button class="b1" id="okx">Close</button><button class="b2" id="buyx">Buy Credits</button></div>`);
       const b = $('buyx'); if (b) b.onclick = openCredits;
       $('okx').onclick = closeModal;
     } else if (d && d.pack) {
@@ -1060,7 +1070,7 @@
     } else if (d && d.busy) {
       openRestore('There have been too many tries. Please try again in an hour.');
     } else if (d) {
-      openModal(`<h3>Restore My Credits</h3><p>We could not find credits for that receipt number. Please check your Emailed Stripe Receipt Number and try again.</p>${help}<div class="acts"><button class="b1" id="nox">Close</button><button class="b2" id="tryx">Try Again</button></div>`);
+      openModal(`<h3>Restore My Credits</h3><p>We could not find credits for that Emailed Stripe Receipt Number. Please check your Emailed Stripe Receipt Number and try again.</p>${help}<div class="acts"><button class="b1" id="nox">Close</button><button class="b2" id="tryx">Try Again</button></div>`);
       $('nox').onclick = closeModal; $('tryx').onclick = openRestore;
     } else {
       openRestore('We could not connect. Please check your internet connection and try again.');
@@ -1077,7 +1087,7 @@
         addCard(d);
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         const rc = String(d.receipt || '').replace(/[^0-9-]/g, '');
-        openModal(`<h3>Thank You</h3><div class="credbal">${d.credits} Credits Added ✓</div><p>Your next video will have no icon.</p>${rc ? `<p>Receipt Number: <b class="nw" style="color:var(--text)">#${rc}</b></p>` : ''}<p>Please keep your Emailed Stripe Receipt. It lets you use your credits on any device.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
+        openModal(`<h3>Thank You</h3><div class="credbal">${d.credits} Credits Added ✓</div><p>Your next video will have no icon.</p>${rc ? `<p>Emailed Stripe Receipt Number: <b class="nw" style="color:var(--text)">#${rc}</b></p>` : ''}<p>Please keep your Emailed Stripe Receipt. It lets you use your credits on any device.</p><div class="acts"><button class="b2" id="okx">OK</button></div>`);
       } else if (d.used && d.card) {                // already added: this phone simply joins the card (nothing is doubled)
         try { history.replaceState(null, '', location.pathname); } catch (e) {}
         addCard(d);
