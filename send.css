@@ -115,3 +115,10 @@
 .sendbox .thumb .sm{position:absolute;top:34px;left:4px;background:#C99A3B;color:#111014;border-radius:4px;padding:0 6px;font-size:12px}
 .sendbox .smallmsg{margin:12px 0 0;padding:12px 14px;border:2px solid #C99A3B;border-radius:4px;background:#fff;color:#1a1a1a;text-align:center;line-height:1.45}
 .sendbox .smallmsg[hidden]{display:none}
+
+/* Collect My Video: Watch First preview (28 Nov) */
+.gvid{margin:0 0 14px}
+.gwatch{display:block;margin:6px auto 0;background:none;border:none;font:inherit;font-size:16px;font-weight:700;text-decoration:underline;color:inherit;cursor:pointer;padding:6px 10px}
+.gview iframe{display:block;margin:8px auto 0;border:0;border-radius:6px;background:#000;width:100%}
+.gview iframe.wide{aspect-ratio:16/9}
+.gview iframe.tall{aspect-ratio:9/16;max-width:360px}

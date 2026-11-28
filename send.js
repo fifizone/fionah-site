@@ -302,9 +302,20 @@ const guard = window.fionahSafety;   // safety/safety.js (Guard 1 photos + Guard
           const label = v => 'Download ' + (many ? v.name + ', ' : 'Your ') + (SHAPE_WORDS[v.shape] || (many ? '' : 'Video'));
           out.innerHTML = '<p>Order #' + n + ' is ready.</p>' +
             (vids.some(v => v.shape) ? '<p>Each video comes in two shapes. The one that suits this device is shown first.</p>' : '') +
-            vids.map(v => '<a class="sbtn hl" href="' + v.url + '">' + label(v).replace(/, $/, '') + '</a>').join('') +
+            vids.map((v, i) => {
+              const id = (String(v.url).match(/[?&]id=([\w-]+)/) || [])[1];
+              const watch = id ? '<button type="button" class="gwatch" data-i="' + i + '" data-id="' + id + '" data-tall="' + (v.shape === 'Phone' ? 1 : 0) + '">Watch First</button><div class="gview" id="gView' + i + '"></div>' : '';
+              return '<div class="gvid"><a class="sbtn hl" href="' + v.url + '">' + label(v).replace(/, $/, '') + '</a>' + watch + '</div>';
+            }).join('') +
             (d.waiting > 0 ? `<p>${d.waiting} more video${d.waiting === 1 ? ' is' : 's are'} on the way.</p>` : '') +
             '<button type="button" class="sbtn hl" id="gDone">Delete My Files</button>';
+          // Watch First: plays the video on the page before downloading (tap again to close)
+          out.querySelectorAll('.gwatch').forEach(b => b.addEventListener('click', () => {
+            const box = $('#gView' + b.dataset.i);
+            if (box.innerHTML) { box.innerHTML = ''; b.textContent = 'Watch First'; return; }
+            box.innerHTML = '<iframe src="https://drive.google.com/file/d/' + b.dataset.id + '/preview" class="' + (b.dataset.tall === '1' ? 'tall' : 'wide') + '" allow="autoplay; fullscreen" allowfullscreen title="Video preview"></iframe>';
+            b.textContent = 'Close Preview';
+          }));
           $('#gDone').addEventListener('click', async () => {
             let r = {};
             try { r = await (await fetch(SEND_URL + '?n=' + encodeURIComponent(n) + '&code=' + encodeURIComponent(code) + '&done=1')).json(); } catch (err) {}
