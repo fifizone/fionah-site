@@ -259,7 +259,6 @@
   .steps li::before{content:counter(s);position:absolute;left:18px;top:16px;width:32px;height:32px;border-radius:var(--r);background:#4B33C4;color:#fff;display:grid;place-items:center}
   #faq .faq{max-width:760px;margin:22px auto 0;background:var(--card);color:#111014;border-radius:var(--r-lg);padding:4px 22px;border-top:none}
   [data-look="night"] #faq .faq{color:#F4F2EE}
-  #who details.drawer+details.drawer{margin-top:22px}
   #who .whobox{max-width:760px;margin:22px auto 0;background:var(--card);color:#111014;border-radius:var(--r-lg);padding:14px 22px;border-top:none;text-align:left}
   [data-look="night"] #who .whobox{color:#F4F2EE}
   #who .whobox ul{margin:8px 0 0;padding-left:22px}#who .whobox li{margin:8px 0}#who .whobox p{color:inherit;margin:8px 0}
@@ -340,11 +339,12 @@
   .fi{white-space:nowrap}
   .fi b{font-family:'Italianno','Brush Script MT',cursive;font-weight:400;font-size:1.6em;line-height:0;color:inherit;margin-right:.14em;vertical-align:-.08em}
   /* Who/Why tabs: same size as the Make Your Own Free Video button */
-  #who details.drawer>summary{display:flex;justify-content:center;padding:0}
-  #who details.drawer>summary::before,#who details.drawer>summary::after{content:none;display:none}
+  #who .whorow{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
   #who .whobtn{min-width:260px}
   #who .whobtn .pm::before{content:"+";font-weight:700}
-  #who details[open] .whobtn .pm::before{content:"\2013"}
+  #who .whobtn[aria-expanded="true"] .pm::before{content:"\2013"}
+  #who .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (max-width:640px){#who .whorow{display:grid;grid-template-columns:1fr 1fr;gap:8px}#who .whobtn{min-width:0;padding:10px 6px;gap:4px;margin:0 4px 4px 0}#who .whobtn .wt,#who .whobtn .wt>span{font-size:14px !important;line-height:1.25}#who .whobtn .fi b{font-size:22px !important;line-height:0}}
   #who .fi b{font-size:28px !important;vertical-align:-.12em}
   #who .whobtn .wt{display:inline;line-height:1.2}
   #fiFoot b{font-size:32px !important;vertical-align:-.12em}
@@ -464,6 +464,35 @@
   </div>
 </section>
 
+<section id="who">
+  <div class="wrap">
+    <h2 class="sr">About fionah</h2>
+    <div class="whorow">
+      <button type="button" class="btn btn-main whobtn" aria-expanded="false" aria-controls="whoFor"><span class="wt">Who Is <span class="fi"><b>F</b>ionah</span> For?</span> <span class="pm" aria-hidden="true"></span></button>
+      <button type="button" class="btn btn-main whobtn" aria-expanded="false" aria-controls="whoWhy"><span class="wt">Why We Created <span class="fi"><b>F</b>ionah</span></span> <span class="pm" aria-hidden="true"></span></button>
+    </div>
+    <div class="faq whobox" id="whoFor" hidden>
+        <p>For busy people who want a beautiful property video, with no video skills needed and no software to learn.</p>
+        <ul>
+          <li><b>Real estate agents:</b> A video for every listing. The Agent Pack gives you 8 videos, each one for a different property, in Wide for listing websites and Phone for Reels.</li>
+          <li><b>Private sellers and landlords:</b> Help your home stand out when you sell or rent it. The Starter Pack gives you 1 video.</li>
+          <li><b>Holiday rental hosts:</b> Show guests your place to stay before they book.</li>
+          <li><b>Property managers and builders:</b> Show rentals, new builds and renovations.</li>
+          <li><b>Everyone else:</b> Motion Studio is free. Make a moving video from your own images on your device, any time.</li>
+        </ul>
+      </div>
+    <div class="faq whobox" id="whoWhy" hidden>
+        <p>We wanted an honest, simple way to turn property images into smooth, ready-to-share videos, without needing video skills or expensive software.</p>
+        <ul>
+          <li>We keep it simple for people who would rather not wrestle with technology.</li>
+          <li>We do not ask for your name or address. Your Emailed Stripe Receipt Number, Order Number and Private Code do the work instead.</li>
+          <li>We only use your real images, gently moved, so your property looks just as it is.</li>
+          <li>fionah is a small Australian business, and we are glad you are here.</li>
+        </ul>
+      </div>
+  </div>
+</section>
+
 <section id="how">
   <div class="wrap">
     <details class="drawer">
@@ -494,36 +523,6 @@
         </div>
         <div class="keep"><span class="vid ic"></span> To get a video without the icon, make it again and choose No Icon</div>
         <div class="keep"><svg class="rcpt" viewBox="0 0 32 40" aria-hidden="true"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A4FE0"/><stop offset="1" stop-color="#2E1F80"/></linearGradient></defs><path d="M4 2h24v36l-4-3-4 3-4-3-4 3-4-3-4 3z" fill="url(#rg)"/><g stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M10 11h12M10 17h12M10 23h7"/></g></svg> Credits are saved with your Emailed Stripe Receipt Number, so you can use them on any device</div>
-      </div>
-    </details>
-  </div>
-</section>
-
-<section id="who">
-  <div class="wrap">
-    <details class="drawer">
-      <summary><span class="btn btn-main whobtn" role="heading" aria-level="2"><span class="wt">Who Is <span class="fi"><b>F</b>ionah</span> For?</span> <span class="pm" aria-hidden="true"></span></span></summary>
-      <div class="faq whobox">
-        <p>For busy people who want a beautiful property video, with no video skills needed and no software to learn.</p>
-        <ul>
-          <li><b>Real estate agents:</b> A video for every listing. The Agent Pack gives you 8 videos, each one for a different property, in Wide for listing websites and Phone for Reels.</li>
-          <li><b>Private sellers and landlords:</b> Help your home stand out when you sell or rent it. The Starter Pack gives you 1 video.</li>
-          <li><b>Holiday rental hosts:</b> Show guests your place to stay before they book.</li>
-          <li><b>Property managers and builders:</b> Show rentals, new builds and renovations.</li>
-          <li><b>Everyone else:</b> Motion Studio is free. Make a moving video from your own images on your device, any time.</li>
-        </ul>
-      </div>
-    </details>
-    <details class="drawer">
-      <summary><span class="btn btn-main whobtn" role="heading" aria-level="2"><span class="wt">Why We Created <span class="fi"><b>F</b>ionah</span></span> <span class="pm" aria-hidden="true"></span></span></summary>
-      <div class="faq whobox">
-        <p>We wanted an honest, simple way to turn property images into smooth, ready-to-share videos, without needing video skills or expensive software.</p>
-        <ul>
-          <li>We keep it simple for people who would rather not wrestle with technology.</li>
-          <li>We do not ask for your name or address. Your Emailed Stripe Receipt Number, Order Number and Private Code do the work instead.</li>
-          <li>We only use your real images, gently moved, so your property looks just as it is.</li>
-          <li>fionah is a small Australian business, and we are glad you are here.</li>
-        </ul>
       </div>
     </details>
   </div>
@@ -570,8 +569,6 @@
     <div class="flinks"><a href="send.html">Send Images</a><a href="get.html">Collect My Video</a><a href="policies.html#about">About</a><a href="policies.html#contact">Contact</a><a href="qa.html">Questions And Answers</a><a href="policies.html#refunds">Refunds</a><a href="policies.html#terms">Terms</a><a href="policies.html#privacy">Privacy</a></div>
   </div>
 </footer>
-
-
 
 <script>
 /* =========================================================
@@ -639,5 +636,18 @@ const CONFIG = {
 })();
 </script>
 <script src="mail.js"></script>
+<script>
+/* Who / Why tabs: tap one to open its box below (the other closes) */
+document.querySelectorAll('#who .whobtn').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var open = b.getAttribute('aria-expanded') !== 'true';
+    document.querySelectorAll('#who .whobtn').forEach(function (o) {
+      o.setAttribute('aria-expanded', 'false');
+      document.getElementById(o.getAttribute('aria-controls')).hidden = true;
+    });
+    if (open) { b.setAttribute('aria-expanded', 'true'); document.getElementById(b.getAttribute('aria-controls')).hidden = false; }
+  });
+});
+</script>
 </body>
 </html>
