@@ -336,6 +336,11 @@
   .biz h3{margin:0 0 8px}
   .biz p{margin:5px 0}
   .biz a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+  /* fionah brand word: script gold F (logo font) + ionah, headings and footer only */
+  @font-face{font-family:'Italianno';src:url('fonts/Italianno-Regular.ttf') format('truetype');font-display:swap}
+  .fi{white-space:nowrap}
+  .fi b{font-family:'Italianno','Brush Script MT',cursive;font-weight:400;font-size:1.6em;line-height:0;color:#F2C75C;margin-right:.07em;vertical-align:-.08em}
+  #fiFoot b{font-size:32px !important;vertical-align:-.12em}
 </style>
 <style id="tapfix">
   /* No grey/blue flash or leftover outline when tapping; outline stays for keyboard users */
@@ -490,7 +495,7 @@
 <section id="who">
   <div class="wrap">
     <details class="drawer">
-      <summary><h2>Who Is fionah For?</h2></summary>
+      <summary><h2>Who Is <span class="fi"><b>F</b>ionah</span> For?</h2></summary>
       <div class="faq whobox">
         <p>For busy people who want a beautiful property video, with no video skills needed and no software to learn.</p>
         <ul>
@@ -503,7 +508,7 @@
       </div>
     </details>
     <details class="drawer">
-      <summary><h2>Why We Created fionah</h2></summary>
+      <summary><h2>Why We Created <span class="fi"><b>F</b>ionah</span></h2></summary>
       <div class="faq whobox">
         <p>We wanted an honest, simple way to turn property images into smooth, ready-to-share videos, without needing video skills or expensive software.</p>
         <ul>
@@ -554,7 +559,7 @@
 
 <footer>
   <div class="wrap">
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><a class="logo sm" href="#top" aria-label="Back to top"><img src="logo.svg" alt="fionah" width="40" height="40"></a><span>www.fionah.com 2026</span></div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><a class="logo sm" href="#top" aria-label="Back to top"><img src="logo.svg" alt="fionah" width="40" height="40"></a><span>www.<span class="fi" id="fiFoot"><b>F</b>ionah</span>.com 2026</span></div>
     <div class="flinks"><a href="send.html">Send Images</a><a href="get.html">Collect My Video</a><a href="policies.html#about">About</a><a href="policies.html#contact">Contact</a><a href="qa.html">Questions And Answers</a><a href="policies.html#refunds">Refunds</a><a href="policies.html#terms">Terms</a><a href="policies.html#privacy">Privacy</a></div>
   </div>
 </footer>
