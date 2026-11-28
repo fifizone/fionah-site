@@ -259,6 +259,11 @@
   .steps li::before{content:counter(s);position:absolute;left:18px;top:16px;width:32px;height:32px;border-radius:var(--r);background:#4B33C4;color:#fff;display:grid;place-items:center}
   #faq .faq{max-width:760px;margin:22px auto 0;background:var(--card);color:#111014;border-radius:var(--r-lg);padding:4px 22px;border-top:none}
   [data-look="night"] #faq .faq{color:#F4F2EE}
+  #who details.drawer+details.drawer{margin-top:22px}
+  #who .whobox{max-width:760px;margin:22px auto 0;background:var(--card);color:#111014;border-radius:var(--r-lg);padding:14px 22px;border-top:none;text-align:left}
+  [data-look="night"] #who .whobox{color:#F4F2EE}
+  #who .whobox ul{margin:8px 0 0;padding-left:22px}#who .whobox li{margin:8px 0}#who .whobox p{color:inherit;margin:8px 0}
+  @media (max-width:500px){#who details.drawer>summary h2{font-size:26px}}
   #faq .faq details{border-bottom:1px solid #E4E2EC}
   [data-look="night"] #faq .faq details{border-color:#2A2A33}
   #faq .faq details:last-child{border-bottom:none}
@@ -477,6 +482,36 @@
         </div>
         <div class="keep"><span class="vid ic"></span> To get a video without the icon, make it again and choose No Icon</div>
         <div class="keep"><svg class="rcpt" viewBox="0 0 32 40" aria-hidden="true"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A4FE0"/><stop offset="1" stop-color="#2E1F80"/></linearGradient></defs><path d="M4 2h24v36l-4-3-4 3-4-3-4 3-4-3-4 3z" fill="url(#rg)"/><g stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M10 11h12M10 17h12M10 23h7"/></g></svg> Credits are saved with your Emailed Stripe Receipt Number, so you can use them on any device</div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="who">
+  <div class="wrap">
+    <details class="drawer">
+      <summary><h2>Who Is fionah For?</h2></summary>
+      <div class="faq whobox">
+        <p>For busy people who want a beautiful property video, with no video skills needed and no software to learn.</p>
+        <ul>
+          <li><b>Real estate agents:</b> A video for every listing. The Agent Pack gives you 8 videos, each one for a different property, in Wide for listing websites and Phone for Reels.</li>
+          <li><b>Private sellers and landlords:</b> Help your home stand out when you sell or rent it. The Starter Pack gives you 1 video.</li>
+          <li><b>Holiday rental hosts:</b> Show guests your place to stay before they book.</li>
+          <li><b>Property managers and builders:</b> Show rentals, new builds and renovations.</li>
+          <li><b>Everyone else:</b> Motion Studio is free. Make a moving video from your own images on your device, any time.</li>
+        </ul>
+      </div>
+    </details>
+    <details class="drawer">
+      <summary><h2>Why We Created fionah</h2></summary>
+      <div class="faq whobox">
+        <p>We wanted an honest, simple way to turn property images into smooth, ready-to-share videos, without needing video skills or expensive software.</p>
+        <ul>
+          <li>We keep it simple for people who would rather not wrestle with technology.</li>
+          <li>We do not ask for your name or address. Your Emailed Stripe Receipt Number, Order Number and Private Code do the work instead.</li>
+          <li>We only use your real images, gently moved, so your property looks just as it is.</li>
+          <li>fionah is a small Australian business, and we are glad you are here.</li>
+        </ul>
       </div>
     </details>
   </div>
